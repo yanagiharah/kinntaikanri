@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+ <script src="js/ErrorCheck.js" type="text/javascript"></script>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+
 </head>
 <body>
-	<form th:action="@{/login/check}" method="post">
+	<form name = "LoginForm" th:action="@{/login/check}" method="post">
 		<center>
 			<div class"text-danger" th:if="${out} != null">
 				<span th:text="${out}" style="color: red;"></span>
@@ -15,7 +17,7 @@
 		<center>
 			<p>パスワード<input type="password" name="password"></p>
 		</center>
-		<center><input type="submit" value="ログイン" style="background-color: yellow;"></center>
+		<center><input type="submit" id = "check" value="ログイン" style="background-color: yellow;" onclick="return check()"></center>
 	</form>
 </body>
 </html>

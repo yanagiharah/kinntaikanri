@@ -18,12 +18,20 @@ public class LoginController {
 		}
 		
 		@RequestMapping("/check")
-			public String check(Integer userId ,Integer password,Model model, RedirectAttributes redirectAttributes ) {
-
-			if(userId ==null|| password ==null) {
-				redirectAttributes.addFlashAttribute("out","登録されているデータと一致しません。");
-				return "redirect:/";
-			}
+			public String check(Integer userId ,char password,Model model, RedirectAttributes redirectAttributes ){
+			
+//			try {
+//				if(userId ==null|| password == '\u0000' ) {
+//					redirectAttributes.addFlashAttribute("out","登録されているデータと一致しません。");
+//					return "redirect:/";
+//				}
+//				
+//			}catch(methodArgumentTypeMismatchException e) {
+//				redirectAttributes.addFlashAttribute("out","登録されているデータと一致しません。");
+//				return "redirect:/";
+//			}
+			
+			
 			
 			//ユーザーID,パスワードを引数にserviceクラスでリストの取得
 			
