@@ -4,9 +4,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+
 @Controller
 @RequestMapping("/login")
 public class LoginController {
+//	@Autowired
+//	private LoginService loginService;
+	
 		@GetMapping("")
 		public String login() {
 			return "index";	
@@ -16,7 +21,7 @@ public class LoginController {
 			public String check(Integer userId ,Integer password,Model model, RedirectAttributes redirectAttributes ) {
 
 			if(userId ==null|| password ==null) {
-				redirectAttributes.addAttribute("error","登録されているデータと一致しません。");
+				redirectAttributes.addFlashAttribute("out","登録されているデータと一致しません。");
 				return "redirect:/";
 			}
 			

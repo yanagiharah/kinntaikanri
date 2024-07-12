@@ -5,11 +5,11 @@
 <title>Insert title here</title>
 </head>
 <body>
-<!--	<th:if = "${error} != null">-->
-<!--		<th:text="${error}"></th:text>-->
-<!--	</th:if>-->
 	<form th:action="@{/login/check}" method="post">
 		<center>
+			<div class"text-danger" th:if="${out} != null">
+				<span th:text="${out}" style="color: red;"></span>
+			</div>
 			<p>ユーザーID<input type="text" name="userId"></p>
 		</center>
 		<center>
@@ -17,7 +17,5 @@
 		</center>
 		<center><input type="submit" value="ログイン" style="background-color: yellow;"></center>
 	</form>
-
-
 </body>
 </html>
