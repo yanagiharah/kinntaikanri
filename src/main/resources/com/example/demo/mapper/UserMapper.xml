@@ -11,21 +11,21 @@
 
 <!-- １件取得 -->
 <select id="selectByPrimaryKey" resultType="User">
-	select * from user
-	where id = #{id}
+	select * from users
+	where id = #{id} AND password = #{password}
 </select>
 
 
 <!-- 登録 -->
 <insert id="insert">
-	insert into user(user_name)
+	insert into users(user_name)
 	values(#{name})
 </insert>
 
 
 <!-- 更新 -->
 <update id="updateByPrimaryKey">
-	update user
+	update users
 	set name = #{name}
 	where id = #{id}
 </update>
@@ -33,7 +33,7 @@
 
 <!-- 削除 -->
 <delete id="deleteByPrimaryKey">
-	delete from user
+	delete from users
 	where id = #{id}
 </delete>
 

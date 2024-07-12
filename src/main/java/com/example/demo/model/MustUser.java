@@ -7,11 +7,11 @@ import lombok.Data;
 @Data
 public class MustUser {
 	
-	private int id;
+	private Integer id;
 	
 	private String name;
 	
-	private String password;
+	private char password;
 	
 	private String role;
 	

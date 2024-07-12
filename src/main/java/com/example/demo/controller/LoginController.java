@@ -1,16 +1,20 @@
 package com.example.demo.controller;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.demo.model.MustUser;
+import com.example.demo.service.LoginService;
+
 
 @Controller
 @RequestMapping("/login")
 public class LoginController {
-//	@Autowired
-//	private LoginService loginService;
+	@Autowired
+	private LoginService loginService;
 	
 		@GetMapping("")
 		public String login() {
@@ -34,13 +38,14 @@ public class LoginController {
 			
 			
 			//ユーザーID,パスワードを引数にserviceクラスでリストの取得
-			
+			MustUser mustUser = loginService.LoginListUp(userId, password);
 			//リストがあった場合
-			if(userId !=null && password !=0) {
-				model.addAttribute("list", "ここ変える");
-				return "user";
+			if(mustUser == null) {
+				redirectAttributes.addFlashAttribute("out","登録されているデータと一致しません。");
+				return "redirect:/";
+
 			}
-			
-			return "index";
+			model.addAttribute("mustUser", mustUser);
+			return "test";
 		}
 }
