@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configurationPUBLIC "-//mybatis.org//DTD Config 3.0//EN""http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+<settings>
+<!-- 設定１：NULL値とJDBC型のマッピング設定-->
+<setting name="jdbcTypeForNull" value="NULL"/>
+<!-- 設定２：mapUnderscoreToCamelCase-->
+<setting name="mapUnderscoreToCamelCase" value="true"/>
+</settings>
+</configuration>
