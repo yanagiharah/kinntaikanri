@@ -5,9 +5,19 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<center><p>ユーザーID<input type="text"></p></center>
-	<center><p>パスワード<input type="password"></p></center>
-	<center><input type="button" value="ログイン" style="background-color: yellow;"></center>
+<!--	<th:if = "${error} != null">-->
+<!--		<th:text="${error}"></th:text>-->
+<!--	</th:if>-->
+	<form th:action="@{/login/check}" method="post">
+		<center>
+			<p>ユーザーID<input type="text" name="userId"></p>
+		</center>
+		<center>
+			<p>パスワード<input type="password" name="password"></p>
+		</center>
+		<center><input type="submit" value="ログイン" style="background-color: yellow;"></center>
+	</form>
+
 
 </body>
 </html>
