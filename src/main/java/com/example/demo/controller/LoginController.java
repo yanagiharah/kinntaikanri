@@ -22,7 +22,7 @@ public class LoginController {
 		}
 		
 		@RequestMapping("/check")
-			public String check(Integer userId ,char password,Model model, RedirectAttributes redirectAttributes ){
+			public String check(Integer userId ,String password,Model model, RedirectAttributes redirectAttributes ){
 			
 //			try {
 //				if(userId ==null|| password == '\u0000' ) {

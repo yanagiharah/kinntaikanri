@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
- <script src="js/ErrorCheck.js" type="text/javascript"></script>
+
+ 
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -13,11 +14,12 @@
 				<span th:text="${out}" style="color: red;"></span>
 			</div>
 			<p>ユーザーID<input type="text" name="userId"></p>
-		</center>
-		<center>
+		
 			<p>パスワード<input type="password" name="password"></p>
 		</center>
-		<center><input type="submit" id = "check" value="ログイン" style="background-color: yellow;" onclick="return check()"></center>
+		<center><input type="submit" id = "check" value="ログイン" style="background-color: yellow;"></center>
 	</form>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	 <script src="js/ErrorCheck.js" type="text/javascript"></script>
 </body>
 </html>

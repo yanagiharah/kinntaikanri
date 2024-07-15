@@ -11,7 +11,7 @@ public class MustUser {
 	
 	private String name;
 	
-	private char password;
+	private String password;
 	
 	private String role;
 	

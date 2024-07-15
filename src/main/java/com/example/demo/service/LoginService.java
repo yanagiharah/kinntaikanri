@@ -10,7 +10,7 @@ import com.example.demo.model.MustUser;
 public class LoginService {
   @Autowired
   public UserMapper userMapper;
-	public MustUser LoginListUp(Integer userId ,char password) {
+	public MustUser LoginListUp(Integer userId ,String password) {
 		MustUser mustUser = userMapper.selectByPrimaryKey(userId, password);
 		return mustUser;
 		
