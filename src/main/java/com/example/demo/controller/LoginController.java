@@ -38,14 +38,14 @@ public class LoginController {
 			
 			
 			//ユーザーID,パスワードを引数にserviceクラスでリストの取得
-			Users mustUser = loginService.LoginListUp(userId, password);
+			Users users = loginService.LoginListUp(userId, password);
 			//リストがあった場合
-			if(mustUser == null) {
+			if(users == null) {
 				redirectAttributes.addFlashAttribute("out","登録されているデータと一致しません。");
 				return "redirect:/";
 
 			}
-			model.addAttribute("mustUser", mustUser);
+			model.addAttribute("Users", users);
 			return "test";
 		}
 }

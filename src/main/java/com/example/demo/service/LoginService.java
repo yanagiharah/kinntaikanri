@@ -11,8 +11,8 @@ public class LoginService {
   @Autowired
   public UserMapper userMapper;
 	public Users LoginListUp(Integer userId ,String password) {
-		Users mustUser = userMapper.selectByPrimaryKey(userId, password);
-		return mustUser;
+		Users users = userMapper.selectByPrimaryKey(userId, password);
+		return users;
 		
 	}
 }
