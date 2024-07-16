@@ -44,7 +44,8 @@ public class LoginController {
 			if(users == null) {
 				redirectAttributes.addFlashAttribute("out","登録されているデータと一致しません。");
 				return "redirect:/";
-
+			}else if(users.getRole() .equalsIgnoreCase("Admin")) {
+				return "User/manegement";
 			}
 			model.addAttribute("Users", users);
 			return "attendance/registration";
