@@ -18,8 +18,8 @@
 
 <!-- 登録 -->
 <insert id="insert">
-	insert into users(name, password, role, start_date date)
-	values(#{name})
+	insert into users (password, user_name, role, department_id, start_date) 
+	values(#{password}, #{userName}, #{role}, #{departmentId}, #{startDate});
 </insert>
 
 
