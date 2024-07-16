@@ -4,13 +4,13 @@
 
 
 <!-- 全件取得 -->
-<select id="selectAll" resultType="com.example.demo.model.MustUser">
+<select id="selectAll" resultType="com.example.demo.model.User">
 	select * from users;
 </select>
  
  
 <!-- １件取得 -->
-<select id="selectByPrimaryKey" resultType="com.example.demo.model.MustUser">
+<select id="selectByPrimaryKey" resultType="com.example.demo.model.User">
 	select * from users
 	where id = #{id} AND password = #{password}
 </select>
