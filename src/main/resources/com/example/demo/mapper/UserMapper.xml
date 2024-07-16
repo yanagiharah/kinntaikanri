@@ -22,7 +22,7 @@
 	values(#{name})
 </insert>
 
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+
 <!-- 更新 -->
 <update id="updateByPrimaryKey">
 	update users

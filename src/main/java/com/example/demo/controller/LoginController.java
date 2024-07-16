@@ -39,6 +39,7 @@ public class LoginController {
 			
 			//ユーザーID,パスワードを引数にserviceクラスでリストの取得
 			Users users = loginService.LoginListUp(userId, password);
+			System.out.print(users);
 			//リストがあった場合
 			if(users == null) {
 				redirectAttributes.addFlashAttribute("out","登録されているデータと一致しません。");
@@ -46,6 +47,6 @@ public class LoginController {
 
 			}
 			model.addAttribute("Users", users);
-			return "test";
+			return "attendanceRegistration";
 		}
 }
