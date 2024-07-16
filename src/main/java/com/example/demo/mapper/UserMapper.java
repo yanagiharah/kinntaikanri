@@ -14,7 +14,7 @@ public interface UserMapper {
 	List<Users> selectAll();
 	
 	//１件取得
-	Users selectByPrimaryKey(@Param("id")Integer id, @Param("password")String password);
+	Users selectByPrimaryKey(@Param("userId")Integer userId, @Param("password")String password);
 	
 	//登録
 	int insert(Users user);

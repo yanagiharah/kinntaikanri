@@ -9,7 +9,7 @@ import com.example.demo.model.Users;
 @Service
 public class LoginService {
   @Autowired
-  public UserMapper userMapper;
+  private UserMapper userMapper;
 	public Users LoginListUp(Integer userId ,String password) {
 		Users users = userMapper.selectByPrimaryKey(userId, password);
 		return users;

@@ -10,9 +10,11 @@
  
  
 <!-- １件取得 -->
-<select id="selectByPrimaryKey" resultType="com.example.demo.model.Users">
-	select * from users
-	where id = #{id} AND password = #{password}
+<select id="selectByPrimaryKey"
+	resultType="com.example.demo.model.Users">
+	SELECT *
+	FROM users
+	WHERE user_id = #{userId} AND password = #{password}
 </select>
 
 
