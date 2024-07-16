@@ -1,15 +1,11 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
-    <settings>
-        <!-- 設定１：NULL値とJDBC型のマッピング設定-->
-        <setting name="jdbcTypeForNull" value="NULL"/>
-        <!-- 設定２：mapUnderscoreToCamelCase-->
-        <setting name="mapUnderscoreToCamelCase" value="true"/>
-        
-    </settings>
-     <typeAliases>
-        <package name="com.example.demo.domain"/>
-    </typeAliases>
+<settings>
+<!-- スネークケースをキャメルケースに変換 -->
+<setting name="mapUnderscoreToCamelCase" value="true" />
+<!-- SQL の結果が返ってくるまでの待ち時間 -->
+<setting name="defaultStatementTimeout" value="90" />
+</settings>
 </configuration>
