@@ -5,7 +5,7 @@ import java.util.Date;
 import lombok.Data;
 
 @Data
-public class MustUser {
+public class Users {
 	
 	private Integer id;
 	

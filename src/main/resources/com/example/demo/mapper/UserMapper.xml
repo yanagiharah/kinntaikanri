@@ -18,7 +18,7 @@
 
 <!-- 登録 -->
 <insert id="insert">
-	insert into users(user_name)
+	insert into users(name, password, role, start_date date)
 	values(#{name})
 </insert>
 

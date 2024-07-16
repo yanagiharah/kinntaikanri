@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.demo.model.MustUser;
+import com.example.demo.model.Users;
 import com.example.demo.service.LoginService;
 
 
@@ -38,7 +38,7 @@ public class LoginController {
 			
 			
 			//ユーザーID,パスワードを引数にserviceクラスでリストの取得
-			MustUser mustUser = loginService.LoginListUp(userId, password);
+			Users mustUser = loginService.LoginListUp(userId, password);
 			//リストがあった場合
 			if(mustUser == null) {
 				redirectAttributes.addFlashAttribute("out","登録されているデータと一致しません。");

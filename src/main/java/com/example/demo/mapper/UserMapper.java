@@ -5,22 +5,22 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.example.demo.model.MustUser;
+import com.example.demo.model.Users;
 
 @Mapper
 public interface UserMapper {
 	
 	//全件取得
-	List<MustUser> selectAll();
+	List<Users> selectAll();
 	
 	//１件取得
-	MustUser selectByPrimaryKey(@Param("id")Integer id, @Param("password")String password);
+	Users selectByPrimaryKey(@Param("id")Integer id, @Param("password")String password);
 	
 	//登録
-	int insert(MustUser user);
+	int insert(Users user);
 	
 	//更新
-	int updateByPrimaryKey(MustUser user);
+	int updateByPrimaryKey(Users user);
 	
 	//削除
 	int deleteByPrimaryKey(Long id);
