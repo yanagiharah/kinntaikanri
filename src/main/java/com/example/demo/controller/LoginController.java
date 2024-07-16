@@ -46,6 +46,7 @@ public class LoginController {
 				return "redirect:/";
 			}
 			else if(users.getRole() .equalsIgnoreCase("Admin")) {
+				model.addAttribute("Users", users);
 				return "User/manegement";
 			}
 			model.addAttribute("Users", users);

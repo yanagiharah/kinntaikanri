@@ -17,7 +17,8 @@ public class Users {
 	
 	private Date startDate;
 	
-	private Integer departmentId;
+	private Integer departmentName;
+	
 	
 //	private Date status;
 }
