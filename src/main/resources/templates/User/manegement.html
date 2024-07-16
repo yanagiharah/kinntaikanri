@@ -5,7 +5,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<form name = "SearchUser" th:action="@{/user/management}" th:object = "${Users}" method="post">
+	<form name = "SearchUser" th:action="@{/user/management}" th:object="${Users}" method="post">
 		
 		<div class"text-danger" th:if="${out} != null">
 			<span th:text="${check}" style="color: red;"></span>
@@ -13,7 +13,7 @@
 		
 		<p>ユーザー名<input type="text"><input type="button" value="検索" style="background-color: yellow;"></p>
 		<hr>
-		ユーザーID： <p th:text="${userId}">userId</p>
+		ユーザーID： <p th:text="*{userId}">userId</p>
 		<p>パスワード<input type="password"></p>
 		<p>権限<input type="text"></p>
 		<p>所属部署<input type="text"></p>
