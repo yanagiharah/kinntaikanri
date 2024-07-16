@@ -18,7 +18,7 @@ public class LoginController {
 	
 		@GetMapping("")
 		public String login() {
-			return "index";	
+			return "login/index";	
 		}
 		
 		@RequestMapping("/check")
@@ -47,6 +47,6 @@ public class LoginController {
 
 			}
 			model.addAttribute("Users", users);
-			return "attendanceRegistration";
+			return "attendance/registration";
 		}
 }
