@@ -5,13 +5,25 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<p>ユーザー名<input type="text"><input type="button" value="検索" style="background-color: yellow;"></p>
-	<hr>
-	<p>ユーザーID</p>
-	<p>パスワード<input type="password"></p>
-	<p>権限<input type="text"></p>
-	<p>所属部署<input type="text"></p>
-	<pp>利用開始日<input type="text"><input type="button" value="登録" style="background-color: yellow;"></p>
-
+	<form name = "SearchUser" th:action="@{/user/management}" th:object = "${Users}" method="post">
+		
+		<div class"text-danger" th:if="${out} != null">
+			<span th:text="${check}" style="color: red;"></span>
+		</div>
+		
+		<p>ユーザー名<input type="text"><input type="button" value="検索" style="background-color: yellow;"></p>
+		<hr>
+		ユーザーID： <p th:text="${userId}">userId</p>
+		<p>パスワード<input type="password"></p>
+		<p>権限<input type="text"></p>
+		<p>所属部署<input type="text"></p>
+		<p>利用開始日<input type="text"><input type="button" value="登録" style="background-color: yellow;"></p>
+		</div>
+		
+	</form>
+	
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		 <script src="js/ErrorCheck.js" type="text/javascript"></script>
+	
 </body>
 </html>
