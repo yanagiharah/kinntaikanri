@@ -5,22 +5,29 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<form name = "SearchUser" th:action="@{/user/management}" th:object="${Users}" method="post">
+	<form name = "SearchUser" th:action="@{/user/management}">
 		
 		<div class"text-danger" th:if="${out} != null">
 			<span th:text="${check}" style="color: red;"></span>
 		</div>
 		
-		<p>ユーザー名<input type="text"><input type="button" value="検索" style="background-color: yellow;"></p>
-		<hr>
-		ユーザーID： <p th:text="*{userId}">userId</p>
-		<p>パスワード<input type="password"></p>
-		<p>権限<input type="text"></p>
-		<p>所属部署<input type="text"></p>
-		<p>利用開始日<input type="text"><input type="button" value="登録" style="background-color: yellow;"></p>
-		</div>
-		
+		<p>ユーザー名<input type="text" name = "userName"><input type="submit" value="検索"  style="background-color: yellow;"></p>
 	</form>
+	
+		<hr>
+		
+	<div th:if="${List} != null">
+		<form th:object="${List}" method="post">
+	
+			ユーザーID： <p th:text="*{userId}">userId</p>
+	
+			<p>パスワード<input type="password"></p>
+			<p>権限<input type="text"></p>
+			<p>所属部署<input type="text"></p>
+			<p>利用開始日<input type="text"><input type="submit" value="登録" style="background-color: yellow;"></p>
+		</form>
+	</div>
+			
 	
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 		 <script src="js/ErrorCheck.js" type="text/javascript"></script>

@@ -17,22 +17,23 @@ public class UserManagementController {
 	
 	
 	@RequestMapping("/management")
-	public String userSearch(String name,Model model, RedirectAttributes redirectAttributes ){
+	public String userSearch(String userName,Model model, RedirectAttributes redirectAttributes ){
 		
 	
-	if(name == null) {
-		redirectAttributes.addFlashAttribute("check","入力は必須です。");
-		return "redirect:/User/manegement";
-	}
+//	if(name == null) {
+//		redirectAttributes.addFlashAttribute("check","入力は必須です。");
+//		return "redirect:/User/manegement";
+//	}
 	//名前を引数にserviceクラスでリストの取得
-	Users users = userManagementService.UserSearchListUp(name);
-	System.out.print(users);
+		System.out.print("ここに表示"+userName);
+	Users users = userManagementService.UserSearchListUp(userName);
+	System.out.print("ここに表示"+users);
 	//リストがあった場合
 		if(users == null) {
 			return "User/manegement";
 		}
 		
-	model.addAttribute("Users", users);
+	model.addAttribute("List", users);
 	return "User/manegement";
 	}
 }

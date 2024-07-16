@@ -14,7 +14,7 @@ public interface UserSearchMapper {
 	List<Users> selectAll();
 	
 	//１件取得
-	Users selectByPrimaryKey(@Param("name")String name);
+	Users selectByPrimaryKey(@Param("userName")String userName);
 	
 	//登録
 	int insert(Users user);

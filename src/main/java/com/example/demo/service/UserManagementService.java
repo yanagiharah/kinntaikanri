@@ -10,8 +10,8 @@ import com.example.demo.model.Users;
 public class UserManagementService {
   @Autowired
   public UserSearchMapper userSearchMapper;
-	public Users UserSearchListUp(String name) {
-		Users users = userSearchMapper.selectByPrimaryKey(name);
+	public Users UserSearchListUp(String userName) {
+		Users users = userSearchMapper.selectByPrimaryKey(userName);
 		return users;
 		
 	}

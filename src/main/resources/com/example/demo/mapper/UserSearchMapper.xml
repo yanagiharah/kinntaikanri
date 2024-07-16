@@ -12,7 +12,7 @@
 <!-- １件取得 -->
 <select id="selectByPrimaryKey" resultType="com.example.demo.model.Users">
 	SELECT * FROM users 
-	WHERE name = #{name};
+	WHERE user_name = #{userName};
 </select>
 
 
