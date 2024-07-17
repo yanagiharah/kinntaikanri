@@ -21,6 +21,7 @@ public class LoginController {
 			return "login/index";	
 		}
 		
+		
 		@RequestMapping("/check")
 		public String check(Integer userId, String password, Model model, RedirectAttributes redirectAttributes) {
 
