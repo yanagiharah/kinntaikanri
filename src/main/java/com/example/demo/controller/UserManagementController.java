@@ -26,7 +26,7 @@ public class UserManagementController {
 //	}
 	//名前を引数にserviceクラスでリストの取得
 		System.out.print("ここに表示"+userName);
-	Users users = userManagementService.UserSearchListUp(userName);
+	Users users = userManagementService.userSearchListUp(userName);
 	System.out.print("ここに表示"+users);
 	//リストがあった場合
 		if(users == null) {
