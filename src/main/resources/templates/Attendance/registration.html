@@ -8,58 +8,70 @@
 </head>
 <body>
 	<div class="container" th:object="${Users}">
+		<div class="row">
+			<div class="d-flex justify-content-between">
+				ユーザー名:[[*{userName}]] ユーザーID:[[*{userId}]] ステータス
+			</div>
+			<span class="d-flex justify-content-start">
+				<input type="text" id="year">年
+				<input type="text" id="month">月
+				<input type="button" id="yearCheck" value="表示" style="background-color: yellow;">
+			</span>
 	
-		ユーザー名:[[*{userName}]] ユーザーID:[[*{userId}]] ステータス
+			<span class="d-flex justify-content-end">
+				<input type="button" id="yearCheck" value="却下" style="background-color: yellow;">
+				<input type="button" id="yearCheck" value="承認" style="background-color: yellow;">
+				<input type="button" id="yearCheck" value="承認申請" style="background-color: yellow;">
+				<input type="button" id="yearCheck" value="登録" style="background-color: yellow;">
+			</span>
+			<div>
 	
-		<input type="text" id="year">年
-		<input type="text" id="month">月
-		<input type="button" id="yearCheck" value="表示" style="background-color: yellow;">
-		
-		<input type="button" id="yearCheck" value="却下" style="background-color: yellow;">
-		<input type="button" id="yearCheck" value="承認" style="background-color: yellow;">
-		<input type="button" id="yearCheck" value="承認申請" style="background-color: yellow;">
-		<input type="button" id="yearCheck" value="登録" style="background-color: yellow;">
-		
-		<div class="col-4 ml-3">
-			<table class="table table-bordered border border-dark">
-				<thead>
-					<tr>
-						<td>承認申請者</td>
-						<td>申請対象年月</td>
-						<td>申請日</td>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>1</td>
-						<td>エンジニア1</td>
-						<td>PHP</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
+				<div class="row">
+					<div class="col-4 ml-3">
+						<table class="table table-bordered border border-dark ">
+							<thead>
+								<tr>
+									<td>承認申請者</td>
+									<td>申請対象年月</td>
+									<td>申請日</td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>1</td>
+									<td>エンジニア1</td>
+									<td>PHP</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
 	
-		<div class="col-6 ml-3">
-			<table class="table table-bordered border border-dark">
-				<thead>
-					<tr>
-						<td>日付</td>
-						<td>曜日</td>
-						<td>勤務状況</td>
-						<td>出勤時間</td>
-						<td>退勤時間</td>
-						<td>備考</td>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>1</td>
-						<td>エンジニア1</td>
-						<td>PHP</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
+			<div class="row">		
+				<div class="col-6 ml-3">
+					<table class="table table-bordered border border-dark">
+						<thead>
+							<tr>
+								<td>日付</td>
+								<td>曜日</td>
+								<td>勤務状況</td>
+								<td>出勤時間</td>
+								<td>退勤時間</td>
+								<td>備考</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>1</td>
+								<td>エンジニア1</td>
+								<td>PHP</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+	
+	
 	
 	</div>
 
