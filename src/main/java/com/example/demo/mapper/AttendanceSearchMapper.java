@@ -1,6 +1,6 @@
 package com.example.demo.mapper;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -16,7 +16,7 @@ public interface AttendanceSearchMapper {
 	List<Users> selectAll();
 	
 	//１件取得
-	Attendance selectByPrimaryKey(@Param("userId")Integer userId, @Param("startDate")Date startDate, @Param("endDate")Date endDate);
+	Attendance selectByYearMonth(@Param("userId")Integer userId, @Param("startDate")LocalDate targetDate, @Param("endDate")LocalDate endDate);
 	
 	//登録
 	int insert(Users user);

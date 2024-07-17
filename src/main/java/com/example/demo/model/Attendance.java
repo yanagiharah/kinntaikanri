@@ -21,6 +21,10 @@ public class Attendance {
 	
 	private String attendance_remarks;
 	
+	private Integer years;
+	
+	private Integer month;
+	
 	private Date startDate;
 	
 	private Date endDate;
