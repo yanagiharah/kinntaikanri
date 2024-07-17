@@ -13,20 +13,20 @@ public class Attendance {
 	
 	private Integer  status;
 	
-	private Date attendance_date;
+	private Date attendanceDate;
 	
-	private String start_time;
+	private String startTime;
 	
-	private String end_time;
+	private String endTime;
 	
-	private String attendance_remarks;
+	private String attendanceRemarks;
 	
 	private Integer years;
 	
 	private Integer month;
 	
-	private Date startDate;
-	
+	//月末が何日かを判断するためのに使用してる変数
+	private Date startDate;	
 	private Date endDate;
 	
 	
