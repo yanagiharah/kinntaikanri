@@ -12,9 +12,9 @@
 <!-- １件取得 -->
 <select id="selectByPrimaryKey"
 	resultType="com.example.demo.model.Attendance">
-	SELECT *
+	SELECT 
 	FROM attendance
-	WHERE user_id = #{userId} AND date BETWEEN startDate AND endDate ;
+	WHERE user_id = #{userId} AND attendance_datedate BETWEEN #{targetDate} AND #{endDate} ;
 </select>
 
 
