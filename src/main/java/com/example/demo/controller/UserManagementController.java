@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import java.util.Random;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,11 +31,17 @@ public class UserManagementController {
 	Users users = userManagementService.userSearchListUp(userName);
 	System.out.print("ここに表示"+users);
 	//リストがあった場合
-		if(users == null) {
-			return "User/manegement";
-		}
-		
-	model.addAttribute("List", users);
+	if(users != null) {
+		model.addAttribute("List", users);
+		return "User/manegement";
+	}
+	
+	Random rand = new Random();
+	Users user =new Users();
+    Integer randomNumber = rand.nextInt(2147483647);
+    user.setUserId(randomNumber);
+    
+    model.addAttribute("List", user);
 	return "User/manegement";
 	}
 }

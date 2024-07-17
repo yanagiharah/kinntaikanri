@@ -13,9 +13,8 @@ public class UserManagementService {
   @Autowired
   public UserSearchMapper userSearchMapper;
 	public Users userSearchListUp(String userName) {
-		Users users = userSearchMapper.selectByPrimaryKey(userName);
+		Users users = userSearchMapper.selectByPrimaryKey(userName);		
 		return users;
-		
 	}
 	
 	public Users userCreate(String password, String userName, String role, Integer departmentId, Date startDate) {
