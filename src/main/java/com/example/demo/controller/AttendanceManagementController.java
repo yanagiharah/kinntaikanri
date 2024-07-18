@@ -9,13 +9,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.model.Attendance;
+import com.example.demo.model.Users;
 import com.example.demo.service.AttendanceManagementService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/attendance")
 public class AttendanceManagementController {
 	@Autowired
 	private AttendanceManagementService attendanceManagementService;
+	
+	@RequestMapping("/index")
+		public String start(HttpSession session, Model model){
+		Users users = (Users) session.getAttribute("Users");
+		model.addAttribute("Users", users);
+		return "attendance/registration";
+	}
 	
 	
 	@RequestMapping("/management")

@@ -12,9 +12,9 @@
 		<div class="row">
 			<form name = "AttendanceForm" th:action="@{/attendance/management}" method="post">
 				<div class="d-flex justify-content-between">
-					ユーザー名:<span th:text="*{userName}"></span> ユーザーID:<span th:text="*{userId}"></span> ステータス
-					<input type="hidden" name="userId" th:value="*{userId}">
-					<input type="hidden" name="userName" th:value="*{userName}">
+					ユーザー名:<span th:text="${Users.userName}"></span> ユーザーID:<span th:text="${Users.userId}"></span> ステータス
+<!--					<input type="hidden" name="userId" th:value="${session.userId}">-->
+<!--					<input type="hidden" name="userName" th:value="*{userName}">-->
 				</div>
 				<span class="d-flex justify-content-start">
 					<input type="text" id="years" name="years">年

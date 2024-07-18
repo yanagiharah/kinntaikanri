@@ -9,6 +9,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.demo.model.Users;
 import com.example.demo.service.LoginService;
 
+import jakarta.servlet.http.HttpSession;
+
 
 @Controller
 @RequestMapping("/login")
@@ -17,12 +19,14 @@ public class LoginController {
 	private LoginService loginService;
 	
 		@GetMapping("")
-		public String login() {
+		public String login(HttpSession session, Model model) {
+			 Users users = (Users) session.getAttribute("Users");
+			 model.addAttribute("Users", users);
 			return "login/index";	
 		}
 		
 		@RequestMapping("/check")
-		public String check(Integer userId, String password, Model model, RedirectAttributes redirectAttributes) {
+		public String check(Integer userId, String password, Model model, RedirectAttributes redirectAttributes, HttpSession session) {
 
 			Users users = loginService.LoginListUp(userId, password);
 
@@ -33,7 +37,11 @@ public class LoginController {
 				model.addAttribute("Users", users);
 				return "User/manegement";
 			}
-			model.addAttribute("Users", users);
-			return "attendance/registration";
+		
+			session.setAttribute("Users", users);
+			 System.out.println("セッションに保存されたユーザー: " + session.getAttribute("Users"));
+
+			return "redirect:/attendance/index";
 		}
-	}
+
+}
