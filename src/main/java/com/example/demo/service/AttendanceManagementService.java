@@ -1,7 +1,9 @@
 package com.example.demo.service;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,32 @@ public class AttendanceManagementService {
 		List<Attendance> attendance = attendanceSearchMapper.selectByYearMonth(userId, targetDate, endDate);
 		
 		
+		for(int j = 0; j < attendance.size(); j++) {
+			String str = new SimpleDateFormat("MM-dd").format(attendance.get(j).getAttendanceDate());
+			String monthStr = str.substring(0, 2);
+			String dayStr = str.substring(3, 5);
+			attendance.get(j).setMonth(Integer.valueOf(monthStr));
+			attendance.get(j).setDays(Integer.valueOf(dayStr));
+			
+			
+		}
+		
+		
+		//年月から最終月日を算出
+		Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, years);
+        calendar.set(Calendar.MONTH, month - 1);
+        int lastMonthAndDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+		
+        for(int i = 1;i <= lastMonthAndDay ;i++) {
+			for(int j = 0; j < attendance.size(); j++) {
+				if(i != attendance.get(j).getDays()) {
+					
+				}
+				
+			}
+		}
+        
 		return attendance;
 	}
 	

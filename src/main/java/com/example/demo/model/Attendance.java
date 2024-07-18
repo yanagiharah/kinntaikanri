@@ -27,6 +27,8 @@ public class Attendance {
 	
 	private Integer month;
 	
+	private Integer days;
+	
 	//月末が何日かを判断するためのに使用してる変数
 	private Date startDate;	
 	private Date endDate;
