@@ -12,7 +12,8 @@
 		<div class="row">
 			<form name = "AttendanceForm" th:action="@{/attendance/management}" method="post">
 				<div class="d-flex justify-content-between">
-					ユーザー名:[[*{userName}]] ユーザーID:[[*{userId}]] ステータス
+					ユーザー名:[[*{userName}]] ユーザーID:<span th:text="*{userId}"></span> ステータス
+					<input type="hidden" name="userId" th:value="*{userId}">
 				</div>
 				<span class="d-flex justify-content-start">
 					<input type="text" id="years" name="years">年

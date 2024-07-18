@@ -15,10 +15,14 @@ public class AttendanceManagementService {
   public AttendanceSearchMapper attendanceSearchMapper;
 	public Attendance attendanceSearchListUp(Integer userId, Integer years, Integer month) {
 		
-		Attendance attendance = attendanceSearchMapper.selectByYearMonth(userId);
+		
 		
 		LocalDate targetDate = LocalDate.of(years, month, 1);
 		LocalDate endDate = targetDate.with(TemporalAdjusters.lastDayOfMonth());
+		
+		System.out.print("『月初と月末変換確認表示』："+ userId + targetDate + endDate);
+		
+		Attendance attendance = attendanceSearchMapper.selectByYearMonth(userId, targetDate, endDate);
 		
 		
 		return attendance;

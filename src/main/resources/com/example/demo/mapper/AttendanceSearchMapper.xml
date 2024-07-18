@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.demo.mapper.UserMapper">
+<mapper namespace="com.example.demo.mapper.AttendanceSearchMapper">
 
 
 <!-- 全件取得 -->
-<select id="selectAll" resultType="com.example.demo.model.Users">
+<select id="selectAll" resultType="com.example.demo.model.Attendance">
 	select * from users;
 </select>
  
  
 <!-- １件取得 -->
-<select id="selectByPrimaryKey"
+<select id="selectByYearMonth"
 	resultType="com.example.demo.model.Attendance">
-	SELECT 
+	SELECT *
 	FROM attendance
-	WHERE user_id = #{userId} AND attendance_datedate BETWEEN #{targetDate} AND #{endDate} ;
+	WHERE user_id = #{userId} AND attendance_date BETWEEN #{targetDate} AND #{endDate};
 </select>
 
 
