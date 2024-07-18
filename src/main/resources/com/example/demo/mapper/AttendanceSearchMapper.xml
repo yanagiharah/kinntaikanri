@@ -13,8 +13,8 @@
 <select id="selectByYearMonth"
 	resultType="com.example.demo.model.Attendance">
 	SELECT *
-	FROM attendance
-	WHERE user_id = #{userId} AND attendance_date BETWEEN #{targetDate} AND #{endDate};
+	FROM attendance INNER JOIN users on attendance.user_id = users.user_id
+	WHERE attendance.user_id = #{userId} AND attendance_date BETWEEN #{targetDate} AND #{endDate};
 </select>
 
 

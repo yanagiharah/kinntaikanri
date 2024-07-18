@@ -11,6 +11,8 @@ public class Attendance {
 	
 	private Integer userId;
 	
+	private String userName;
+	
 	private Integer  status;
 	
 	private Date attendanceDate;

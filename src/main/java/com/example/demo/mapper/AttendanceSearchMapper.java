@@ -16,7 +16,7 @@ public interface AttendanceSearchMapper {
 	List<Users> selectAll();
 	
 	//１件取得
-	Attendance selectByYearMonth(@Param("userId")Integer userId, @Param("targetDate")LocalDate targetDate, @Param("endDate")LocalDate endDate);
+	List<Attendance> selectByYearMonth(@Param("userId")Integer userId, @Param("targetDate")LocalDate targetDate, @Param("endDate")LocalDate endDate);
 	
 	//登録
 	int insert(Users user);

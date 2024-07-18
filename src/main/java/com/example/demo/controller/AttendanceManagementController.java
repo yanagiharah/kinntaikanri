@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +20,7 @@ public class AttendanceManagementController {
 	
 	@RequestMapping("/management")
 	public String attendanceSearch(Integer userId, Integer years, Integer month, Model model, RedirectAttributes redirectAttributes ){
-		System.out.print("『画面から受け取りチェック表示』："+ userId + years + month);
+//		System.out.print("『画面から受け取りチェック表示』："+ userId + years + month);
 	
 //	if(name == null) {
 //		redirectAttributes.addFlashAttribute("check","入力は必須です。");
@@ -26,12 +28,12 @@ public class AttendanceManagementController {
 //	}
 	//名前を引数にserviceクラスでリストの取得
 //		System.out.print("ここに表示"+userName);
-		Attendance attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month);
-//	System.out.print("ここに表示"+users);
+		List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month);
+	System.out.print("ここに表示"+ userId + years + month);
 	//リストがあった場合
-		System.out.print("『最終チェック表示』："+attendance);
+		System.out.print("『最終チェック表示："+attendance);
 	if(attendance != null) {
-		model.addAttribute("List", attendance);
+		model.addAttribute("Users", attendance);
 		
 		return "attendance/registration";
 	}
