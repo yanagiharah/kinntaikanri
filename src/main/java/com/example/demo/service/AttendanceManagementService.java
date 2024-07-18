@@ -66,16 +66,33 @@ public class AttendanceManagementService {
 		List<Attendance> attendance = attendanceSearchMapper.selectByYearMonth(userId, targetDate, endDate);
 		
 		
-		for(int j = 0; j < attendance.size(); j++) {
-			String str = new SimpleDateFormat("MM-dd").format(attendance.get(j).getAttendanceDate());
-			String monthStr = str.substring(0, 2);
-			String dayStr = str.substring(3, 5);
-			attendance.get(j).setMonth(Integer.valueOf(monthStr));
-			attendance.get(j).setDays(Integer.valueOf(dayStr));
-			
-			
+		System.out.print("『ああああああ』：" +attendance);
+		
+		
+//		for(int j = 0; j < attendance.size(); j++) {
+//			String str = new SimpleDateFormat("MM-dd").format(attendance.get(j).getAttendanceDate());
+//			String monthStr = str.substring(0, 2);
+//			String dayStr = str.substring(3, 5);
+//			attendance.get(j).setMonth(Integer.valueOf(monthStr));
+//			attendance.get(j).setDays(Integer.valueOf(dayStr));
+//
+//		}
+		
+		
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
+
+		for (int j = 0; j < attendance.size(); j++) {
+		    String str = sdf.format(attendance.get(j).getAttendanceDate());
+		    String monthStr = str.substring(0, 2);
+		    String dayStr = str.substring(3, 5);
+		    attendance.get(j).setMonth(Integer.parseInt(monthStr));
+		    attendance.get(j).setDays(Integer.parseInt(dayStr));
 		}
 		
+		
+		
+		System.out.print("『』：" +attendance);
 		
 		
 		
