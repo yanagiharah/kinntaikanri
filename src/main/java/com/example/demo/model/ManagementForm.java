@@ -1,11 +1,9 @@
 package com.example.demo.model;
 
-import java.util.Date;
-
 import lombok.Data;
 
 @Data
-public class Users {
+public class ManagementForm {
 	
 	private Integer userId;
 	
@@ -15,7 +13,5 @@ public class Users {
 	
 	private String role;
 	
-	private Date startDate;
-	
-//	private Date status;
+	private String startDate;
 }

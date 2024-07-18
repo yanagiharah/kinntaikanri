@@ -18,8 +18,8 @@
 
 <!-- 登録 -->
 <insert id="insert">
-	insert into users (password, user_name, role, department_id, start_date) 
-	values(#{password}, #{userName}, #{role}, #{departmentId}, #{startDate});
+	insert into users (user_id,password, user_name, role, start_date) 
+	values(#{userId},#{password}, #{userName}, #{role}, #{startDate});
 </insert>
 
 
@@ -32,9 +32,9 @@
 
 
 <!-- 削除 -->
-<delete id="deleteByPrimaryKey">
+<delete id="delete">
 	delete from users
-	where id = #{id}
+	where user_id = #{userId}
 </delete>
 
 

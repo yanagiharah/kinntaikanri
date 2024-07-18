@@ -2,48 +2,60 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>ユーザー管理画面</title>
 </head>
 <body>
-	<form name="SearchUser" th:action="@{/user/management}">
+	<form th:action="@{/user/management}"name = "managementForm" method="post">
 	
-		<div class"text-danger" th:if="${out} != null">
+		<div class"text-danger" th:if="${check} != null">
 			<span th:text="${check}" style="color: red;"></span>
 		</div>
 	
 		<p>ユーザー名<input type="text" name="userName">
-			<input type="submit" value="検索" style="background-color: yellow;">
+			　　　<input type="submit" value="検索" name="search" style="background-color: yellow;">
 		</p>
-	</form>
 	
-	<hr>
-	<div th:if="${Users} != null">
-		<form  method="post">
-			ユーザーID：
-			<p>パスワード<input type="password"></p>
-			<p>権限<input type="text"></p>
-			<p>所属部署<input type="text"></p>
-			<p>利用開始日<input type="text">
-				<input type="submit" value="登録" style="background-color: yellow;">
-			</p>
-		</form>
-	</div>
 	
-	<div th:if="${List} != null">
-		<form th:object="${List}" method="post">
-			ユーザーID： <p th:text="*{userId}">userId</p>
-			<p>パスワード<input type="password" th:value="*{password}"></p>
-			<p>権限<input type="text" th:value="*{role}"></p>
-			<p>所属部署<input type="text" th:value="*{departmentName}"></p>
-			<p>利用開始日<input type="text" th:value="*{startDate}">
-				<input type="hidden" th:value="*{userName}">
-				<input type="submit" value="登録" style="background-color: yellow;">
-			</p>
-		</form>
-	</div>
+		<hr>
+	
+		<div th:if=" ${List} == null or ${List} != null" th:object="${List}">
+			ユーザーID：<span th:text="${List} != null ? *{userId} : ''"></span>
+			<input type="hidden" name="userId" th:value="${List} != null ? *{userId} : ''">
+			<p>パスワード<input type="password" name="password" th:value="${List} != null ? *{password} :'' "></p>
 			
-	
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+			
+			権限
+			<span th:if="${List} != null">
+				<select name="role">
+					<option value=""></option>
+					<option value="UnitManager" th:selected="*{role == 'UnitManager'}">UnitManager</option>
+					<option value="Manager" th:selected="*{role} == 'Manager'">Manager</option>
+					<option value="Regular" th:selected="*{role} == 'Regular'">Regular</option>
+					<option value="admin" th:selected="*{role} == 'Admin'">admin</option>
+				</select>
+			</span>
+			
+			<span th:if="${List} == null">
+				<select name = "role">
+				<option value=""></option>
+				<option value="UnitManager">UnitManager</option>
+				<option value="Manager" >Manager</option>	
+				<option value="Regular" >Regular</option>	
+				<option value="admin" >ad</option>	
+				</option>
+			</select>
+			</span>
+			
+			
+			
+			<div>利用開始日
+				<input type="text" name="startDate" th:value="${List != null} ? *{startDate} : ''">
+			</div>
+			 　　　　　　　　　　　　　　　　　　　<input type="submit" value="登録" name="insert" style="background-color: yellow;">
+			
+		</div>
+	</form>
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 		 <script src="js/ErrorCheck.js" type="text/javascript"></script>
 	
 </body>
