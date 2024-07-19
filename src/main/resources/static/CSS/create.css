@@ -1,0 +1,7 @@
+@charset "UTF-8";
+.m-50  {
+    padding-top: 50px !important; /* 上に余白を追加 */
+    padding-bottom: 50px; /* 下に余白を追加 */
+    font-size: x-large !important;
+/*    margin: 0 auto;*/
+}
