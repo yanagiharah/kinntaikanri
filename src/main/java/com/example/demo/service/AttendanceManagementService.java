@@ -31,6 +31,7 @@ public class AttendanceManagementService {
         calendar.set(Calendar.MONTH, month - 1);
         int lastMonthAndDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 		
+        
 		
 //		Attendance attendanceDate = new Attendance();
 //		List<Attendance> attendanceDate1 = new ArrayList<Attendance>();
@@ -51,6 +52,7 @@ public class AttendanceManagementService {
             attendanceDate.setStartTime("");
             attendanceDate.setEndTime("");
             attendanceDate.setAttendanceRemarks("");
+            attendanceDate.setDays(i + 1);
             attendanceDate1.add(attendanceDate);
         
 
@@ -59,14 +61,17 @@ public class AttendanceManagementService {
         
         
 		}
-		System.out.print("『空文字予定』："+ attendanceDate1.get(1)+attendanceDate1.get(3));
 		
 //		System.out.print("『月初と月末変換確認表示』："+ userId + targetDate + endDate);
+		
+		
+		
+
+		
 		
 		List<Attendance> attendance = attendanceSearchMapper.selectByYearMonth(userId, targetDate, endDate);
 		
 		
-		System.out.print("『ああああああ』：" +attendance);
 		
 		
 //		for(int j = 0; j < attendance.size(); j++) {
@@ -80,23 +85,23 @@ public class AttendanceManagementService {
 		
 		
 		
-		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		
 
 		for (int j = 0; j < attendance.size(); j++) {
 		    String str = sdf.format(attendance.get(j).getAttendanceDate());
-		    String monthStr = str.substring(0, 2);
-		    String dayStr = str.substring(3, 5);
+		    String monthStr = str.substring(5, 7);
+		    String dayStr = str.substring(8, 10);
 		    attendance.get(j).setMonth(Integer.parseInt(monthStr));
 		    attendance.get(j).setDays(Integer.parseInt(dayStr));
 		}
 		
 		
 		
-		System.out.print("『』：" +attendance);
 		
 		
 		
-        for(int i = 1;i <= lastMonthAndDay ;i++) {
+        for(int i = 0;i < lastMonthAndDay ;i++) {
 			for(int j = 0; j < attendance.size(); j++) {
 				if(attendanceDate1.get(i).getDays() .equals(attendance.get(j).getDays()) ) {
 					attendanceDate1.get(i).setStatus(attendance.get(j).getStatus());
@@ -108,7 +113,7 @@ public class AttendanceManagementService {
 				
 			}
 		}
-        
+        System.out.print("『うううううううう』：" +attendanceDate1);
 		return attendanceDate1;
 	}
 	

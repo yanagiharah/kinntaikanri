@@ -13,8 +13,8 @@
 			<form name = "AttendanceForm" th:action="@{/attendance/management}" method="post">
 				<div class="d-flex justify-content-between">
 					ユーザー名:<span th:text="${Users.userName}"></span> ユーザーID:<span th:text="${Users.userId}"></span> ステータス
-<!--					<input type="hidden" name="userId" th:value="${session.userId}">-->
-<!--					<input type="hidden" name="userName" th:value="*{userName}">-->
+					<input type="hidden" name="userId" th:value="${Users.userId}">
+					<input type="hidden" name="userName" th:value="*{userName}">
 				</div>
 				<span class="d-flex justify-content-start">
 					<input type="text" id="years" name="years">年
@@ -51,32 +51,32 @@
 					</div>
 				</div>
 	
-<!--			<div class="row" th:each="Users:${Users}">		-->
-<!--				<div class="col-6 ml-3">-->
-<!--					<table class="table table-bordered border border-dark">-->
-<!--						<thead>-->
-<!--							<tr>-->
-<!--								<td>日付</td>-->
-<!--								<td>曜日</td>-->
-<!--								<td>勤務状況</td>-->
-<!--								<td>出勤時間</td>-->
-<!--								<td>退勤時間</td>-->
-<!--								<td>備考</td>-->
-<!--							</tr>-->
-<!--						</thead>-->
-<!--						<tbody>-->
-<!--							<tr>-->
-<!--								<td>1</td>-->
-<!--								<td>エンジニア1</td>-->
-<!--								<td>PHP</td>-->
-<!--								<td th:text="*{startTime}"></td>-->
-<!--								<td th:text="*{endTime}"></td>-->
-<!--								<td th:text="*{attendanceRemarks}"></td>-->
-<!--							</tr>-->
-<!--						</tbody>-->
-<!--					</table>-->
-<!--				</div>-->
-<!--			</div>-->
+			<div class="row" th:each="Attendance:${Attendance}">		
+				<div class="col-6 ml-3">
+					<table class="table table-bordered border border-dark">
+						<thead>
+							<tr>
+								<td>日付</td>
+								<td>曜日</td>
+								<td>勤務状況</td>
+								<td>出勤時間</td>
+								<td>退勤時間</td>
+								<td>備考</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>1</td>
+								<td>エンジニア1</td>
+								<td>PHP</td>
+								<td th:text="${Attendance.startTime}"></td>
+								<td th:text="${Attendance.endTime}"></td>
+								<td th:text="${Attendance.attendanceRemarks}"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
 	
 	
 	
