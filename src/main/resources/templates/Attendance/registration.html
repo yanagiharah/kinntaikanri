@@ -64,16 +64,18 @@
 								<td>備考</td>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
-								<td th:text="${#dates.format(Attendance.attendanceDate, 'MM/dd')}"></td>
-								<td th:text="${Attendance.dayOfWeek}"></td>
-								<td th:text="${Attendance.status}"></td>
-								<td th:text="${Attendance.startTime}"></td>
-								<td th:text="${Attendance.endTime}"></td>
-								<td th:text="${Attendance.attendanceRemarks}"></td>
-							</td>
-						</tbody>
+						<form>
+							<tbody>
+								<tr>
+									<td th:text="${#dates.format(Attendance.attendanceDate, 'MM/dd')}" ></td>
+									<td th:text="${Attendance.dayOfWeek}"></td>
+									<td><select th:text="${Attendance.status}"><option value="NN" label="通常出勤">通常出勤</option></select></td>
+									<td><input type="text" id="startTime" name="startTime" th:placeholder="${Attendance.startTime}"></td>
+									<td><input type="text" id="endTime" name="endTime" th:text="${Attendance.endTime}"></td>
+									<td><input type="text" id="attendanceRemarks" name="attendanceRemarks" th:text="${Attendance.attendanceRemarks}"></td>
+								</td>
+							</tbody>
+						</form>
 					</table>
 				</div>
 			</div>
