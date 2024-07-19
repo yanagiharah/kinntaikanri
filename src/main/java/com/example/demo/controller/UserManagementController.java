@@ -65,17 +65,22 @@ public class UserManagementController {
 	
 	@RequestMapping(value = "/management", params = "insert", method = RequestMethod.POST)
 	public String userCreate(ManagementForm managementForm, Model model) {
-		System.out.print("ここに表示"+ managementForm);
-		if (managementForm.getUserName() == null || managementForm.getUserId() == null
-				|| managementForm.getPassword() == null || managementForm.getRole() == ""
-				|| managementForm.getStartDate() == null) {
+		System.out.print("ここに表示" + managementForm);
+		if (managementForm.getUserName() == null ||managementForm.getUserName() == ""
+				|| managementForm.getPassword() == "" || managementForm.getRole() == ""
+				|| managementForm.getStartDate() == "") {
 			model.addAttribute("check", "入力してください");
 			return "redirect:/user/";
 		}
-		if("9999-99-99".equals(managementForm.getStartDate().trim())) {
+		if ("9999-99-99".equals(managementForm.getStartDate().trim())) {
 			userManagementService.userDelete(managementForm);
-		}else {
-			userManagementService.userCreate(managementForm);
+		} else {
+			Users users = userManagementService.userSearchListUp(managementForm.getUserName());
+			if (users != null) {
+				userManagementService.userUpdate(managementForm);
+			} else {
+				userManagementService.userCreate(managementForm);
+			}
 		}
 		return "User/manegement";
 	}

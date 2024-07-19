@@ -31,6 +31,17 @@ public class UserManagementService {
 	 userSearchMapper.insert(users);
 	}
 	
+	public void userUpdate(ManagementForm managementForm) {
+		String strDate = managementForm.getStartDate();
+		 Date sqlDate = java.sql.Date.valueOf(strDate);
+		 Users users = new Users();
+		 	users.setUserId(managementForm.getUserId());
+			users.setPassword(managementForm.getPassword());
+			users.setRole(managementForm.getRole());
+			users.setStartDate(sqlDate);
+	 userSearchMapper.update(users);
+	}
+	
 	public void userDelete(ManagementForm managementForm) {
 		 userSearchMapper.delete(managementForm);
 	}

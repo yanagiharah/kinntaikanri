@@ -21,7 +21,7 @@ public interface UserSearchMapper {
 	void insert(Users users);
 	
 	//更新
-	int updateByPrimaryKey(Users user);
+	void update(Users users);
 	
 	//削除
 	void delete(ManagementForm managementForm);
