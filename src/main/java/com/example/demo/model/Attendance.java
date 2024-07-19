@@ -29,6 +29,8 @@ public class Attendance {
 	
 	private Integer days;
 	
+	private String dayOfWeek;
+	
 	//月末が何日かを判断するためのに使用してる変数
 	private Date startDate;	
 	private Date endDate;

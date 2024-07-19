@@ -54,6 +54,44 @@ public class AttendanceManagementService {
             attendanceDate.setAttendanceRemarks("");
             attendanceDate.setDays(i + 1);
             attendanceDate1.add(attendanceDate);
+            
+            
+            
+            
+			Calendar cal = Calendar.getInstance();
+			cal.set(years, month - 1, attendanceDate.getDays());
+
+			// 日付から曜日を取得する
+			 switch (cal.get(Calendar.DAY_OF_WEEK)) { 
+			    case Calendar.SUNDAY:     // Calendar.SUNDAY:1 
+			    	//日曜日
+			    	attendanceDate.setDayOfWeek("日曜日");
+				    break;
+				case Calendar.MONDAY:     // Calendar.MONDAY:2
+				    //月曜日
+					attendanceDate.setDayOfWeek("月曜日");
+				    break;
+				case Calendar.TUESDAY:    // Calendar.TUESDAY:3
+				    //火曜日
+					attendanceDate.setDayOfWeek("火曜日");
+				    break;
+				case Calendar.WEDNESDAY:  // Calendar.WEDNESDAY:4
+				    //水曜日
+					attendanceDate.setDayOfWeek("水曜日");
+				    break;
+				case Calendar.THURSDAY:   // Calendar.THURSDAY:5
+				    //木曜日
+					attendanceDate.setDayOfWeek("木曜日");
+				    break;
+				case Calendar.FRIDAY:     // Calendar.FRIDAY:6
+				    //金曜日
+					attendanceDate.setDayOfWeek("金曜日");
+				    break;
+				case Calendar.SATURDAY:   // Calendar.SATURDAY:7
+				    //土曜日
+					attendanceDate.setDayOfWeek("土曜日");
+				    break;
+			  }
         
 
         
@@ -109,11 +147,12 @@ public class AttendanceManagementService {
 					attendanceDate1.get(i).setEndTime(attendance.get(j).getEndTime());
 					attendanceDate1.get(i).setAttendanceRemarks(attendance.get(j).getAttendanceRemarks());
 					
+					
 				}
 				
 			}
 		}
-        System.out.print("『うううううううう』：" +attendanceDate1);
+        System.out.print("『』："+ attendanceDate1);
 		return attendanceDate1;
 	}
 	
