@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +56,7 @@ public class AttendanceManagementService {
             attendanceDate.setEndTime("");
             attendanceDate.setAttendanceRemarks("");//備考
             attendanceDate.setDays(i + 1);
-            attendanceDate.setAttendanceDisplayOnryDate(month + "/" + attendanceDate.getDays());
+//            attendanceDate.setAttendanceDisplayOnryDate(month + "/" + attendanceDate.getDays());
             attendanceDate1.add(attendanceDate);
             
             
@@ -93,7 +94,9 @@ public class AttendanceManagementService {
 					attendanceDate.setDayOfWeek("土曜日");
 				    break;
 			  }
-        
+			 Date newDate = cal.getTime();
+			 
+			 attendanceDate.setAttendanceDate(newDate);
 
         
                 

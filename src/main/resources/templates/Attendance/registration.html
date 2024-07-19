@@ -66,13 +66,13 @@
 						</thead>
 						<tbody>
 							<tr>
-								<td th:text="${Attendance.attendanceDisplayOnryDate}"></td>
+								<td th:text="${#dates.format(Attendance.attendanceDate, 'MM/dd')}"></td>
 								<td th:text="${Attendance.dayOfWeek}"></td>
 								<td th:text="${Attendance.status}"></td>
 								<td th:text="${Attendance.startTime}"></td>
 								<td th:text="${Attendance.endTime}"></td>
 								<td th:text="${Attendance.attendanceRemarks}"></td>
-							</tr>
+							</td>
 						</tbody>
 					</table>
 				</div>
