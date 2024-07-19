@@ -1,8 +1,6 @@
 package com.example.demo.controller;
-
+ 
 import java.util.List;
-
-import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +12,8 @@ import com.example.demo.model.Attendance;
 import com.example.demo.model.Users;
 import com.example.demo.service.AttendanceManagementService;
 
+import jakarta.servlet.http.HttpSession;
+ 
 @Controller
 @RequestMapping("/attendance")
 public class AttendanceManagementController {
