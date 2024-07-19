@@ -66,9 +66,9 @@
 						</thead>
 						<tbody>
 							<tr>
-								<td>1</td>
-								<td>エンジニア1</td>
-								<td>PHP</td>
+								<td th:text="${Attendance.attendanceDisplayOnryDate}"></td>
+								<td th:text="${Attendance.dayOfWeek}"></td>
+								<td th:text="${Attendance.status}"></td>
 								<td th:text="${Attendance.startTime}"></td>
 								<td th:text="${Attendance.endTime}"></td>
 								<td th:text="${Attendance.attendanceRemarks}"></td>

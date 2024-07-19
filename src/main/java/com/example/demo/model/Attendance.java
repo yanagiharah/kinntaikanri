@@ -17,6 +17,8 @@ public class Attendance {
 	
 	private Date attendanceDate;
 	
+	private Object attendanceDisplayOnryDate;
+	
 	private String startTime;
 	
 	private String endTime;
