@@ -25,83 +25,84 @@
 					<input type="submit" id="yearCheck" value="表示" style="background-color: yellow;">
 				</span>
 			</form>
-			<span class="d-flex justify-content-end">
-				<input type="button" id="yearCheck" value="却下" style="background-color: yellow;">
-				<input type="button" id="yearCheck" value="承認" style="background-color: yellow;">
-				<input type="button" id="yearCheck" value="承認申請" style="background-color: yellow;">
-				<input type="button" id="yearCheck" value="登録" style="background-color: yellow;">
-			</span>
-			<div>
-	
-				<div class="row">
-					<div class="col-4 ml-3">
-						<table class="table table-bordered border border-dark ">
+			<form name = "AttendanceRegistration" th:action="@{/attendance/registration}" method="post">
+				<span class="d-flex justify-content-end">
+					<input type="button" id="yearCheck" value="却下" style="background-color: yellow;">
+					<input type="button" id="yearCheck" value="承認" style="background-color: yellow;">
+					<input type="button" id="yearCheck" value="承認申請" style="background-color: yellow;">
+					<input type="submit" id="yearCheck" value="登録" style="background-color: yellow;">
+				</span>
+				</form>
+		
+					<div class="row">
+						<div class="col-4 ml-3">
+							<table class="table table-bordered border border-dark ">
+								<thead>
+									<tr>
+										<td>承認申請者</td>
+										<td>申請対象年月</td>
+										<td>申請日</td>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>1</td>
+										<td>エンジニア1</td>
+										<td>PHP</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+		
+				<div class="row" th:each="Attendance:${Attendance}">		
+					<div class="col-12 ml-3">
+						<table class="table table-bordered border border-dark">
 							<thead>
 								<tr>
-									<td>承認申請者</td>
-									<td>申請対象年月</td>
-									<td>申請日</td>
+									<td>日付</td>
+									<td>曜日</td>
+									<td>勤務状況</td>
+									<td>出勤時間</td>
+									<td>退勤時間</td>
+									<td>備考</td>
 								</tr>
 							</thead>
-							<tbody>
-								<tr>
-									<td>1</td>
-									<td>エンジニア1</td>
-									<td>PHP</td>
-								</tr>
-							</tbody>
+							<form>
+								<tbody>
+									<tr>
+										<td th:text="${#dates.format(Attendance.attendanceDate, 'MM/dd')}" ></td>
+										<td th:text="${Attendance.dayOfWeek}"></td>
+	<!--									<td><select th:text="${Attendance.status}"><option value="0" >通常出勤</option></select></td>-->
+										
+										<td>
+											<select name="status">
+												<option value=""></option>
+												<option value="0" th:selected="${Attendance.status} == '0'">通常出勤</option>
+												<option value="1" th:selected="${Attendance.status} == '1'">休日</option>
+												<option value="2" th:selected="${Attendance.status} == '2'">祝日</option>
+												<option value="3" th:selected="${Attendance.status} == '3'">遅刻</option>
+												<option value="4" th:selected="${Attendance.status} == '4'">有給</option>
+												<option value="5" th:selected="${Attendance.status} == '5'">欠勤</option>
+												<option value="6" th:selected="${Attendance.status} == '6'">早退</option>
+												<option value="7" th:selected="${Attendance.status} == '7'">時間外勤務</option>
+												<option value="8" th:selected="${Attendance.status} == '8'">振替出勤</option>
+												<option value="9" th:selected="${Attendance.status} == '9'">振替休日</option>
+												<option value="10" th:selected="${Attendance.status} == '10'">代替出勤</option>
+												<option value="11" th:selected="${Attendance.status} == '11'">代替休日</option>
+											</select>
+										</td>
+										
+										<td><input type="text" id="startTime" name="startTime" th:value="${Attendance.startTime}"></td>
+										<td><input type="text" id="endTime" name="endTime" th:value="${Attendance.endTime}"></td>
+										<td><input type="text" id="attendanceRemarks" name="attendanceRemarks" th:value="${Attendance.attendanceRemarks}"></td>
+									</td>
+								</tbody>
+							</form>
 						</table>
 					</div>
 				</div>
-	
-			<div class="row" th:each="Attendance:${Attendance}">		
-				<div class="col-6 ml-3">
-					<table class="table table-bordered border border-dark">
-						<thead>
-							<tr>
-								<td>日付</td>
-								<td>曜日</td>
-								<td>勤務状況</td>
-								<td>出勤時間</td>
-								<td>退勤時間</td>
-								<td>備考</td>
-							</tr>
-						</thead>
-						<form>
-							<tbody>
-								<tr>
-									<td th:text="${#dates.format(Attendance.attendanceDate, 'MM/dd')}" ></td>
-									<td th:text="${Attendance.dayOfWeek}"></td>
-<!--									<td><select th:text="${Attendance.status}"><option value="0" >通常出勤</option></select></td>-->
-									
-									<td>
-										<select name="status">
-											<option value=""></option>
-											<option value="0" th:selected="${Attendance.status} == '0'">通常出勤</option>
-											<option value="1" th:selected="${Attendance.status} == '1'">休日</option>
-											<option value="2" th:selected="${Attendance.status} == '2'">祝日</option>
-											<option value="3" th:selected="${Attendance.status} == '3'">遅刻</option>
-											<option value="4" th:selected="${Attendance.status} == '4'">有給</option>
-											<option value="5" th:selected="${Attendance.status} == '5'">欠勤</option>
-											<option value="6" th:selected="${Attendance.status} == '6'">早退</option>
-											<option value="7" th:selected="${Attendance.status} == '7'">時間外勤務</option>
-											<option value="8" th:selected="${Attendance.status} == '8'">振替出勤</option>
-											<option value="9" th:selected="${Attendance.status} == '9'">振替休日</option>
-											<option value="10" th:selected="${Attendance.status} == '10'">代替出勤</option>
-											<option value="11" th:selected="${Attendance.status} == '11'">代替休日</option>
-										</select>
-									</td>
-									
-									<td><input type="text" id="startTime" name="startTime" th:placeholder="${Attendance.startTime}"></td>
-									<td><input type="text" id="endTime" name="endTime" th:placeholder="${Attendance.endTime}"></td>
-									<td><input type="text" id="attendanceRemarks" name="attendanceRemarks" th:placeholder="${Attendance.attendanceRemarks}"></td>
-								</td>
-							</tbody>
-						</form>
-					</table>
-				</div>
-			</div>
-	
+			</form>
 	
 	
 	</div>
