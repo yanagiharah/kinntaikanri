@@ -51,31 +51,31 @@ public class AttendanceManagementService {
 			switch (cal.get(Calendar.DAY_OF_WEEK)) {
 			case Calendar.SUNDAY: // Calendar.SUNDAY:1 
 				//日曜日
-				attendanceDate.setDayOfWeek("日曜日");
+				attendanceDate.setDayOfWeek("日");
 				break;
 			case Calendar.MONDAY: // Calendar.MONDAY:2
 				//月曜日
-				attendanceDate.setDayOfWeek("月曜日");
+				attendanceDate.setDayOfWeek("月");
 				break;
 			case Calendar.TUESDAY: // Calendar.TUESDAY:3
 				//火曜日
-				attendanceDate.setDayOfWeek("火曜日");
+				attendanceDate.setDayOfWeek("火");
 				break;
 			case Calendar.WEDNESDAY: // Calendar.WEDNESDAY:4
 				//水曜日
-				attendanceDate.setDayOfWeek("水曜日");
+				attendanceDate.setDayOfWeek("水");
 				break;
 			case Calendar.THURSDAY: // Calendar.THURSDAY:5
 				//木曜日
-				attendanceDate.setDayOfWeek("木曜日");
+				attendanceDate.setDayOfWeek("木");
 				break;
 			case Calendar.FRIDAY: // Calendar.FRIDAY:6
 				//金曜日
-				attendanceDate.setDayOfWeek("金曜日");
+				attendanceDate.setDayOfWeek("金");
 				break;
 			case Calendar.SATURDAY: // Calendar.SATURDAY:7
 				//土曜日
-				attendanceDate.setDayOfWeek("土曜日");
+				attendanceDate.setDayOfWeek("土");
 				break;
 			}
 			Date newDate = cal.getTime();

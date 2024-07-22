@@ -5,3 +5,8 @@
     font-size: x-large !important;
 /*    margin: 0 auto;*/
 }
+
+.noneBox{
+    /*コレ*/border: none;
+    background: #e7edf8;
+}
