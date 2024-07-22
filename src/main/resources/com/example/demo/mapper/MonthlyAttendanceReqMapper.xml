@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.AttendanceSearchMapper">
+
+
+
+<!-- 日付指定範囲取得 -->
+<select id="selectApprovalPending"
+	resultType="com.example.demo.model.MonthlyAttendanceReq">
+	SELECT *
+	FROM monthly_attendance_req 
+	WHERE status = 1;
+</select>
+
+
+<!-- 登録 -->
+<insert id="insert">
+	insert into attendance(user_id,status,attendance_date,start_time,end_time,attendance_remarks)
+	values(#{userId},#{status},#{attendanceDate},#{startTime},#{endTime},#{attendanceRemarks})
+</insert>
+
+
+<!-- 日付指定範囲削除 -->
+<delete id="deleteByYearMonth">
+	delete from attendance
+	WHERE attendance.user_id = #{userId} AND attendance_date BETWEEN #{targetDate} AND #{endDate};
+</delete>
+
+
+</mapper>
