@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.demo.mapper.AttendanceSearchMapper">
+<mapper namespace="com.example.demo.mapper.MonthlyAttendanceReqMapper">
 
 
 
@@ -15,8 +15,8 @@
 
 <!-- 登録 -->
 <insert id="insert">
-	insert into attendance(user_id,status,attendance_date,start_time,end_time,attendance_remarks)
-	values(#{userId},#{status},#{attendanceDate},#{startTime},#{endTime},#{attendanceRemarks})
+	insert into monthly_attendance_req(user_id, target_year_month, monthly_attendance_req_date, status)
+	values(#{userId},#{targetYearMonth},#{monthlyAttendanceReqDate},#{status});
 </insert>
 
 
