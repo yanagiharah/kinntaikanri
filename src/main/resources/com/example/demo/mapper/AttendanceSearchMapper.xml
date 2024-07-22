@@ -3,13 +3,8 @@
 <mapper namespace="com.example.demo.mapper.AttendanceSearchMapper">
 
 
-<!-- 全件取得 -->
-<select id="selectAll" resultType="com.example.demo.model.Attendance">
-	select * from users;
-</select>
- 
- 
-<!-- １件取得 -->
+
+<!-- 日付指定範囲取得 -->
 <select id="selectByYearMonth"
 	resultType="com.example.demo.model.Attendance">
 	SELECT *
@@ -20,23 +15,15 @@
 
 <!-- 登録 -->
 <insert id="insert">
-	insert into users(name, password, role, start_date date)
-	values(#{name})
+	insert into attendance(user_id,status,attendance_date,start_time,end_time,attendance_remarks)
+	values(#{userId},#{status},#{attendanceDate},#{startTime},#{endTime},#{attendanceRemarks})
 </insert>
 
 
-<!-- 更新 -->
-<update id="updateByPrimaryKey">
-	update users
-	set name = #{name}
-	where id = #{id}
-</update>
-
-
-<!-- 削除 -->
-<delete id="deleteByPrimaryKey">
-	delete from users
-	where id = #{id}
+<!-- 日付指定範囲削除 -->
+<delete id="deleteByYearMonth">
+	delete from attendance
+	WHERE attendance.user_id = #{userId} AND attendance_date BETWEEN #{targetDate} AND #{endDate};
 </delete>
 
 

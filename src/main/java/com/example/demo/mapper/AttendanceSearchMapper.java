@@ -7,23 +7,16 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.example.demo.model.Attendance;
-import com.example.demo.model.Users;
 
 @Mapper
 public interface AttendanceSearchMapper {
 	
-	//全件取得
-	List<Users> selectAll();
-	
-	//１件取得
+	//日付指定範囲取得
 	List<Attendance> selectByYearMonth(@Param("userId")Integer userId, @Param("targetDate")LocalDate targetDate, @Param("endDate")LocalDate endDate);
 	
 	//登録
-	int insert(Users user);
+	void insert(List<Attendance> attendance);
 	
-	//更新
-	int updateByPrimaryKey(Users user);
-	
-	//削除
-	int deleteByPrimaryKey(Long id);
+	//日付指定範囲削除
+	int deleteByYearMonth(@Param("userId")Integer userId, @Param("targetDate")LocalDate targetDate, @Param("endDate")LocalDate endDate);
 }
