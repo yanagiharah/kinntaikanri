@@ -16,6 +16,9 @@
 					<input type="hidden" name="userId" th:value="${Users.userId}">
 					<input type="hidden" name="userName" th:value="*{userName}">
 				</div>
+				<div class"text-danger" th:if="${check} != null">
+					<span th:text="${check}" style="color: red;"></span>
+				</div>
 				<span class="d-flex justify-content-start">
 					<input type="text" id="years" name="years">年
 					<input type="text" id="month" name="month">月
@@ -71,8 +74,8 @@
 									<td th:text="${Attendance.dayOfWeek}"></td>
 									<td><select th:text="${Attendance.status}"><option value="NN" label="通常出勤">通常出勤</option></select></td>
 									<td><input type="text" id="startTime" name="startTime" th:placeholder="${Attendance.startTime}"></td>
-									<td><input type="text" id="endTime" name="endTime" th:text="${Attendance.endTime}"></td>
-									<td><input type="text" id="attendanceRemarks" name="attendanceRemarks" th:text="${Attendance.attendanceRemarks}"></td>
+									<td><input type="text" id="endTime" name="endTime" th:placeholder="${Attendance.endTime}"></td>
+									<td><input type="text" id="attendanceRemarks" name="attendanceRemarks" th:placeholder="${Attendance.attendanceRemarks}"></td>
 								</td>
 							</tbody>
 						</form>

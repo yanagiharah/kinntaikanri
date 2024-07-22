@@ -156,7 +156,7 @@ public class AttendanceManagementService {
 				
 			}
 		}
-        System.out.print("『』："+ attendanceDate1);
+//        System.out.print("『』："+ attendanceDate1);
 		return attendanceDate1;
 	}
 	
