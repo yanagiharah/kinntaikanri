@@ -1,7 +1,9 @@
 package com.example.demo.controller;
- 
+
 import java.util.ArrayList;
 import java.util.List;
+
+import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,24 +17,19 @@ import com.example.demo.model.AttendanceFormList;
 import com.example.demo.model.Users;
 import com.example.demo.service.AttendanceManagementService;
 
-import jakarta.servlet.http.HttpSession;
- 
 @Controller
 @RequestMapping("/attendance")
 public class AttendanceManagementController {
 	@Autowired
 	private AttendanceManagementService attendanceManagementService;
-	
-	
-	
+
 	@RequestMapping("/index")
-		public String start(HttpSession session, Model model){
+	public String start(HttpSession session, Model model) {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
 		return "attendance/registration";
 	}
-	
-	
+
 	@RequestMapping(value = "/management", params = "search", method = RequestMethod.POST)
 	public String attendanceSearch(Integer userId, Integer years, Integer month, Model model,
 			RedirectAttributes redirectAttributes, HttpSession session) {
@@ -44,12 +41,12 @@ public class AttendanceManagementController {
 			model.addAttribute("check", "年月を入力してください");
 			return "attendance/registration";
 		}
-		
+
 		List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month);
 		if (attendance != null) {
-			//formに詰めなおす
+			// formに詰めなおす
 			AttendanceFormList attendanceFormList = new AttendanceFormList();
-			ArrayList<Attendance> attendanceList = new  ArrayList<Attendance>();
+			ArrayList<Attendance> attendanceList = new ArrayList<Attendance>();
 			attendanceFormList.setAttendanceList(attendanceList);
 			attendanceList.addAll(attendance);
 			model.addAttribute("attendanceFormList", attendanceFormList);
@@ -59,16 +56,13 @@ public class AttendanceManagementController {
 
 		return "attendance/registration";
 	}
-	
-	
-	@RequestMapping(value = "/management", params ="insert" ,method = RequestMethod.POST )
-	public String insert(AttendanceFormList attendanceFormList,Model model,HttpSession session) {
+
+	@RequestMapping(value = "/management", params = "insert", method = RequestMethod.POST)
+	public String insert(AttendanceFormList attendanceFormList, Model model, HttpSession session) {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
-		System.out.print("登録後"+attendanceFormList.getAttendanceList());
-		//System.out.print("登録後"+status);
+		System.out.print("登録後" + attendanceFormList.getAttendanceList());
+		// System.out.print("登録後"+status);
 		return "attendance/registration";
-		
 	}
 }
-
