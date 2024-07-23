@@ -8,5 +8,9 @@
 
 .noneBox{
     /*コレ*/border: none;
-    background: #e7edf8;
+
+}
+.buttonSize {
+  width: 15%;
+  background-color: yellow;
 }
