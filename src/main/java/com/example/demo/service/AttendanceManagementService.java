@@ -31,6 +31,7 @@ public class AttendanceManagementService {
         calendar.set(Calendar.MONTH, month - 1);
         int lastMonthAndDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 
+       
                
         //attendanceDate1は１日～３１日までの日付のattendance型が入ったList
         List<Attendance> attendanceDate1 = new ArrayList<Attendance>();
@@ -79,19 +80,23 @@ public class AttendanceManagementService {
 				break;
 			}
 			Date newDate = cal.getTime();
-
 			attendanceDate.setAttendanceDate(newDate);
+			//String型の日付を取得
+			String newDateS = new SimpleDateFormat("yyyy-MM-dd").format(newDate);
+			attendanceDate.setAttendanceDateS(String.valueOf(newDateS));
 
 		}
-		
+		//DBから勤怠表を取得
 		List<Attendance> attendance = attendanceSearchMapper.selectByYearMonth(userId, targetDate, endDate);
 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
+		 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		
+		//DBに存在する勤怠表の日付を日、月、string型日付で取得する
 		for (int j = 0; j < attendance.size(); j++) {
 			String str = sdf.format(attendance.get(j).getAttendanceDate());
 			String monthStr = str.substring(5, 7);
 			String dayStr = str.substring(8, 10);
+			//attendance.get(j).setAttendanceDateS(str);
 			attendance.get(j).setMonth(Integer.parseInt(monthStr));
 			attendance.get(j).setDays(Integer.parseInt(dayStr));
 		}

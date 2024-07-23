@@ -17,6 +17,8 @@ public class Attendance {
 	
 	private Date attendanceDate;//勤務日
 	
+	private String attendanceDateS;//画面表示用勤務日
+	
 	private String startTime;//勤務開始時刻
 	
 	private String endTime;//勤務終了時刻

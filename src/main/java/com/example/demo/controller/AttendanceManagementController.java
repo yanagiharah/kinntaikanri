@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +63,9 @@ public class AttendanceManagementController {
 	public String insert(AttendanceFormList attendanceFormList, Model model, HttpSession session) {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
-		System.out.print("登録後" + attendanceFormList.getAttendanceList());
+		//System.out.print("登録後" + attendanceFormList.getAttendanceList());
+		Date sqlDate = java.sql.Date.valueOf(attendanceFormList.getAttendanceList().get(0).getAttendanceDateS());
+		System.out.print("登録後" + sqlDate);
 		// System.out.print("登録後"+status);
 		return "attendance/registration";
 	}
