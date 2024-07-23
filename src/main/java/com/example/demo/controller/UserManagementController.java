@@ -82,6 +82,7 @@ public class UserManagementController {
 				userManagementService.userCreate(managementForm);
 			}
 		}
+		model.addAttribute("check","|managementForm.getUserName()|+入力してください");
 		return "User/manegement";
 	}
 }

@@ -8,7 +8,7 @@
 
 .noneBox{
     /*コレ*/border: none;
-
+ width: 100%
 }
 .buttonSize {
   width: 15%;

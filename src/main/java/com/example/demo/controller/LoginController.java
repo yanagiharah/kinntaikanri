@@ -31,7 +31,7 @@ public class LoginController {
 			Users users = loginService.LoginListUp(userId, password);
 
 			if (users == null) {
-				redirectAttributes.addFlashAttribute("out", "登録されているデータと一致しません。");
+				redirectAttributes.addFlashAttribute("out", "ユーザーID、パスワードが不正、もしくはユーザーが無効です。");
 				return "redirect:/";
 			} else if (users.getRole().equalsIgnoreCase("Admin")) {
 				model.addAttribute("Users", users);
