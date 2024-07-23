@@ -21,7 +21,7 @@
 
 
 <!-- 日付指定範囲削除 -->
-<delete id="deleteByYearMonth">
+<delete id="deleteByAttendanceOfMonth">
 	delete from attendance
 	WHERE attendance.user_id = #{userId} AND attendance_date BETWEEN #{targetDate} AND #{endDate};
 </delete>

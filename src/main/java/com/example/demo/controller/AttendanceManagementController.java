@@ -1,8 +1,9 @@
 package com.example.demo.controller;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
+import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,8 +16,6 @@ import com.example.demo.model.Attendance;
 import com.example.demo.model.AttendanceFormList;
 import com.example.demo.model.Users;
 import com.example.demo.service.AttendanceManagementService;
-
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/attendance")
@@ -63,10 +62,19 @@ public class AttendanceManagementController {
 	public String insert(AttendanceFormList attendanceFormList, Model model, HttpSession session) {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
+		 for(int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
+			  attendanceFormList.getAttendanceList().get(i).setAttendanceDate(java.sql.Date.valueOf(attendanceFormList.getAttendanceList().get(i).getAttendanceDateS()));
+			  attendanceFormList.getAttendanceList().get(i).setUserId(users.getUserId());
+		  }
+		 
+		attendanceManagementService.attendanceDelete(attendanceFormList);
+		
+		attendanceManagementService.attendanceCreate(attendanceFormList);
+		
 		//System.out.print("登録後" + attendanceFormList.getAttendanceList());
-		Date sqlDate = java.sql.Date.valueOf(attendanceFormList.getAttendanceList().get(0).getAttendanceDateS());
-		System.out.print("登録後" + sqlDate);
 		// System.out.print("登録後"+status);
 		return "attendance/registration";
 	}
+	
+	
 }

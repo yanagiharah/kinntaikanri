@@ -11,11 +11,11 @@ public class MonthlyAttendanceReq {
 	
 	private Integer userId;//ユーザーID
 	
-	private Date targetYearMonth;//ユーザーの名前
+	private Date targetYearMonth;//申請対象年月
 	
-	private Date monthlyAttendanceReqDate;
+	private Date monthlyAttendanceReqDate;//申請日
 	
-	private Integer  status;//勤務状況
+	private Integer  status;//承認状況
 	
 	
 	

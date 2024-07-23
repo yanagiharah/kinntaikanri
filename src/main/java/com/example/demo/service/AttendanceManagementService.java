@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.mapper.AttendanceSearchMapper;
 import com.example.demo.model.Attendance;
+import com.example.demo.model.AttendanceFormList;
 
 @Service
 public class AttendanceManagementService {
@@ -38,7 +39,7 @@ public class AttendanceManagementService {
 
 		for (int i = 0; i < lastMonthAndDay; i++) {
 			Attendance attendanceDate = new Attendance();
-			attendanceDate.setStatus(null);
+			attendanceDate.setStatus(12);
 			attendanceDate.setStartTime("");
 			attendanceDate.setEndTime("");
 			attendanceDate.setAttendanceRemarks("");//備考
@@ -120,13 +121,28 @@ public class AttendanceManagementService {
 //	}
   
   
-  public void update(List<Attendance> attendance) {
+  public void attendanceDelete(AttendanceFormList attendanceFormList) {
+	  
+	 
+	  attendanceSearchMapper.deleteByAttendanceOfMonth(attendanceFormList.getAttendanceList().get(0).getUserId(), attendanceFormList.getAttendanceList().get(0).getAttendanceDate(), attendanceFormList.getAttendanceList().get(attendanceFormList.getAttendanceList().size() - 1).getAttendanceDate());
+	 
+	  
+	  
 	  
 	  //取得したリストの要素番号0の日付と要素番号の最期の日付を下記メソッドの引数に設定したい
 	  //リストの中のattendanceにdaysとmonthってあればそれを引数にするなければ、dateから変換?もしくは変換しないで使える？
 	  //attendanceSearchMapper.deleteByYearMonth(attendance.get(0).getUserId(),));
 	  
-	  attendanceSearchMapper.insert(attendance);
 	  
+	  
+  }
+  
+  
+  public void attendanceCreate(AttendanceFormList attendanceFormList) {
+	  
+
+	  for(int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
+	  attendanceSearchMapper.insert(attendanceFormList.getAttendanceList().get(i));
+	  }
   }
 }
