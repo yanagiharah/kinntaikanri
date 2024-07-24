@@ -4,12 +4,18 @@
 
 
 
-<!-- 日付指定範囲取得 -->
+<!-- 承認待ちユーザー取得 -->
 <select id="selectApprovalPending"
 	resultType="com.example.demo.model.MonthlyAttendanceReq">
-	SELECT *
-	FROM monthly_attendance_req 
-	WHERE status = 1;
+	SELECT
+	t1.user_id,
+	t2.monthly_attendance_req_id,
+	t2.target_year_month,
+	t2.monthly_attendance_req_date,
+	t2.status
+	FROM users t1  
+	INNER JOIN monthly_attendance_req t2 on t1.user_id = t2.user_id
+	WHERE t2.status = 1;
 </select>
 
 

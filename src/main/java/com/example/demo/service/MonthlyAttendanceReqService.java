@@ -13,8 +13,9 @@ public class MonthlyAttendanceReqService {
   @Autowired
   public MonthlyAttendanceReqMapper monthlyAttendanceReqMapper;
   
-  public List<MonthlyAttendanceReq> selectApprovalPending(Integer status) {
-	  List<MonthlyAttendanceReq> monthlyAttendanceReq = monthlyAttendanceReqMapper.selectApprovalPending(status);		
+  public List<MonthlyAttendanceReq> selectApprovalPending() {
+	  //1は承認待ち
+	  List<MonthlyAttendanceReq> monthlyAttendanceReq = monthlyAttendanceReqMapper.selectApprovalPending(1);		
 		return monthlyAttendanceReq;
 		
 	}

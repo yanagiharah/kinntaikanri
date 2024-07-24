@@ -7,6 +7,8 @@ import lombok.Data;
 @Data
 public class MonthlyAttendanceReq {
 	
+	private String userName;//ユーザー名
+	
 	private Integer monthlyAttendanceReqId;//月次勤怠申請ID
 	
 	private Integer userId;//ユーザーID
