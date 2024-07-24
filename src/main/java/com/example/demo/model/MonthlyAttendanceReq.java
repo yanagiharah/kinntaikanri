@@ -19,6 +19,12 @@ public class MonthlyAttendanceReq {
 	
 	private Integer  status;//承認状況
 	
+	private Integer years;//年
+	
+	private Integer month;//月
+	
+	private Integer days;//日
+	
 	
 	
 
