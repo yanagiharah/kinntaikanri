@@ -14,7 +14,7 @@ public interface MonthlyAttendanceReqMapper {
 	List<MonthlyAttendanceReq> selectApprovalPending(@Param("status")Integer status);
 	
 //	//登録
-//	void insert(List<Attendance> attendance);
+	void insertMonthlyAttendanceReq(MonthlyAttendanceReq monthlyAttendanceReq);
 //	
 //	//日付指定範囲削除
 //	int deleteByYearMonth(@Param("userId")Integer userId, @Param("targetDate")LocalDate targetDate, @Param("endDate")LocalDate endDate);
