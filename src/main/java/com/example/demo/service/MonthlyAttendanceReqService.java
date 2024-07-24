@@ -46,4 +46,11 @@ public class MonthlyAttendanceReqService {
 	  
   }
   
+  public void approvalStatus(Integer userId) {
+	  monthlyAttendanceReqMapper.approvalStatus(userId);
+	  }
+  
+  public void rejectedStatus(Integer userId) {
+	  monthlyAttendanceReqMapper.rejectedStatus(userId);
+	  }
 }

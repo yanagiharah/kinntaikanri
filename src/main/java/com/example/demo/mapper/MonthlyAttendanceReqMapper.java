@@ -18,4 +18,10 @@ public interface MonthlyAttendanceReqMapper {
 //	
 //	//日付指定範囲削除
 //	int deleteByYearMonth(@Param("userId")Integer userId, @Param("targetDate")LocalDate targetDate, @Param("endDate")LocalDate endDate);
+	
+	//ステータス承認
+	void approvalStatus(Integer userId);
+	
+	//ステータス却下
+	void rejectedStatus(Integer userId);
 }

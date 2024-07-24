@@ -23,7 +23,7 @@
 <!-- 指定された月のstatus状況確認（1or2なら入力不可にする） -->
 <select id="select"
 	resultType="com.example.demo.model.MonthlyAttendanceReq">
-	
+	SELECT * from monthly_attendance_req where target_year_month = #{target_year_month} AND status = 1 OR 2
 </select>
 
 
@@ -40,9 +40,19 @@
 	WHERE attendance.user_id = #{userId} AND attendance_date BETWEEN #{targetDate} AND #{endDate};
 </delete>
 
+<!-- ステータス承認 -->
+<update id="approvalStatus">
+  UPDATE monthly_attendance_req
+  SET status = 2
+  WHERE user_id = #{userId};
+</update>
 
-
-
+<!-- ステータス却下 -->
+<update id="rejectedStatus">
+  UPDATE monthly_attendance_req
+  SET status = 3
+  WHERE user_id = #{userId};
+</update>
 
 
 </mapper>

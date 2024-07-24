@@ -88,27 +88,45 @@ public class AttendanceManagementController {
 	
 	
 	@RequestMapping(value = "/management", params = "approvalApplicationRegistration", method = RequestMethod.POST)
-	public String monthlyAttendanceReqCreate(MonthlyAttendanceReq monthlyAttendanceReq, AttendanceFormList attendanceFormList, Model model, HttpSession session) {
+	public String monthlyAttendanceReqCreate(MonthlyAttendanceReq monthlyAttendanceReq,
+			AttendanceFormList attendanceFormList, Model model, HttpSession session) {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
-		
-		
-		
-		monthlyAttendanceReqService.monthlyAttendanceReqCreate(monthlyAttendanceReq,attendanceFormList);
-		
+
+		monthlyAttendanceReqService.monthlyAttendanceReqCreate(monthlyAttendanceReq, attendanceFormList);
+
 		//System.out.print("登録後" + attendanceFormList.getAttendanceList());
-		 
+
 		return "attendance/registration";
 	}
-	
+
 	@RequestMapping(value = "/management", params = "ate", method = RequestMethod.POST)
-	public String attendance(@RequestParam("approvalUserId") Integer userId, @RequestParam("Years")Integer years, @RequestParam("Month")Integer month, Model model,
+	public String attendance(@RequestParam("approvalUserId") Integer userId, @RequestParam("Years") Integer years,
+			@RequestParam("Month") Integer month, Model model,
 			RedirectAttributes redirectAttributes, HttpSession session) {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
-		attendanceSearch(userId,years,month, model, redirectAttributes, session);
+		attendanceSearch(userId, years, month, model, redirectAttributes, session);
 		return "attendance/registration";
 	}
 	
+	//マネージャー承認ボタン
+	@RequestMapping(value = "/management", params = "approval", method = RequestMethod.POST)
+	public String approval(AttendanceFormList attendanceFormList, Model model, HttpSession session) {
+		Users users = (Users) session.getAttribute("Users");
+		model.addAttribute("Users", users);
+		monthlyAttendanceReqService.approvalStatus(attendanceFormList.getAttendanceList().get(0).getUserId());
+		return "attendance/registration";
+	}
+
+	//マネージャー却下ボタン押下
+	@RequestMapping(value = "/management", params = "Rejected", method = RequestMethod.POST)
+	public String Rejected(AttendanceFormList attendanceFormList, Model model, HttpSession session) {
+		Users users = (Users) session.getAttribute("Users");
+		model.addAttribute("Users", users);
+		System.out.print("登録後"+attendanceFormList.getAttendanceList().get(0).getUserId());
+		monthlyAttendanceReqService.rejectedStatus(attendanceFormList.getAttendanceList().get(0).getUserId());
+		return "attendance/registration";
+	}
 	
 }
