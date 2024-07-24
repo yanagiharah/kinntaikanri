@@ -14,19 +14,28 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.model.Attendance;
 import com.example.demo.model.AttendanceFormList;
+import com.example.demo.model.MonthlyAttendanceReq;
 import com.example.demo.model.Users;
 import com.example.demo.service.AttendanceManagementService;
+import com.example.demo.service.MonthlyAttendanceReqService;
 
 @Controller
 @RequestMapping("/attendance")
 public class AttendanceManagementController {
 	@Autowired
 	private AttendanceManagementService attendanceManagementService;
+	@Autowired
+	private MonthlyAttendanceReqService monthlyAttendanceReqService;
 
 	@RequestMapping("/index")
 	public String start(HttpSession session, Model model) {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
+		if (users.getRole().equalsIgnoreCase("Manager")) {
+			List<MonthlyAttendanceReq> ApprovalPending = monthlyAttendanceReqService.selectApprovalPending();
+			 System.out.println(": " + ApprovalPending);
+			model.addAttribute("ApprovalPending",ApprovalPending);
+		}
 		return "attendance/registration";
 	}
 
@@ -73,6 +82,21 @@ public class AttendanceManagementController {
 		
 		//System.out.print("登録後" + attendanceFormList.getAttendanceList());
 		// System.out.print("登録後"+status);
+		return "attendance/registration";
+	}
+	
+	
+	@RequestMapping(value = "/management", params = "approvalApplicationRegistration", method = RequestMethod.POST)
+	public String monthlyAttendanceReqCreate(MonthlyAttendanceReq monthlyAttendanceReq, AttendanceFormList attendanceFormList, Model model, HttpSession session) {
+		Users users = (Users) session.getAttribute("Users");
+		model.addAttribute("Users", users);
+		
+		
+		
+		monthlyAttendanceReqService.monthlyAttendanceReqCreate(monthlyAttendanceReq,attendanceFormList);
+		
+		//System.out.print("登録後" + attendanceFormList.getAttendanceList());
+		 
 		return "attendance/registration";
 	}
 	
