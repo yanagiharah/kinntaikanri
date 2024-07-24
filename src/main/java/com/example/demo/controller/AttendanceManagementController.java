@@ -3,13 +3,12 @@ package com.example.demo.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.model.Attendance;
@@ -18,6 +17,8 @@ import com.example.demo.model.MonthlyAttendanceReq;
 import com.example.demo.model.Users;
 import com.example.demo.service.AttendanceManagementService;
 import com.example.demo.service.MonthlyAttendanceReqService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/attendance")
@@ -97,6 +98,15 @@ public class AttendanceManagementController {
 		
 		//System.out.print("登録後" + attendanceFormList.getAttendanceList());
 		 
+		return "attendance/registration";
+	}
+	
+	@RequestMapping(value = "/management", params = "ate", method = RequestMethod.POST)
+	public String attendance(@RequestParam("approvalUserId") Integer userId, @RequestParam("Years")Integer years, @RequestParam("Month")Integer month, Model model,
+			RedirectAttributes redirectAttributes, HttpSession session) {
+		Users users = (Users) session.getAttribute("Users");
+		model.addAttribute("Users", users);
+		attendanceSearch(userId,years,month, model, redirectAttributes, session);
 		return "attendance/registration";
 	}
 	
