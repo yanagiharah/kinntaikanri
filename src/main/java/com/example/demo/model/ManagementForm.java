@@ -6,7 +6,7 @@ import lombok.Data;
 public class ManagementForm {
 	
 	private Integer userId;
-	
+
 	private String userName;
 	
 	private String password;

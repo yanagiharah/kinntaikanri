@@ -1,11 +1,17 @@
 package com.example.demo.controller;
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.demo.model.LoginForm;
 import com.example.demo.model.Users;
 import com.example.demo.service.LoginService;
 
@@ -13,7 +19,7 @@ import jakarta.servlet.http.HttpSession;
 
 
 @Controller
-@RequestMapping("/login")
+@RequestMapping("/")
 public class LoginController {
 	@Autowired
 	private LoginService loginService;
@@ -22,24 +28,47 @@ public class LoginController {
 //	private  MonthlyAttendanceReqService  monthlyAttendanceReqService;
 	
 		@GetMapping("")
-		public String login(HttpSession session, Model model) {
+		public String login(@ModelAttribute LoginForm loginForm,HttpSession session, Model model) {
 			 Users users = (Users) session.getAttribute("Users");
 			 model.addAttribute("Users", users);
-			return "login/index";	
+			 model.addAttribute("loginForm", new LoginForm()); // ここで loginForm を追加
+			return "Login/index";	
 		}
 		
-		@RequestMapping("/check")
-		public String check(Integer userId, String password, Model model, RedirectAttributes redirectAttributes, HttpSession session) {
+		@RequestMapping("/login") 
+		public String check(@Validated @ModelAttribute LoginForm loginForm, BindingResult bindingResult ,Model model, RedirectAttributes redirectAttributes,
+				HttpSession session) {
+
+		if (bindingResult.hasErrors()) {
+			 return "Login/index";
+		}
+						
+			Integer userId = null;
+			String userIds = null;
+			try {
+				userId = Integer.valueOf(loginForm.getUserId());	
+			}
+			catch(NullPointerException e){
+				userId = Integer.valueOf(userIds);	
+			}
+			catch(NumberFormatException e) {
+				redirectAttributes.addFlashAttribute("out", "ユーザーID無効です。");
+				return "redirect:/";
+			}
 			
-			//引数をString型に変更する→引数が全て数字であればIntegerに型チェンジ→DB確認する
-			//引数が数字でなければredirect
+			userId = Integer.valueOf(loginForm.getUserId());	
 			
-			Users users = loginService.LoginListUp(userId, password);
+			Users users = loginService.LoginListUp(userId, loginForm.getPassword());
+			
+			Date today = new Date();
 
 			if (users == null) {
 				redirectAttributes.addFlashAttribute("out", "ユーザーID、パスワードが不正、もしくはユーザーが無効です。");
 				return "redirect:/";
-			} else if (users.getRole().equalsIgnoreCase("Admin")) {
+			}else if (users.getStartDate().compareTo(today) == 1 ) {
+				redirectAttributes.addFlashAttribute("out", "現在は使用できません");
+				return "redirect:/";
+			}else if (users.getRole().equalsIgnoreCase("Admin")) {
 				model.addAttribute("Users", users);
 				return "User/manegement";
 			} 

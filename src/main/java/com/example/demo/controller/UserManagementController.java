@@ -6,6 +6,8 @@ import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -22,7 +24,6 @@ public class UserManagementController {
 	
 	@RequestMapping("/")
 		public String user(Model model) {
-		model.addAttribute("check","入力してください");
 			return "User/manegement";
 		}
 	
@@ -32,7 +33,14 @@ public class UserManagementController {
 		
 	
 	if(userName == null || userName == "") {
-		model.addAttribute("check","入力してください");
+		redirectAttributes.addFlashAttribute("check", "ユーザー名は必須です");
+		return "redirect:/user/";
+	}else if(userName.length() >=20) {
+		redirectAttributes.addFlashAttribute("check", "ユーザーID無効です。");
+		return "redirect:/user/";
+	}else if( !userName.matches("[\\p{Script=Han}\\p{Script=Hiragana}\\p{Script=Katakana}\\p{InCJKSymbolsAndPunctuation}ーa-zA-Z0-9ａ-ｚＡ-Ｚ々〆〤〓〒〠〡〢〣〤〥〦〧〨〩〪〭〮〯〫〬〰〱〲〳〴〵〶〷〸〹〺〜〻〼〽〾〿]+")) {
+		//if文うまくいってない半角じゃない時考える
+		redirectAttributes.addFlashAttribute("check", "全角文字以外入力できません");
 		return "redirect:/user/";
 	}
 	
@@ -64,7 +72,15 @@ public class UserManagementController {
 	
 	
 	@RequestMapping(value = "/management", params = "insert", method = RequestMethod.POST)
-	public String userCreate(ManagementForm managementForm, Model model) {
+	public String userCreate(@ModelAttribute ManagementForm managementForm, BindingResult result, Model model) {
+		//serviceのエラーメソッド
+		if(result.hasErrors()) {
+			//フィールドにエラー入るからmodelに入れない
+		    return "User/manegement";
+		  }
+			
+		
+		
 		System.out.print("ここに表示" + managementForm);
 		if (managementForm.getUserName() == null ||managementForm.getUserName() == ""
 				|| managementForm.getPassword() == "" || managementForm.getRole() == ""
