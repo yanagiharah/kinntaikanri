@@ -43,15 +43,12 @@ public class AttendanceManagementController {
 	@RequestMapping(value = "/management", params = "search", method = RequestMethod.POST)
 	public String attendanceSearch(Integer userId, Integer years, Integer month, Model model,
 			RedirectAttributes redirectAttributes, HttpSession session) {
-
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
-
 		if (years == null || month == null) {
 			model.addAttribute("check", "年月を入力してください");
 			return "attendance/registration";
 		}
-
 		List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month);
 		if (attendance != null) {
 			// formに詰めなおす
@@ -60,10 +57,8 @@ public class AttendanceManagementController {
 			attendanceFormList.setAttendanceList(attendanceList);
 			attendanceList.addAll(attendance);
 			model.addAttribute("attendanceFormList", attendanceFormList);
-
 			return "attendance/registration";
 		}
-
 		return "attendance/registration";
 	}
 	
@@ -76,13 +71,8 @@ public class AttendanceManagementController {
 			  attendanceFormList.getAttendanceList().get(i).setAttendanceDate(java.sql.Date.valueOf(attendanceFormList.getAttendanceList().get(i).getAttendanceDateS()));
 			  attendanceFormList.getAttendanceList().get(i).setUserId(users.getUserId());
 		  }
-		 
-		attendanceManagementService.attendanceDelete(attendanceFormList);
-		
+		attendanceManagementService.attendanceDelete(attendanceFormList);		
 		attendanceManagementService.attendanceCreate(attendanceFormList);
-		
-		//System.out.print("登録後" + attendanceFormList.getAttendanceList());
-		// System.out.print("登録後"+status);
 		return "attendance/registration";
 	}
 	
@@ -92,11 +82,7 @@ public class AttendanceManagementController {
 			AttendanceFormList attendanceFormList, Model model, HttpSession session) {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
-
 		monthlyAttendanceReqService.monthlyAttendanceReqCreate(monthlyAttendanceReq, attendanceFormList);
-
-		//System.out.print("登録後" + attendanceFormList.getAttendanceList());
-
 		return "attendance/registration";
 	}
 
@@ -106,7 +92,22 @@ public class AttendanceManagementController {
 			RedirectAttributes redirectAttributes, HttpSession session) {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
-		attendanceSearch(userId, years, month, model, redirectAttributes, session);
+		//attendanceSearch(userId, years, month, model, redirectAttributes, session);
+		List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month);
+		if (attendance != null) {
+			// formに詰めなおす
+			AttendanceFormList attendanceFormList = new AttendanceFormList();
+			ArrayList<Attendance> attendanceList = new ArrayList<Attendance>();
+			attendanceFormList.setAttendanceList(attendanceList);
+			attendanceList.addAll(attendance);
+			//★	approvalUserIdをセットするfor文を回す
+			for(int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
+				  attendanceFormList.getAttendanceList().get(i).setUserId(userId);
+			  }
+			model.addAttribute("attendanceFormList", attendanceFormList);
+			System.out.print("登録後"+attendanceFormList.getAttendanceList().get(0).getUserId());
+			return "attendance/registration";
+		}
 		return "attendance/registration";
 	}
 	
@@ -124,7 +125,6 @@ public class AttendanceManagementController {
 	public String Rejected(AttendanceFormList attendanceFormList, Model model, HttpSession session) {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
-		System.out.print("登録後"+attendanceFormList.getAttendanceList().get(0).getUserId());
 		monthlyAttendanceReqService.rejectedStatus(attendanceFormList.getAttendanceList().get(0).getUserId());
 		return "attendance/registration";
 	}
