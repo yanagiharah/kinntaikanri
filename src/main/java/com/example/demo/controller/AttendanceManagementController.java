@@ -3,6 +3,8 @@ package com.example.demo.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,8 +19,6 @@ import com.example.demo.model.MonthlyAttendanceReq;
 import com.example.demo.model.Users;
 import com.example.demo.service.AttendanceManagementService;
 import com.example.demo.service.MonthlyAttendanceReqService;
-
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/attendance")
@@ -39,7 +39,8 @@ public class AttendanceManagementController {
 		}
 		return "attendance/registration";
 	}
-
+	
+	//表示ボタンの処理
 	@RequestMapping(value = "/management", params = "search", method = RequestMethod.POST)
 	public String attendanceSearch(Integer userId, Integer years, Integer month, Model model,
 			RedirectAttributes redirectAttributes, HttpSession session) {
@@ -50,19 +51,30 @@ public class AttendanceManagementController {
 			return "attendance/registration";
 		}
 		List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month);
-		if (attendance != null) {
+		
 			// formに詰めなおす
 			AttendanceFormList attendanceFormList = new AttendanceFormList();
 			ArrayList<Attendance> attendanceList = new ArrayList<Attendance>();
 			attendanceFormList.setAttendanceList(attendanceList);
 			attendanceList.addAll(attendance);
 			model.addAttribute("attendanceFormList", attendanceFormList);
-			return "attendance/registration";
-		}
+			
+			//月次勤怠テーブルのstatusをユーザーモデルのstatusに詰める
+			MonthlyAttendanceReq statusCheck = monthlyAttendanceReqService.statusCheck(attendance.get(0).getAttendanceDate(), userId);
+
+			if (statusCheck != null) {
+			    users.setStatus(statusCheck.getStatus());
+			} else {
+				users.setStatus(4);
+			}
+			
+
+//			System.out.print("中身チェック→"+users);
+			
 		return "attendance/registration";
 	}
 	
-
+	//登録ボタンの処理
 	@RequestMapping(value = "/management", params = "insert", method = RequestMethod.POST)
 	public String insert(AttendanceFormList attendanceFormList, Model model, HttpSession session) {
 		Users users = (Users) session.getAttribute("Users");
@@ -76,13 +88,43 @@ public class AttendanceManagementController {
 		return "attendance/registration";
 	}
 	
-	
+	  //承認申請ボタン押下
 	@RequestMapping(value = "/management", params = "approvalApplicationRegistration", method = RequestMethod.POST)
 	public String monthlyAttendanceReqCreate(MonthlyAttendanceReq monthlyAttendanceReq,
 			AttendanceFormList attendanceFormList, Model model, HttpSession session) {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
-		monthlyAttendanceReqService.monthlyAttendanceReqCreate(monthlyAttendanceReq, attendanceFormList);
+		
+		attendanceFormList.getAttendanceList().get(0).setAttendanceDate(java.sql.Date.valueOf(attendanceFormList.getAttendanceList().get(0).getAttendanceDateS()));
+		
+		MonthlyAttendanceReq monthlyAttendanceDoubleCheck  = monthlyAttendanceReqService.statusCheck(attendanceFormList.getAttendanceList().get(0).getAttendanceDate(), monthlyAttendanceReq.getUserId());
+//		System.out.print("中身入ってますか？→"+monthlyAttendanceDoubleCheck);
+		System.out.print("TargetYearMonth入ってますか？"+ monthlyAttendanceReq.getTargetYearMonth());
+		  if(monthlyAttendanceDoubleCheck == null) {
+			  //中身がnull、すなわち同一ユーザーかつ同一月の月次勤怠申請がテーブルにない時の処理。statusはnull
+			  monthlyAttendanceReqService.monthlyAttendanceReqCreate(monthlyAttendanceReq, attendanceFormList);
+			  
+			  //承認申請が却下された際の処理。statusは3
+		  }else if(monthlyAttendanceDoubleCheck != null && monthlyAttendanceDoubleCheck.getStatus() == 3){
+			  monthlyAttendanceReq.setTargetYearMonth(attendanceFormList.getAttendanceList().get(0).getAttendanceDate());
+			  monthlyAttendanceReqService.updateMonthlyAttendanceReq(monthlyAttendanceReq);
+			  
+		  } else {
+			  //承認申請が承認待ち、もしくは承認された際の処理。statusは1 or 2
+			  model.addAttribute("double","既に申請されています。");
+		  }
+		
+		
+		
+		
+		MonthlyAttendanceReq statusCheck = monthlyAttendanceReqService.statusCheck(attendanceFormList.getAttendanceList().get(0).getAttendanceDate(), users.getUserId());
+//		System.out.print("年月日→"+attendanceFormList.getAttendanceList().get(0).getAttendanceDate() + "ユーザーID→"+ users.getUserId());
+		if (statusCheck != null) {
+		    users.setStatus(statusCheck.getStatus());
+		} else {
+			//4はregistration.thmlのステータスを未申請にする。
+			users.setStatus(4);
+		}
 		return "attendance/registration";
 	}
 

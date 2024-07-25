@@ -21,9 +21,9 @@
 
 
 <!-- 指定された月のstatus状況確認（1or2なら入力不可にする） -->
-<select id="select"
+<select id="selectTargetYearMonthStatus"
 	resultType="com.example.demo.model.MonthlyAttendanceReq">
-	SELECT * from monthly_attendance_req where target_year_month = #{target_year_month} AND status = 1 OR 2
+	SELECT * FROM monthly_attendance_req WHERE target_year_month = DATE_FORMAT(#{targetYearMonth}, '%Y-%m-%d') AND user_id = #{userId};
 </select>
 
 
@@ -39,6 +39,11 @@
 	delete from attendance
 	WHERE attendance.user_id = #{userId} AND attendance_date BETWEEN #{targetDate} AND #{endDate};
 </delete>
+
+<!-- 却下された月次勤怠の申請内容を更新 -->
+<update id="updateMonthlyAttendanceReq">
+  UPDATE monthly_attendance_req SET monthly_attendance_req_date = #{monthlyAttendanceReqDate}, status = 1 WHERE target_year_month = DATE_FORMAT(#{targetYearMonth}, '%Y-%m-%d') AND user_id = #{userId};
+</update>
 
 <!-- ステータス承認 -->
 <update id="approvalStatus">

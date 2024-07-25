@@ -30,6 +30,7 @@ public class MonthlyAttendanceReqService {
 		
 	}
   
+  //承認申請ボタン押下(登録の方)
   public void monthlyAttendanceReqCreate(MonthlyAttendanceReq monthlyAttendanceReq, AttendanceFormList attendanceFormList){
 	  
 	  //申請月の１日をtargetYearMonthにいれる
@@ -37,14 +38,32 @@ public class MonthlyAttendanceReqService {
 	  //今日の日付をmonthlyAttendanceReqDateに入れる
 	  Date date = new Date();
 	  monthlyAttendanceReq.setMonthlyAttendanceReqDate(date);
-	  //statusに１を入れる
+	  //statusに１を入れる(1は承認待ち)
 	  monthlyAttendanceReq.setStatus(1);
 	  
-		System.out.print("『』→"+monthlyAttendanceReq);
-		
+//		System.out.print("『』→"+monthlyAttendanceReq);
 	  monthlyAttendanceReqMapper.insertMonthlyAttendanceReq(monthlyAttendanceReq);
 	  
   }
+  
+//承認申請ボタン押下(却下されたやつの更新)
+  public void updateMonthlyAttendanceReq(MonthlyAttendanceReq monthlyAttendanceReq) {
+	//今日の日付をmonthlyAttendanceReqDateに入れる
+	  Date date = new Date();
+	  monthlyAttendanceReq.setMonthlyAttendanceReqDate(date);
+//	  System.out.print("『』→"+monthlyAttendanceReq);
+	  monthlyAttendanceReqMapper.updateMonthlyAttendanceReq(monthlyAttendanceReq);
+  }
+  
+  
+  //承認申請のステータス確認
+  public MonthlyAttendanceReq statusCheck(Date targetYearMonth, Integer userId) {
+//	  System.out.print("『』→"+targetYearMonth+"&&&"+ userId);
+	  MonthlyAttendanceReq statusCheck = monthlyAttendanceReqMapper.selectTargetYearMonthStatus(targetYearMonth, userId);
+//	  System.out.print("『』→"+statusCheck);
+	  return statusCheck;
+  }
+  
   
   public void approvalStatus(Integer userId) {
 	  monthlyAttendanceReqMapper.approvalStatus(userId);
