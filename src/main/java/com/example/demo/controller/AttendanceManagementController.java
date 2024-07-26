@@ -59,6 +59,8 @@ public class AttendanceManagementController {
 			attendanceList.addAll(attendance);
 			model.addAttribute("attendanceFormList", attendanceFormList);
 			
+			
+			
 			//月次勤怠テーブルのstatusをユーザーモデルのstatusに詰める
 			MonthlyAttendanceReq statusCheck = monthlyAttendanceReqService.statusCheck(attendance.get(0).getAttendanceDate(), userId);
 
@@ -69,6 +71,8 @@ public class AttendanceManagementController {
 			}
 			
 
+			attendanceManagementService.requestActivityCheck(attendanceFormList, users);
+			
 //			System.out.print("中身チェック→"+users);
 			
 		return "attendance/registration";
@@ -85,6 +89,8 @@ public class AttendanceManagementController {
 		  }
 		attendanceManagementService.attendanceDelete(attendanceFormList);		
 		attendanceManagementService.attendanceCreate(attendanceFormList);
+		
+		attendanceManagementService.requestActivityCheck(attendanceFormList, users);
 		return "attendance/registration";
 	}
 	

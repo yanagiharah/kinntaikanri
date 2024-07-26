@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.mapper.AttendanceSearchMapper;
 import com.example.demo.model.Attendance;
 import com.example.demo.model.AttendanceFormList;
+import com.example.demo.model.Users;
 
 @Service
 public class AttendanceManagementService {
@@ -40,9 +41,9 @@ public class AttendanceManagementService {
 		for (int i = 0; i < lastMonthAndDay; i++) {
 			Attendance attendanceDate = new Attendance();
 			attendanceDate.setStatus(12);
-			attendanceDate.setStartTime("");
-			attendanceDate.setEndTime("");
-			attendanceDate.setAttendanceRemarks("");//備考
+			attendanceDate.setStartTime(null);
+			attendanceDate.setEndTime(null);
+			attendanceDate.setAttendanceRemarks(null);//備考
 			attendanceDate.setDays(i + 1);
 			attendanceDate1.add(attendanceDate);
 
@@ -144,5 +145,18 @@ public class AttendanceManagementService {
 	  for(int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
 	  attendanceSearchMapper.insert(attendanceFormList.getAttendanceList().get(i));
 	  }
+  }
+  
+  
+//勤怠登録画面で承認申請ボタンを有効にするかを決める
+  public void requestActivityCheck(AttendanceFormList attendanceFormList, Users users) {
+	for(int i = 0;i < attendanceFormList.getAttendanceList().size();i++) {
+		System.out.print("time型どんなのがはいってる?→"+"『"+attendanceFormList.getAttendanceList().get(10).getStartTime()+"』");
+		if((attendanceFormList.getAttendanceList().get(i).getStatus() == 12 && "00:00:00".equals(attendanceFormList.getAttendanceList().get(i).getStartTime()) && "00:00:00".equals(attendanceFormList.getAttendanceList().get(i).getEndTime())) || (attendanceFormList.getAttendanceList().get(i).getStatus() == 12 && attendanceFormList.getAttendanceList().get(i).getStartTime() == null && attendanceFormList.getAttendanceList().get(i).getEndTime() == null)) {
+			users.setRequestActivityCheck(false);
+		}else {
+			users.setRequestActivityCheck(true);
+		}
+	}
   }
 }

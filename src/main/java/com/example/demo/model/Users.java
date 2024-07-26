@@ -23,5 +23,7 @@ public class Users implements Serializable {
 	private Date startDate;
 	
 	private Integer  status;//承認状況
+	
+	private boolean RequestActivityCheck;//承認申請ボタンの活性と非活性
 
 }
