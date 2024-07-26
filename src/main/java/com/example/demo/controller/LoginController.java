@@ -31,7 +31,7 @@ public class LoginController {
 		public String login(@ModelAttribute LoginForm loginForm,HttpSession session, Model model) {
 			 Users users = (Users) session.getAttribute("Users");
 			 model.addAttribute("Users", users);
-			 model.addAttribute("loginForm", new LoginForm()); // ここで loginForm を追加
+			 model.addAttribute("loginForm", new LoginForm()); 
 			return "Login/index";	
 		}
 		
@@ -69,8 +69,8 @@ public class LoginController {
 				redirectAttributes.addFlashAttribute("out", "現在は使用できません");
 				return "redirect:/";
 			}else if (users.getRole().equalsIgnoreCase("Admin")) {
-				model.addAttribute("Users", users);
-				return "User/manegement";
+				session.setAttribute("Users", users);
+				return "redirect:/user/";
 			} 
 		
 			session.setAttribute("Users", users);
