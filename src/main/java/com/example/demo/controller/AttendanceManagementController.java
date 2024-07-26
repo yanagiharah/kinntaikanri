@@ -3,11 +3,11 @@ package com.example.demo.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +19,8 @@ import com.example.demo.model.MonthlyAttendanceReq;
 import com.example.demo.model.Users;
 import com.example.demo.service.AttendanceManagementService;
 import com.example.demo.service.MonthlyAttendanceReqService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/attendance")
@@ -73,16 +75,26 @@ public class AttendanceManagementController {
 
 			attendanceManagementService.requestActivityCheck(attendanceFormList, users);
 			
-//			System.out.print("中身チェック→"+users);
+
 			
 		return "attendance/registration";
 	}
 	
 	//登録ボタンの処理
 	@RequestMapping(value = "/management", params = "insert", method = RequestMethod.POST)
-	public String insert(AttendanceFormList attendanceFormList, Model model, HttpSession session) {
+	public String insert(@ModelAttribute AttendanceFormList attendanceFormList, BindingResult result , Model model, HttpSession session) {
+		
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
+		
+		attendanceManagementService.errorCheck(attendanceFormList,result);
+		
+		if(result.hasErrors()) {
+			System.out.print("つうか！！！！！！！！");
+			return "attendance/registration";
+		}
+		
+		
 		 for(int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
 			  attendanceFormList.getAttendanceList().get(i).setAttendanceDate(java.sql.Date.valueOf(attendanceFormList.getAttendanceList().get(i).getAttendanceDateS()));
 			  attendanceFormList.getAttendanceList().get(i).setUserId(users.getUserId());
@@ -133,8 +145,9 @@ public class AttendanceManagementController {
 		}
 		return "attendance/registration";
 	}
-
-	@RequestMapping(value = "/management", params = "ate", method = RequestMethod.POST)
+	
+	//マネージャー承認申請者勤怠表表示ボタン
+	@RequestMapping(value = "/management", params = "ApprovalApplicantDisplay", method = RequestMethod.POST)
 	public String attendance(@RequestParam("approvalUserId") Integer userId, @RequestParam("Years") Integer years,
 			@RequestParam("Month") Integer month, Model model,
 			RedirectAttributes redirectAttributes, HttpSession session) {

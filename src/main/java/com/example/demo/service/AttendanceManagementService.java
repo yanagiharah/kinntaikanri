@@ -10,6 +10,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
 import com.example.demo.mapper.AttendanceSearchMapper;
 import com.example.demo.model.Attendance;
@@ -21,6 +23,7 @@ public class AttendanceManagementService {
   @Autowired
   public AttendanceSearchMapper attendanceSearchMapper;
   
+  //勤怠表の取得
   public List<Attendance> attendanceSearchListUp(Integer userId, Integer years, Integer month) {
 		
 		LocalDate targetDate = LocalDate.of(years, month, 1);
@@ -116,32 +119,18 @@ public class AttendanceManagementService {
 		return attendanceDate1;
 	}
 	
-//	public Users userCreate(String password, String userName, String role, Integer departmentId, Date startDate) {
-//		Users users = userSearchMapper.insert(password, userName, role, departmentId, startDate);
-//		return users;
-//	}
-  
-  
-  public void attendanceDelete(AttendanceFormList attendanceFormList) {
-	  
-	 
-	  attendanceSearchMapper.deleteByAttendanceOfMonth(attendanceFormList.getAttendanceList().get(0).getUserId(), attendanceFormList.getAttendanceList().get(0).getAttendanceDate(), attendanceFormList.getAttendanceList().get(attendanceFormList.getAttendanceList().size() - 1).getAttendanceDate());
-	 
-	  
-	  
-	  
-	  //取得したリストの要素番号0の日付と要素番号の最期の日付を下記メソッドの引数に設定したい
-	  //リストの中のattendanceにdaysとmonthってあればそれを引数にするなければ、dateから変換?もしくは変換しないで使える？
-	  //attendanceSearchMapper.deleteByYearMonth(attendance.get(0).getUserId(),));
-	  
-	  
-	  
-  }
-  
-  
-  public void attendanceCreate(AttendanceFormList attendanceFormList) {
-	  
 
+  
+  //勤怠テーブルのデータを物理削除
+	public void attendanceDelete(AttendanceFormList attendanceFormList) {
+		attendanceSearchMapper.deleteByAttendanceOfMonth(attendanceFormList.getAttendanceList().get(0).getUserId(),
+				attendanceFormList.getAttendanceList().get(0).getAttendanceDate(),
+				attendanceFormList.getAttendanceList().get(attendanceFormList.getAttendanceList().size() - 1)
+						.getAttendanceDate());
+	}
+  
+  //勤怠テーブルに登録処理
+  public void attendanceCreate(AttendanceFormList attendanceFormList) {
 	  for(int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
 	  attendanceSearchMapper.insert(attendanceFormList.getAttendanceList().get(i));
 	  }
@@ -158,5 +147,17 @@ public class AttendanceManagementService {
 			users.setRequestActivityCheck(true);
 		}
 	}
+  }
+  
+  //勤怠登録エラーチェック
+  public void errorCheck(AttendanceFormList attendanceFormList, BindingResult result) {
+	  
+	  for(int i = 0 ;i<attendanceFormList.getAttendanceList().size();i++ ) {
+		  if(attendanceFormList.getAttendanceList().get(i).getAttendanceRemarks() != null || attendanceFormList.getAttendanceList().get(i).getAttendanceRemarks() == "") {
+			  FieldError attendanceRemarks = new FieldError("attendanceFormList", "attendanceList.["+i+"].attendanceRemarks", "エラー");
+			  result.addError(attendanceRemarks);
+		  }
+	  }
+	  
   }
 }
