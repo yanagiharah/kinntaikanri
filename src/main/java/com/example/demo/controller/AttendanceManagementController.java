@@ -3,6 +3,8 @@ package com.example.demo.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,8 +21,6 @@ import com.example.demo.model.MonthlyAttendanceReq;
 import com.example.demo.model.Users;
 import com.example.demo.service.AttendanceManagementService;
 import com.example.demo.service.MonthlyAttendanceReqService;
-
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/attendance")
@@ -87,7 +87,7 @@ public class AttendanceManagementController {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
 		
-		attendanceManagementService.errorCheck(attendanceFormList,result);
+		attendanceManagementService.errorCheck(attendanceFormList, result);
 		
 		if(result.hasErrors()) {
 			System.out.print("つうか！！！！！！！！");
@@ -101,6 +101,8 @@ public class AttendanceManagementController {
 		  }
 		attendanceManagementService.attendanceDelete(attendanceFormList);		
 		attendanceManagementService.attendanceCreate(attendanceFormList);
+		
+		
 		
 		attendanceManagementService.requestActivityCheck(attendanceFormList, users);
 		return "attendance/registration";
