@@ -14,3 +14,10 @@
   width: 15%;
   background-color: yellow;
 }
+
+.linklike {
+  border:none;
+  background-color:transparent;
+  color:blue;
+  text-decoration:underline;
+}
