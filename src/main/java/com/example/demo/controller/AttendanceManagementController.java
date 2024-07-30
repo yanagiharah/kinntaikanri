@@ -89,10 +89,10 @@ public class AttendanceManagementController {
 		
 		attendanceManagementService.errorCheck(attendanceFormList, result);
 		
-		if(result.hasErrors()) {
-			System.out.print("つうか！！！！！！！！");
-			return "attendance/registration";
-		}
+//		if(result.hasErrors()) {
+//			System.out.print("つうか！！！！！！！！");
+//			return "attendance/registration";
+//		}
 		
 		
 		 for(int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {

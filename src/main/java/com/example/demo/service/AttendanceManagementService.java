@@ -153,119 +153,144 @@ public class AttendanceManagementService {
   }
   
   //勤怠登録エラーチェック
-  public void errorCheck(AttendanceFormList attendanceFormList, BindingResult result) {
-	  
-	  for(int i = 0 ;i<attendanceFormList.getAttendanceList().size();i++ ) {
-		  //備考欄
-		 if(attendanceFormList.getAttendanceList().get(i).getAttendanceRemarks() == null || attendanceFormList.getAttendanceList().get(i).getAttendanceRemarks().isEmpty()) {
-			  FieldError attendanceRemarks = new FieldError("attendanceFormList", "attendanceList[" + i + "].attendanceRemarks" ,"エラー");
-			  result.addError(attendanceRemarks);
-		  }
-		  
-		  //出勤時間と退勤時間の整合性
-
-			String strStartInputTime = null;
-			String strEndInputTime = null;
-			DateTimeFormatter formatter = null;
-			LocalTime startInputTime = null;
-			LocalTime endInputTime = null;
-			LocalTime firstTime = null;
-			LocalTime lastTime = null;
-			//出勤時間のみの整合性
-		  if(attendanceFormList.getAttendanceList().get(i).getStartTime() != null) {
-			  try {
-					 formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-					 startInputTime = LocalTime.parse(attendanceFormList.getAttendanceList().get(i).getStartTime(), formatter);
-					 
-					 firstTime = LocalTime.of(0, 0);
-					 lastTime = LocalTime.of(23, 59);
-					
-					 strStartInputTime = startInputTime.toString();
-					 
-
-				if(strStartInputTime != "00:00:00") {
-					
-					
-					if((!startInputTime.isBefore(firstTime) && !startInputTime.isAfter(lastTime))) {
-						FieldError startEndTime = new FieldError("attendanceFormList", "attendanceList[" + i + "].startTime","時刻が不正です。00:00～23:59の間で入力してください。");
-						result.addError(startEndTime);
-//						System.out.print("作ったやつ→"+startEndTime);
-					}
-				}
-			} catch (DateTimeParseException e) {
-	                FieldError timeFormatError = new FieldError("attendanceFormList", "attendanceList[" + i + "].startTime", "時刻の形式が不正です。HH:mm:ss形式で入力してください。");
-	                result.addError(timeFormatError);
-	            }
-			  
-			  
-			  //退勤時間の整合性
-			  if(attendanceFormList.getAttendanceList().get(i).getEndTime() != null) {
-				  
-				  try {
-					  endInputTime = LocalTime.parse(attendanceFormList.getAttendanceList().get(i).getEndTime(), formatter);
-					  
-					  strEndInputTime = endInputTime.toString();
-
-						if(strEndInputTime != "00:00:00") {
-							
-							
-							if((!endInputTime.isBefore(firstTime) && !endInputTime.isAfter(lastTime))) {
-								FieldError startEndTime = new FieldError("attendanceFormList", "attendanceList[" + i + "].startTime","時刻が不正です。00:00～23:59の間で入力してください。");
-								result.addError(startEndTime);
-//								System.out.print("作ったやつ→"+startEndTime);
-							}
-						}
-					} catch (DateTimeParseException e) {
-			                FieldError timeFormatError = new FieldError("attendanceFormList", "attendanceList[" + i + "].startTime", "時刻の形式が不正です。HH:mm:ss形式で入力してください。");
-			                result.addError(timeFormatError);
-			            }
-				  
-				  
-				  //出勤時間と退勤時間を合わせた整合性
-				  
-			  }
-			}
-	  }
-	  
-  }
-  
-//↑のAI君バージョン
 //  public void errorCheck(AttendanceFormList attendanceFormList, BindingResult result) {
-//	    for (int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
-//	        // 備考欄
-//	        if (attendanceFormList.getAttendanceList().get(i).getAttendanceRemarks() == null || attendanceFormList.getAttendanceList().get(i).getAttendanceRemarks().isEmpty()) {
-//	            FieldError attendanceRemarks = new FieldError("attendanceFormList", "attendanceList[" + i + "].attendanceRemarks", "エラー");
-//	            result.addError(attendanceRemarks);
-//	        }
+//	  
+//	  for(int i = 0 ;i<attendanceFormList.getAttendanceList().size();i++ ) {
+//		  //備考欄
+//		 if(attendanceFormList.getAttendanceList().get(i).getAttendanceRemarks() == null || attendanceFormList.getAttendanceList().get(i).getAttendanceRemarks().isEmpty()) {
+//			  FieldError attendanceRemarks = new FieldError("attendanceFormList", "attendanceList[" + i + "].attendanceRemarks" ,"エラー");
+//			  result.addError(attendanceRemarks);
+//		  }
+//		  
+//		  //出勤時間と退勤時間の整合性
 //
-//	        // 出勤時間と退勤時間の整合性
-//	        String startTime = attendanceFormList.getAttendanceList().get(i).getStartTime();
-//	        String endTime = attendanceFormList.getAttendanceList().get(i).getEndTime();
-//	        
-//	        if (startTime != null && endTime != null) {
-//	            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-//	            try {
-//	                LocalTime startInputTime = LocalTime.parse(startTime, formatter);
-//	                LocalTime endInputTime = LocalTime.parse(endTime, formatter);
-//	                LocalTime firstTime = LocalTime.of(0, 0);
-//	                LocalTime lastTime = LocalTime.of(23, 59);
+//			String strStartInputTime = null;
+//			String strEndInputTime = null;
+//			DateTimeFormatter formatter = null;
+//			LocalTime startInputTime = null;
+//			LocalTime endInputTime = null;
+//			LocalTime firstTime = null;
+//			LocalTime lastTime = null;
+//			//出勤時間のみの整合性
+//		  if(attendanceFormList.getAttendanceList().get(i).getStartTime() != null) {
+//			  try {
+//					 formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+//					 startInputTime = LocalTime.parse(attendanceFormList.getAttendanceList().get(i).getStartTime(), formatter);
+//					 
+//					 firstTime = LocalTime.of(0, 0);
+//					 lastTime = LocalTime.of(23, 59);
+//					
+//					 strStartInputTime = startInputTime.toString();
+//					 
 //
-//	                if (!startInputTime.equals(firstTime) && !endInputTime.equals(firstTime) && startInputTime.isAfter(endInputTime)) {
-//	                    FieldError startEndTime = new FieldError("attendanceFormList", "attendanceList[" + i + "].startTime", "時刻が不正です。00:00～23:59の間で入力してください。");
-//	                    result.addError(startEndTime);
-//	                }
-//
-//	                if (startInputTime.isBefore(firstTime) || startInputTime.isAfter(lastTime) || endInputTime.isBefore(firstTime) || endInputTime.isAfter(lastTime)) {
-//	                    FieldError startEndTime = new FieldError("attendanceFormList", "attendanceList[" + i + "].startTime", "時刻が不正です。00:00～23:59の間で入力してください。");
-//	                    result.addError(startEndTime);
-//	                }
-//	            } catch (DateTimeParseException e) {
+//				if(strStartInputTime != "00:00:00") {
+//					
+//					
+//					if((!startInputTime.isBefore(firstTime) && !startInputTime.isAfter(lastTime))) {
+//						FieldError startEndTime = new FieldError("attendanceFormList", "attendanceList[" + i + "].startTime","時刻が不正です。00:00～23:59の間で入力してください。");
+//						result.addError(startEndTime);
+////						System.out.print("作ったやつ→"+startEndTime);
+//					}
+//				}
+//			} catch (DateTimeParseException e) {
 //	                FieldError timeFormatError = new FieldError("attendanceFormList", "attendanceList[" + i + "].startTime", "時刻の形式が不正です。HH:mm:ss形式で入力してください。");
 //	                result.addError(timeFormatError);
 //	            }
-//	        }
-//	    }
-//	}
+//			  
+//			  
+//			  //退勤時間の整合性
+//			  if(attendanceFormList.getAttendanceList().get(i).getEndTime() != null) {
+//				  
+//				  try {
+//					  endInputTime = LocalTime.parse(attendanceFormList.getAttendanceList().get(i).getEndTime(), formatter);
+//					  
+//					  strEndInputTime = endInputTime.toString();
+//
+//						if(strEndInputTime != "00:00:00") {
+//							
+//							
+//							if((!endInputTime.isBefore(firstTime) && !endInputTime.isAfter(lastTime))) {
+//								FieldError startEndTime = new FieldError("attendanceFormList", "attendanceList[" + i + "].endTime","時刻が不正です。00:00～23:59の間で入力してください。");
+//								result.addError(startEndTime);
+////								System.out.print("作ったやつ→"+startEndTime);
+//							}
+//						}
+//					} catch (DateTimeParseException e) {
+//			                FieldError timeFormatError = new FieldError("attendanceFormList", "attendanceList[" + i + "].endTime", "時刻の形式が不正です。HH:mm:ss形式で入力してください。");
+//			                result.addError(timeFormatError);
+//			            }
+//				  
+//				  
+//				  //出勤時間と退勤時間を合わせた整合性
+//				  if((attendanceFormList.getAttendanceList().get(i).getStartTime() != null) && (attendanceFormList.getAttendanceList().get(i).getEndTime() != null)){
+//					  if((startInputTime.isAfter(endInputTime))){
+//						  FieldError startEndTime = new FieldError("attendanceFormList", "attendanceList[" + i + "].startEndTime","出勤時間より退勤時間が早くなっています。");
+//							result.addError(startEndTime);
+//					  }
+//				  }
+//			  }
+//			}
+//	  }
+//	  
+//  }
+  
+//↑のAI君バージョン
+  public void errorCheck(AttendanceFormList attendanceFormList, BindingResult result) {
+	    for (int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
+	        // 備考欄
+	        if (attendanceFormList.getAttendanceList().get(i).getAttendanceRemarks() == null || attendanceFormList.getAttendanceList().get(i).getAttendanceRemarks().isEmpty()) {
+	            FieldError attendanceRemarks = new FieldError("attendanceFormList", "attendanceList[" + i + "].attendanceRemarks", "エラー");
+	            result.addError(attendanceRemarks);
+	        }
+
+	        // 出勤時間と退勤時間の整合性
+	        String startTime = attendanceFormList.getAttendanceList().get(i).getStartTime();
+	        String endTime = attendanceFormList.getAttendanceList().get(i).getEndTime();
+	        
+	        if (startTime != null) {
+	            try {
+	                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+	                LocalTime startInputTime = LocalTime.parse(startTime, formatter);
+	                LocalTime firstTime = LocalTime.of(0, 0);
+	                LocalTime lastTime = LocalTime.of(23, 59);
+
+	                if (!startInputTime.equals(firstTime) && (startInputTime.isBefore(firstTime) || startInputTime.isAfter(lastTime))) {
+	                    FieldError startEndTime = new FieldError("attendanceFormList", "attendanceList[" + i + "].startTime", "時刻が不正です。00:00～23:59の間で入力してください。");
+	                    result.addError(startEndTime);
+	                }
+	            } catch (DateTimeParseException e) {
+	                FieldError timeFormatError = new FieldError("attendanceFormList", "attendanceList[" + i + "].startTime", "時刻の形式が不正です。HH:mm:ss形式で入力してください。");
+	                result.addError(timeFormatError);
+	            }
+	        }
+
+	        if (endTime != null) {
+	            try {
+	                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+	                LocalTime endInputTime = LocalTime.parse(endTime, formatter);
+	                LocalTime firstTime = LocalTime.of(0, 0);
+	                LocalTime lastTime = LocalTime.of(23, 59);
+
+	                if (!endInputTime.equals(firstTime) && (endInputTime.isBefore(firstTime) || endInputTime.isAfter(lastTime))) {
+	                    FieldError startEndTime = new FieldError("attendanceFormList", "attendanceList[" + i + "].endTime", "時刻が不正です。00:00～23:59の間で入力してください。");
+	                    result.addError(startEndTime);
+	                }
+
+	                if (startTime != null) {
+	                    LocalTime startInputTime = LocalTime.parse(startTime, formatter);
+	                    if (startInputTime.isAfter(endInputTime)) {
+	                        FieldError startEndTime = new FieldError("attendanceFormList", "attendanceList[" + i + "].startTime", "出勤時間より退勤時間が早くなっています。");
+	                        result.addError(startEndTime);
+	                    }
+	                }
+	            } catch (DateTimeParseException e) {
+	                FieldError timeFormatError = new FieldError("attendanceFormList", "attendanceList[" + i + "].endTime", "時刻の形式が不正です。HH:mm:ss形式で入力してください。");
+	                result.addError(timeFormatError);
+	            }
+	        }
+	    }
+	}
+
 
   
   
