@@ -47,8 +47,8 @@ public class AttendanceManagementService {
 		for (int i = 0; i < lastMonthAndDay; i++) {
 			Attendance attendanceDate = new Attendance();
 			attendanceDate.setStatus(12);
-			attendanceDate.setStartTime(null);
-			attendanceDate.setEndTime(null);
+			attendanceDate.setStartTime("00:00:00");
+			attendanceDate.setEndTime("00:00:00");
 			attendanceDate.setAttendanceRemarks(null);//備考
 			attendanceDate.setDays(i + 1);
 			attendanceDate1.add(attendanceDate);
@@ -249,6 +249,7 @@ public class AttendanceManagementService {
 	        
 	        if (startTime != null) {
 	            try {
+	            	
 	                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 	                LocalTime startInputTime = LocalTime.parse(startTime, formatter);
 	                LocalTime firstTime = LocalTime.of(0, 0);

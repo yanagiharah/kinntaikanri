@@ -98,7 +98,7 @@
 											<input type="hidden" name="Month" th:value="${ApprovalPending.month}">
 									</th:block>
 									<td>
-										<input type="submit" name="ate" th:value ="${ApprovalPending.userName}" >
+										<input type="submit" name="ApprovalApplicantDisplay" th:value ="${ApprovalPending.userName}"class="linklike" >
 									</td>
 									<td th:text="${#dates.format(ApprovalPending.targetYearMonth,'yyyy/MM/dd')}"></td>
 									<td th:text="${#dates.format(ApprovalPending.monthlyAttendanceReqDate,'yyyy/MM/dd')}"></td>
@@ -189,15 +189,26 @@
 													<option th:value="11" th:selected="${attendance.status} == '11'">代替休日</option>
 												</select>
 											</td>
-											<td><input type="text" id="startTime" th:field="*{attendanceList[__${start.index}__].startTime}"th:value="${attendance.startTime}" class="noneBox"></td>
-											<td><input type="text" id="endTime" th:field="*{attendanceList[__${start.index}__].endTime}"th:value="${attendance.endTime}" class="noneBox"></td>
-											
-											<td><input type="text" id="attendanceRemarks" th:field="*{attendanceList[__${start.index}__].attendanceRemarks}"
-													th:value="${attendance.attendanceRemarks}" class="noneBox">
+											<td><input type="text" id="startTime" th:field="*{attendanceList[__${start.index}__].startTime}"th:value="${attendance.startTime}" class="noneBox">
 											
 												<div class="text-danger">
 													<div th:if="${#fields.hasErrors('attendanceList[__${start.index}__].startTime')}"
 														th:errors="*{attendanceList[__${start.index}__].startTime}"></div>
+												</div>
+											</td>
+											<td><input type="text" id="endTime" th:field="*{attendanceList[__${start.index}__].endTime}"th:value="${attendance.endTime}" class="noneBox">
+											
+												<div class="text-danger">
+													<div th:if="${#fields.hasErrors('attendanceList[__${start.index}__].endTime')}"
+														th:errors="*{attendanceList[__${start.index}__].endTime}"></div>
+												</div>
+											</td>
+											
+											<td><input type="text" id="attendanceRemarks" th:field="*{attendanceList[__${start.index}__].attendanceRemarks}"th:value="${attendance.attendanceRemarks}" class="noneBox">
+											
+												<div class="text-danger">
+													<div th:if="${#fields.hasErrors('attendanceList[__${start.index}__].attendanceRemarks')}"
+														th:errors="*{attendanceList[__${start.index}__].attendanceRemarks}"></div>
 												</div>
 											</td>
 										</tr>
