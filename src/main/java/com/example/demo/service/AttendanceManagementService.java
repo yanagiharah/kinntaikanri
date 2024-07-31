@@ -145,6 +145,13 @@ public class AttendanceManagementService {
 		  if(attendanceFormList.getAttendanceList().get(i).getStatus() !=12 && attendanceFormList.getAttendanceList().get(i).getStartTime()!="") {
 			  attendanceSearchMapper.insert(attendanceFormList.getAttendanceList().get(i)); 
 		  }
+			if (attendanceFormList.getAttendanceList().get(i).getStatus() == 1
+					|| attendanceFormList.getAttendanceList().get(i).getStatus() == 2 ||
+					attendanceFormList.getAttendanceList().get(i).getStatus() == 5 ||
+					attendanceFormList.getAttendanceList().get(i).getStatus() == 9
+					|| attendanceFormList.getAttendanceList().get(i).getStatus() == 11 &&(attendanceFormList.getAttendanceList().get(i).getStartTime() == "" && attendanceFormList.getAttendanceList().get(i).getEndTime() == "")) {
+				attendanceSearchMapper.insert(attendanceFormList.getAttendanceList().get(i));
+			}
 	  }
   }
   

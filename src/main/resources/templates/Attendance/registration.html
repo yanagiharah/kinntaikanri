@@ -113,13 +113,8 @@
 				</div>
 				
 				<div th:if="${attendanceFormList} != null">
-					<div class="row">
-						<div class="col-12 ml-3" th:each="attendance, start : ${attendanceFormList.attendanceList}">
-							
-							
-							
-							
-							
+					<div class="row m-2">
+						<div class="col-12 ml-3" >
 							<table class="table table-bordered border border-dark">
 								<thead>
 									<tr>
@@ -131,7 +126,7 @@
 										<th>備考</th>
 									</tr>
 								</thead>
-								<tbody>
+								<tbody th:each="attendance, start : ${attendanceFormList.attendanceList}">
 									<th:block th:if="${(Users.role == 'Regular' and (Users.status == 1 or Users.status == 2)) or (Users.role == 'UnitManager' and (Users.status == 1 or Users.status == 2)) or (Users.role == 'Manager')}">
 										<tr>
 											<th:block>

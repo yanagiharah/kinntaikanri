@@ -1,9 +1,11 @@
 package com.example.demo.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,8 +25,8 @@ import jakarta.servlet.http.HttpSession;
 public class UserManagementController {
 	@Autowired
 	private UserManagementService userManagementService;
-//	@Autowired
-//	private MessageSource messageSource;
+	@Autowired
+	private MessageSource messageSource;
 	
 	@RequestMapping("/")
 		public String user(@ModelAttribute ManagementForm managementForm,HttpSession session, Model model) {
@@ -47,7 +49,7 @@ public class UserManagementController {
 		return "redirect:/user/";
 	}
 	
-	//★エラーチェック正しく動いているがDBのユーザー名全て半角なので入れなくなる
+	//★★エラーチェック正しく動いているがDBのユーザー名全て半角なので入れなくなる
 	
 //	else if( !userName.matches("^[^ -~｡-ﾟ]+$")) {
 //		redirectAttributes.addFlashAttribute("check", "全角文字以外入力できません");
@@ -91,26 +93,19 @@ public class UserManagementController {
 			//フィールドにエラー入るからmodelに入れない
 		    return "User/manegement";
 		  }
-		System.out.print("つうか！！！！");
-//		if (managementForm.getUserName() == null ||managementForm.getUserName() == ""
-//				|| managementForm.getPassword() == "" || managementForm.getRole() == ""
-//				|| managementForm.getStartDate() == "") {
-//			model.addAttribute("check", "入力してください");
-//			return "redirect:/user/";
-//		}
 		
 		if ("9999-99-99".equals(managementForm.getStartDate().trim())) {
-			//userManagementService.userDelete(managementForm);
-			System.out.print("つうか！！！！");
+			userManagementService.userDelete(managementForm);
 		} else {
 			Users users = userManagementService.userSearchListUp(managementForm.getUserName());
 			if (users != null) {
 				userManagementService.userUpdate(managementForm);
-//				String agree = messageSource.getMessage("agree", null, Locale.JAPAN);
-//				model.addAttribute("check","agree");
+				String agree = messageSource.getMessage("update",new String[] {managementForm.getUserName()} , Locale.getDefault());
+				model.addAttribute("check",agree);
 			} else {
 				userManagementService.userCreate(managementForm);
-				model.addAttribute("check","登録を完了しました");
+				String agree = messageSource.getMessage("update",new String[] {managementForm.getUserName()} , Locale.getDefault());
+				model.addAttribute("check",agree);
 			}
 		}
 		return "User/manegement";
