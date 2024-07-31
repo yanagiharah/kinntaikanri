@@ -105,6 +105,7 @@ public class AttendanceManagementController {
 		
 		
 		attendanceManagementService.requestActivityCheck(attendanceFormList, users);
+		model.addAttribute("attendanceComplete","勤怠の登録が完了しました。");
 		return "attendance/registration";
 	}
 	

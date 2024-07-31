@@ -82,6 +82,9 @@
 							</span>
 							<input type="submit" id="register" value="登録" name="insert" class="buttonSize">
 						</div>
+						<div class="text-danger" th:if="${attendanceComplete} != null">
+							<span th:text="${attendanceComplete}" style="color: red;"></span>
+						</div>
 					</div>
 				</div>
 				
