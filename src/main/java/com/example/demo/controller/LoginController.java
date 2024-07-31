@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 import java.util.Date;
 
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,8 +17,6 @@ import com.example.demo.model.LoginForm;
 import com.example.demo.model.Users;
 import com.example.demo.service.LoginService;
 
-import jakarta.servlet.http.HttpSession;
-
 
 @Controller
 @RequestMapping("/")
@@ -24,8 +24,6 @@ public class LoginController {
 	@Autowired
 	private LoginService loginService;
 	
-//	@Autowired
-//	private  MonthlyAttendanceReqService  monthlyAttendanceReqService;
 	
 		@GetMapping("")
 		public String login(@ModelAttribute LoginForm loginForm,HttpSession session, Model model) {

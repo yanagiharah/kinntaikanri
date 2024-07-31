@@ -17,11 +17,8 @@ public interface MonthlyAttendanceReqMapper {
 	//指定された年月とユーザーIDで月次勤怠テーブルからデータを取得（statusチェックのため）
 	MonthlyAttendanceReq selectTargetYearMonthStatus(@Param("targetYearMonth")Date targetYearMonth, @Param("userId")Integer userId);
 	
-//	//登録
+	//登録
 	void insertMonthlyAttendanceReq(MonthlyAttendanceReq monthlyAttendanceReq);
-//	
-//	//日付指定範囲削除
-//	int deleteByYearMonth(@Param("userId")Integer userId, @Param("targetDate")LocalDate targetDate, @Param("endDate")LocalDate endDate);
 	
 	//却下された月次勤怠の申請内容を更新
 	void updateMonthlyAttendanceReq(MonthlyAttendanceReq monthlyAttendanceReq);
