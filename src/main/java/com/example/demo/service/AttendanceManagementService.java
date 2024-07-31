@@ -113,9 +113,17 @@ public class AttendanceManagementService {
 			for (int j = 0; j < attendance.size(); j++) {
 				if (attendanceDate1.get(i).getDays().equals(attendance.get(j).getDays())) {
 					attendanceDate1.get(i).setStatus(attendance.get(j).getStatus());
-					attendanceDate1.get(i).setStartTime(attendance.get(j).getStartTime().substring(0, 5));
-					attendanceDate1.get(i).setEndTime(attendance.get(j).getEndTime().substring(0, 5));
 					attendanceDate1.get(i).setAttendanceRemarks(attendance.get(j).getAttendanceRemarks());
+					if(attendance.get(j).getStartTime() != null) {
+						attendanceDate1.get(i).setStartTime(attendance.get(j).getStartTime().substring(0, 5));
+					}else {
+						attendanceDate1.get(i).setStartTime(attendance.get(j).getStartTime());
+					}
+					if(attendance.get(j).getEndTime() != null) {
+						attendanceDate1.get(i).setEndTime(attendance.get(j).getEndTime().substring(0, 5));
+					}else {
+						attendanceDate1.get(i).setStartTime(attendance.get(j).getStartTime());
+					}
 				}
 			}
 		}

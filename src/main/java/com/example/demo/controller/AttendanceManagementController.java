@@ -115,11 +115,12 @@ public class AttendanceManagementController {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
 		
-		attendanceFormList.getAttendanceList().get(0).setAttendanceDate(java.sql.Date.valueOf(attendanceFormList.getAttendanceList().get(0).getAttendanceDateS()));
-		
+		for(int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
+			attendanceFormList.getAttendanceList().get(i).setAttendanceDate(java.sql.Date.valueOf(attendanceFormList.getAttendanceList().get(i).getAttendanceDateS()));
+		}
 		MonthlyAttendanceReq monthlyAttendanceDoubleCheck  = monthlyAttendanceReqService.statusCheck(attendanceFormList.getAttendanceList().get(0).getAttendanceDate(), monthlyAttendanceReq.getUserId());
 //		System.out.print("中身入ってますか？→"+monthlyAttendanceDoubleCheck);
-		System.out.print("TargetYearMonth入ってますか？"+ monthlyAttendanceReq.getTargetYearMonth());
+//		System.out.print("TargetYearMonth入ってますか？"+ monthlyAttendanceReq.getTargetYearMonth());
 		  if(monthlyAttendanceDoubleCheck == null) {
 			  //中身がnull、すなわち同一ユーザーかつ同一月の月次勤怠申請がテーブルにない時の処理。statusはnull
 			  monthlyAttendanceReqService.monthlyAttendanceReqCreate(monthlyAttendanceReq, attendanceFormList);
@@ -132,6 +133,8 @@ public class AttendanceManagementController {
 		  } else {
 			  //承認申請が承認待ち、もしくは承認された際の処理。statusは1 or 2
 			  model.addAttribute("double","既に申請されています。");
+//			  System.out.print("attendanceFormListに勤務状況入ってますか？→"+ attendanceFormList);
+//			  return "redirect:/attendance/management";
 		  }
 		
 		
