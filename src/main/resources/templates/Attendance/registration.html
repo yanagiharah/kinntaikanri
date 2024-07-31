@@ -114,7 +114,7 @@
 				</div>
 				
 				<div th:if="${attendanceFormList} != null">
-					<div class="row m-5">
+					<div class="row">
 						<div class="col-12 ml-3" th:each="attendance, start : ${attendanceFormList.attendanceList}">
 							
 							
@@ -194,13 +194,15 @@
 													<option th:value="11" th:selected="${attendance.status} == '11'">代替休日</option>
 												</select>
 											</td>
-											<td th:if="${(Users.role == 'Regular' and (Users.status == 1 or Users.status == 2)) or (Users.role == 'UnitManager' and (Users.status == 1 or Users.status == 2)) or (Users.role == 'Manager')}"><input type="text" id="startTime" th:field="*{attendanceList[__${start.index}__].startTime}"th:value="${attendance.startTime}" class="noneBox">
+											<td><input type="text" id="startTime"
+													th:field="*{attendanceList[__${start.index}__].startTime}" th:value="${attendance.startTime}" class="noneBox">
 											
 												<div class="text-danger">
 													<div th:if="${#fields.hasErrors('attendanceList[__${start.index}__].startTime')}"
 														th:errors="*{attendanceList[__${start.index}__].startTime}"></div>
 												</div>
 											</td>
+											
 											<td><input type="text" id="endTime" th:field="*{attendanceList[__${start.index}__].endTime}"th:value="${attendance.endTime}" class="noneBox">
 											
 												<div class="text-danger">
