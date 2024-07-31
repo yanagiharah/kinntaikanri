@@ -65,9 +65,6 @@
 						<label for="month">月</label>
 						<input type="submit" id="display" value="表示" name="search" class="buttonSize">
 					</div>
-					<div class="text-danger" th:if="${double} != null">
-						<span th:text="${double}" style="color: red;"></span>
-					</div>
 					<div class="col-6">
 						<div th:if="${Users.role} == 'Manager'">
 							<input type="submit" id="reject" value="却下" name="Rejected"class="buttonSize">
@@ -81,6 +78,9 @@
 								<input type="submit" id="requestApproval" name="approvalApplicationRegistration" value="承認申請" class="buttonSize">
 							</span>
 							<input type="submit" id="register" value="登録" name="insert" class="buttonSize">
+						</div>
+						<div class="text-danger" th:if="${double} != null">
+							<span th:text="${double}" style="color: red;"></span>
 						</div>
 						<div class="text-danger" th:if="${attendanceComplete} != null">
 							<span th:text="${attendanceComplete}" style="color: red;"></span>
