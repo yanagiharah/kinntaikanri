@@ -9,9 +9,9 @@
 </head>
 <body>
  
-	<div class="container">
-		<div class="row" style="padding:350px;">
-			<div class="d-flex align-items-center justify-content-center">
+	<div class="container d-flex align-items-center justify-content-center vh-100">
+		<div class="row" >
+			<div class=>
 	
 				<div class="m-50 border border-dark" style="padding:30px;">
 					<form th:action="@{/user/management}" name="managementForm" method="post">
@@ -27,13 +27,9 @@
 								<span th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></span>
 							</div>
 							<p>ユーザー名　<input type="text" name="userName" th:value="${managementForm} != null ? *{userName} :''">
-								　　　<input type="submit" value="検索" name="search" style="background-color: yellow;">
+								　　　<input type="submit" value="検索" name="search" class="buttonRound">
 							</p>
-	
-	
 							<hr>
-	
- 
 							ユーザーID　　<span th:text="${managementForm} != null ? *{userId} : ''"></span>
 							<input type="hidden" name="userId" th:value="${managementForm} != null ? *{userId} : ''">
 							
@@ -66,8 +62,7 @@
 							<div>利用開始日
 								<input type="text" name="startDate" th:value="${managementForm != null} ? *{startDate} : ''">
 							</div>
-							　　　　　　　　　　　　　　　　　　　<input type="submit" value="登録" name="insert"
-								style="background-color: yellow;">
+							　　　　　　　　　　　　　　　　　　　<input type="submit" value="登録" name="insert" class="buttonRound">
 	
 						</div>
 					</form>
