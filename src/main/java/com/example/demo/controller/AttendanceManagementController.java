@@ -118,7 +118,7 @@ public class AttendanceManagementController {
 	    }
 		if(j != 0) {
 			model.addAttribute("attendanceError","勤務状況と出勤時間、または勤務状況と出勤時間と退勤時間を入力してください。");
-		}else {
+		} else  {
 			model.addAttribute("attendanceComplete","勤怠の登録が完了しました。");
 		}
 		
