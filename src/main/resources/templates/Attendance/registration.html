@@ -67,11 +67,11 @@
 							<input type="submit" id="approve" value="承認" name="approval"class="buttonSize">
 							</div>
 						<div th:unless="${Users.role} == 'Manager'">
-							<span th:if="${AttendanceFormList} == null or ${AttendanceFormList.RequestActivityCheck} == false">
+							<span th:if="${attendanceFormList} == null or ${attendanceFormList.RequestActivityCheck} == false">
 								<input type="submit" id="requestApproval" name="approvalApplicationRegistration" value="承認申請" class="buttonSize" disabled>
 							</span>
-							<span th:unless="${AttendanceFormList} == null or ${AttendanceFormList.RequestActivityCheck} == false">
-								<input type="submit" id="requestApproval" name="approvalApplicationRegistration" value="承認申請" class="buttonSize">
+							<span th:unless="${attendanceFormList} == null or ${attendanceFormList.RequestActivityCheck} == false">
+								<input type="submit" id="requestApproval" name="approvalApplicationRegistration" value="承認申請" class="buttonSize" >
 							</span>
 							<span th:if="${Users.status} == 3 or ${Users.status} == 4">
 							<input type="submit" id="register" value="登録" name="insert" class="buttonSize">

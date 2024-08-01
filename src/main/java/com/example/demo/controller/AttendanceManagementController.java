@@ -105,7 +105,7 @@ public class AttendanceManagementController {
 		
 		
 		attendanceManagementService.requestActivityCheck(attendanceFormList);
-		
+		System.out.print("なんで？"+attendanceFormList);
 		
 		int j = 0;
 		for (int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
