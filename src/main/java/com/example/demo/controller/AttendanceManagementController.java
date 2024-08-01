@@ -31,7 +31,7 @@ public class AttendanceManagementController {
 	private MonthlyAttendanceReqService monthlyAttendanceReqService;
 
 	@RequestMapping("/index")
-	public String start(HttpSession session, Model model) {
+	public String start(HttpSession session, MonthlyAttendanceReq monthlyAttendanceReq, Model model) {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
 		if (users.getRole().equalsIgnoreCase("Manager")) {
@@ -73,7 +73,7 @@ public class AttendanceManagementController {
 			}
 			
 
-			attendanceManagementService.requestActivityCheck(attendanceFormList, users);
+			attendanceManagementService.requestActivityCheck(attendanceFormList);
 			
 
 			
@@ -82,7 +82,7 @@ public class AttendanceManagementController {
 	
 	//登録ボタンの処理
 	@RequestMapping(value = "/management", params = "insert", method = RequestMethod.POST)
-	public String insert(@ModelAttribute AttendanceFormList attendanceFormList, BindingResult result , Model model, HttpSession session) {
+	public String insert(@ModelAttribute AttendanceFormList attendanceFormList, BindingResult result, Model model, HttpSession session) {
 		
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
@@ -104,7 +104,7 @@ public class AttendanceManagementController {
 		
 		
 		
-		attendanceManagementService.requestActivityCheck(attendanceFormList, users);
+		attendanceManagementService.requestActivityCheck(attendanceFormList);
 		model.addAttribute("attendanceComplete","勤怠の登録が完了しました。");
 		return "attendance/registration";
 	}
@@ -116,6 +116,7 @@ public class AttendanceManagementController {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
 		
+		System.out.print(monthlyAttendanceReq);
 		for(int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
 			attendanceFormList.getAttendanceList().get(i).setAttendanceDate(java.sql.Date.valueOf(attendanceFormList.getAttendanceList().get(i).getAttendanceDateS()));
 		}

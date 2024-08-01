@@ -19,7 +19,6 @@ import org.springframework.validation.FieldError;
 import com.example.demo.mapper.AttendanceSearchMapper;
 import com.example.demo.model.Attendance;
 import com.example.demo.model.AttendanceFormList;
-import com.example.demo.model.Users;
 
 @Service
 public class AttendanceManagementService {
@@ -157,7 +156,7 @@ public class AttendanceManagementService {
   
   
 //勤怠登録画面で承認申請ボタンを有効にするかを決める
-public void requestActivityCheck(AttendanceFormList attendanceFormList, Users users) {
+public void requestActivityCheck(AttendanceFormList attendanceFormList) {
 	for (int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
 		if ((attendanceFormList.getAttendanceList().get(i).getStatus() == 12
 				&& "".equals(attendanceFormList.getAttendanceList().get(i).getStartTime())
@@ -165,9 +164,9 @@ public void requestActivityCheck(AttendanceFormList attendanceFormList, Users us
 				|| (attendanceFormList.getAttendanceList().get(i).getStatus() == 12
 						&& attendanceFormList.getAttendanceList().get(i).getStartTime() == null
 						&& attendanceFormList.getAttendanceList().get(i).getEndTime() == null)) {
-			users.setRequestActivityCheck(false);
+			attendanceFormList.setRequestActivityCheck(false);
 		} else {
-			users.setRequestActivityCheck(true);
+			attendanceFormList.setRequestActivityCheck(true);
 		}
 	}
 }
