@@ -127,32 +127,41 @@ public class AttendanceManagementService {
 		}
 		return attendanceDate1;
 	}
-	
-
+  
   
   //勤怠テーブルのデータを物理削除
 	public void attendanceDelete(AttendanceFormList attendanceFormList) {
 		attendanceSearchMapper.deleteByAttendanceOfMonth(attendanceFormList.getAttendanceList().get(0).getUserId(),
 				attendanceFormList.getAttendanceList().get(0).getAttendanceDate(),
-				attendanceFormList.getAttendanceList().get(attendanceFormList.getAttendanceList().size() - 1)
-						.getAttendanceDate());
+				attendanceFormList.getAttendanceList().get(attendanceFormList.getAttendanceList().size() - 1).getAttendanceDate());
 	}
   
   //勤怠テーブルに登録処理
-  public void attendanceCreate(AttendanceFormList attendanceFormList) {
-	  for(int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
-		  if(attendanceFormList.getAttendanceList().get(i).getStatus() !=12 && attendanceFormList.getAttendanceList().get(i).getStartTime()!="") {
-			  attendanceSearchMapper.insert(attendanceFormList.getAttendanceList().get(i)); 
-		  }
-			if (attendanceFormList.getAttendanceList().get(i).getStatus() == 1
-					|| attendanceFormList.getAttendanceList().get(i).getStatus() == 2 ||
-					attendanceFormList.getAttendanceList().get(i).getStatus() == 5 ||
-					attendanceFormList.getAttendanceList().get(i).getStatus() == 9
-					|| attendanceFormList.getAttendanceList().get(i).getStatus() == 11 &&(attendanceFormList.getAttendanceList().get(i).getStartTime() == "" && attendanceFormList.getAttendanceList().get(i).getEndTime() == "")) {
+	public void attendanceCreate(AttendanceFormList attendanceFormList) {
+		for (int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
+			//出勤の場合
+			if ((attendanceFormList.getAttendanceList().get(i).getStatus() == 0 ||
+					attendanceFormList.getAttendanceList().get(i).getStatus() == 3 ||
+					attendanceFormList.getAttendanceList().get(i).getStatus() == 6 ||
+					attendanceFormList.getAttendanceList().get(i).getStatus() == 7 ||
+					attendanceFormList.getAttendanceList().get(i).getStatus() == 8 ||
+					attendanceFormList.getAttendanceList().get(i).getStatus() == 10)
+					&& attendanceFormList.getAttendanceList().get(i).getStartTime() != "") {
 				attendanceSearchMapper.insert(attendanceFormList.getAttendanceList().get(i));
 			}
-	  }
-  }
+			//休日の場合
+			if (attendanceFormList.getAttendanceList().get(i).getStatus() == 1
+					|| attendanceFormList.getAttendanceList().get(i).getStatus() == 2
+					|| attendanceFormList.getAttendanceList().get(i).getStatus() == 4 ||
+					attendanceFormList.getAttendanceList().get(i).getStatus() == 5 ||
+					attendanceFormList.getAttendanceList().get(i).getStatus() == 9
+					|| attendanceFormList.getAttendanceList().get(i).getStatus() == 11
+							&& (attendanceFormList.getAttendanceList().get(i).getStartTime() == ""
+									&& attendanceFormList.getAttendanceList().get(i).getEndTime() == "")) {
+				attendanceSearchMapper.insert(attendanceFormList.getAttendanceList().get(i));
+			}
+		}
+	}
   
   
 //勤怠登録画面で承認申請ボタンを有効にするかを決める
