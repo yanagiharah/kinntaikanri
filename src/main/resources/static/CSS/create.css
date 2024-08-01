@@ -15,9 +15,21 @@
   background-color: yellow;
 }
 
+.buttonRound{
+  width:120px;
+  height:60px;
+  background-color: yellow;
+  border-radius:30px;
+}
+
+
 .linklike {
   border:none;
   background-color:transparent;
   color:blue;
   text-decoration:underline;
+}
+
+.loginFontsize{
+	  font-size:30px;
 }
