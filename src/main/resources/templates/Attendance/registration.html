@@ -67,10 +67,10 @@
 							<input type="submit" id="approve" value="承認" name="approval"class="buttonSize">
 							</div>
 						<div th:unless="${Users.role} == 'Manager'">
-							<span th:if="${AttendanceFormList.RequestActivityCheck} == false">
+							<span th:if="${AttendanceFormList} == null or ${AttendanceFormList.RequestActivityCheck} == false">
 								<input type="submit" id="requestApproval" name="approvalApplicationRegistration" value="承認申請" class="buttonSize" disabled>
 							</span>
-							<span th:if="${AttendanceFormList.RequestActivityCheck} == true">
+							<span th:unless="${AttendanceFormList} == null or ${AttendanceFormList.RequestActivityCheck} == false">
 								<input type="submit" id="requestApproval" name="approvalApplicationRegistration" value="承認申請" class="buttonSize">
 							</span>
 							<span th:if="${Users.status} == 3 or ${Users.status} == 4">
@@ -139,7 +139,7 @@
 											<td th:text="${attendance.dayOfWeek}"></td>
 											<td>
 												<select id="status" th:field="*{attendanceList[__${start.index}__].status}" class="noneBox">
-													<option value="12" th:selected="${attendance.status} == '0'" disabled>選択してください</option>
+													<option th:value="12" th:selected="${attendance.status} == '12'" disabled>選択してください</option>
 													<option th:value="0" th:selected="${attendance.status} == '0'" disabled>通常出勤</option>
 													<option th:value="1" th:selected="${attendance.status} == '1'" disabled>休日</option>
 													<option th:value="2" th:selected="${attendance.status} == '2'" disabled>祝日</option>
@@ -172,7 +172,7 @@
 											<td th:text="${attendance.dayOfWeek}"></td>
 											<td>
 												<select id="status" th:field="*{attendanceList[__${start.index}__].status}" class="noneBox">
-													<option value="12" th:selected="${attendance.status} == '0'">選択してください</option>
+													<option th:value="12" th:selected="${attendance.status} == '12'">選択してください</option>
 													<option th:value="0" th:selected="${attendance.status} == '0'">通常出勤</option>
 													<option th:value="1" th:selected="${attendance.status} == '1'">休日</option>
 													<option th:value="2" th:selected="${attendance.status} == '2'">祝日</option>
