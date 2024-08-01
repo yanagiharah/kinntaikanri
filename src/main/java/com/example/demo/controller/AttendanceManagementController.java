@@ -105,7 +105,23 @@ public class AttendanceManagementController {
 		
 		
 		attendanceManagementService.requestActivityCheck(attendanceFormList);
-		model.addAttribute("attendanceComplete","勤怠の登録が完了しました。");
+		
+		
+		int j = 0;
+		for (int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
+	    	if((attendanceFormList.getAttendanceList().get(i).getStatus() == 12 && attendanceFormList.getAttendanceList().get(i).getStartTime() == "" && attendanceFormList.getAttendanceList().get(i).getEndTime() == "") 
+	    			|| (attendanceFormList.getAttendanceList().get(i).getStatus() != 12 && attendanceFormList.getAttendanceList().get(i).getStartTime() != "")) {
+	    		
+	    	} else {
+	    		++j;
+	    	}
+	    }
+		if(j != 0) {
+			model.addAttribute("attendanceError","勤務状況と出勤時間、または勤務状況と出勤時間と退勤時間を入力してください。");
+		}else {
+			model.addAttribute("attendanceComplete","勤怠の登録が完了しました。");
+		}
+		
 		return "attendance/registration";
 	}
 	

@@ -82,6 +82,9 @@
 						<div class="text-danger" th:if="${attendanceComplete} != null">
 							<span th:text="${attendanceComplete}" style="color: red;"></span>
 						</div>
+						<div class="text-danger" th:if="${attendanceError} != null">
+							<span th:text="${attendanceError}" style="color: red;"></span>
+						</div>
 					</div>
 				</div>
 				
