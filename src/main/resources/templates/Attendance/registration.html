@@ -55,9 +55,9 @@
 					</div>
 					<div class="col-6" th:if="${Users.role} == 'Regular' or ${Users.role} == 'UnitManager'">
 						表示年月：
-						<input type="text" id="years" name="years" >
+						<input type="text" class="textBox" id="years" name="years" >
 						<label for="years">年</label>
-						<input type="text" id="month" name="month">
+						<input type="text" class="textBox" id="month" name="month">
 						<label for="month">月</label>
 						<input type="submit" id="display" value="表示" name="search" class="buttonSize">
 					</div>

@@ -110,7 +110,14 @@ public class AttendanceManagementController {
 		int j = 0;
 		for (int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
 	    	if((attendanceFormList.getAttendanceList().get(i).getStatus() == 12 && attendanceFormList.getAttendanceList().get(i).getStartTime() == "" && attendanceFormList.getAttendanceList().get(i).getEndTime() == "") 
-	    			|| (attendanceFormList.getAttendanceList().get(i).getStatus() != 12 && attendanceFormList.getAttendanceList().get(i).getStartTime() != "")) {
+	    			|| (attendanceFormList.getAttendanceList().get(i).getStatus() != 12 && attendanceFormList.getAttendanceList().get(i).getStartTime() != "") 
+	    			|| (attendanceFormList.getAttendanceList().get(i).getStatus() == 1
+	    					|| attendanceFormList.getAttendanceList().get(i).getStatus() == 2
+	    					|| attendanceFormList.getAttendanceList().get(i).getStatus() == 4 ||
+	    					attendanceFormList.getAttendanceList().get(i).getStatus() == 5 ||
+	    					attendanceFormList.getAttendanceList().get(i).getStatus() == 9
+	    					|| attendanceFormList.getAttendanceList().get(i).getStatus() == 11
+	    							&& (attendanceFormList.getAttendanceList().get(i).getStartTime() != "" || attendanceFormList.getAttendanceList().get(i).getEndTime() != ""))) {
 	    		
 	    	} else {
 	    		++j;
