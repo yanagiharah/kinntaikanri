@@ -8,31 +8,26 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
-	<div class="container">
-		<div class="row" style="padding:350px;">
-			<div class="d-flex align-items-center justify-content-center">
+	<div class="container d-flex justify-content-center align-items-center vh-100">
+		<div class="border border-dark" style="padding:50px;">
+			<form name="LoginForm" th:action="@{/login}" method="post" th:object="${loginForm}">
+				<center>
+					<div class"text-danger" th:if="${out} != null">
+						<span th:text="${out}" style="color: red;"></span>
+					</div>
+					<div class="text-danger">
+						<span th:errors="*{userId}"></span>
+					</div>
+					<p>ユーザーID<input type="text" th:field="*{userId}"></p>
 	
-				<div class="border border-dark" style="padding:50px;">
-					<form name="LoginForm" th:action="@{/login}" method="post" th:object="${loginForm}">
-						<center>
-							<div class"text-danger" th:if="${out} != null">
-								<span th:text="${out}" style="color: red;"></span>
-							</div>
-							<div class="text-danger">
-								<span th:errors="*{userId}"></span>
-							</div>
-							<p>ユーザーID<input type="text" th:field="*{userId}"></p>
-							
-							<div class="text-danger">
-								<span th:errors="*{password}"></span>
-							</div>
-							<p>パスワード<input type="password" th:field="*{password}"></p>
-							
-						</center>
-						<center><input type="submit" id="check" value="ログイン" style="background-color: yellow;"></center>
-					</form>
-				</div>
-			</div>
+					<div class="text-danger">
+						<span th:errors="*{password}"></span>
+					</div>
+					<p>パスワード<input type="password" th:field="*{password}"></p>
+	
+				</center>
+				<center><input type="submit" id="check" value="ログイン" style="background-color: yellow;"></center>
+			</form>
 		</div>
 	</div>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
