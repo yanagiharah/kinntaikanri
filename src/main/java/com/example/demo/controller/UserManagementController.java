@@ -96,6 +96,8 @@ public class UserManagementController {
 		
 		if ("9999-99-99".equals(managementForm.getStartDate().trim())) {
 			userManagementService.userDelete(managementForm);
+			String agree = messageSource.getMessage("delete",new String[] {managementForm.getUserName()} , Locale.getDefault());
+			model.addAttribute("check",agree);
 		} else {
 			Users users = userManagementService.userSearchListUp(managementForm.getUserName());
 			if (users != null) {
@@ -104,7 +106,7 @@ public class UserManagementController {
 				model.addAttribute("check",agree);
 			} else {
 				userManagementService.userCreate(managementForm);
-				String agree = messageSource.getMessage("update",new String[] {managementForm.getUserName()} , Locale.getDefault());
+				String agree = messageSource.getMessage("insert",new String[] {managementForm.getUserName()} , Locale.getDefault());
 				model.addAttribute("check",agree);
 			}
 		}

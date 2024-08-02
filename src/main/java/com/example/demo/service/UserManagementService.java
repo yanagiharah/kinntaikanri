@@ -56,7 +56,7 @@ public class UserManagementService {
 	public void errorCheck(ManagementForm managementForm,BindingResult result) {
 		
 		if (managementForm.getUserName() == null ||managementForm.getUserName() == "") {
-			  FieldError userName = new FieldError(managementForm.getUserName(), "userName", "エラー");
+			  FieldError userName = new FieldError(managementForm.getUserName(), "userName", "ユーザー名は必須です");
 			  result.addError(userName);
 		}
 		if(managementForm.getPassword() == null || managementForm.getPassword() == "" ) {
