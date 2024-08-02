@@ -81,6 +81,10 @@ public class UserManagementService {
 			FieldError role = new FieldError("managementForm", "role", "権限は必須です");
 			 result.addError(role);
 		}
+		if(managementForm.getUserId() == null||managementForm.getUserId() == 0) {
+			FieldError userId = new FieldError("managementForm", "userId", "ユーザーIDは必須です");
+			 result.addError(userId);
+		}
 		if (!"9999/99/99".equals(managementForm.getStartDate().trim())) {
 			if(!managementForm.getStartDate().matches("^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$")|| managementForm.getStartDate() == null||managementForm.getStartDate() == ""||managementForm.getStartDate().length() != 10) {
 				FieldError startDate = new FieldError("managementForm", "startDate", "利用開始日はyyyy-mm-ddで必ず半角で入力してください");

@@ -30,6 +30,9 @@
 								　　　<input type="submit" value="検索" name="search" class="buttonRound">
 							</p>
 							<hr style="color: midnightblue;">
+							<div class="text-danger">
+								<span th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}"></span>
+							</div>
 							ユーザーID　　<span th:text="${managementForm} != null ? *{userId} : ''"></span>
 							<input type="hidden" name="userId" th:value="${managementForm} != null ? *{userId} : ''">
 							

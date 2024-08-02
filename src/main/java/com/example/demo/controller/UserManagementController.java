@@ -77,6 +77,7 @@ public class UserManagementController {
     //RandomNumberがdbにあるか確認する処理を行う
     //dbに存在した場合再度RandomNumberの生成forぶんで繰り返す、dbに存在しない数字がでるまで
     managementForm2.setUserId(randomNumber);
+    managementForm2.setUserName(userName);
     
     model.addAttribute("managementForm", managementForm2);
     return "User/manegement";

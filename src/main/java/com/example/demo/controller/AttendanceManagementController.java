@@ -49,6 +49,9 @@ public class AttendanceManagementController {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
 		if (years == null || month == null) {
+			if(users.getStatus() != null) {
+				users.setStatus(null);
+			}
 			model.addAttribute("check", "年月を入力してください");
 			return "attendance/registration";
 		}
