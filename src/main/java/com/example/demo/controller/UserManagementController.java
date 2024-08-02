@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Random;
 
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -17,8 +19,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.demo.model.ManagementForm;
 import com.example.demo.model.Users;
 import com.example.demo.service.UserManagementService;
-
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/user")
@@ -51,10 +51,10 @@ public class UserManagementController {
 	
 	//★★エラーチェック正しく動いているがDBのユーザー名全て半角なので入れなくなる
 	
-//	else if( !userName.matches("^[^ -~｡-ﾟ]+$")) {
-//		redirectAttributes.addFlashAttribute("check", "全角文字以外入力できません");
-//		return "redirect:/user/";
-//	}
+	else if( !userName.matches("^[^ -~｡-ﾟ]+$")) {
+		redirectAttributes.addFlashAttribute("check", "全角文字以外入力できません");
+		return "redirect:/user/";
+	}
 	
 	//名前を引数にserviceクラスでリストの取得
 	Users users = userManagementService.userSearchListUp(userName);	
@@ -94,7 +94,7 @@ public class UserManagementController {
 		    return "User/manegement";
 		  }
 		
-		if ("9999-99-99".equals(managementForm.getStartDate().trim())) {
+		if ("9999/99/99".equals(managementForm.getStartDate().trim())) {
 			userManagementService.userDelete(managementForm);
 			String agree = messageSource.getMessage("delete",new String[] {managementForm.getUserName()} , Locale.getDefault());
 			model.addAttribute("check",agree);

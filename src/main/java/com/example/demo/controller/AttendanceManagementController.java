@@ -107,10 +107,15 @@ public class AttendanceManagementController {
 		attendanceManagementService.requestActivityCheck(attendanceFormList);
 		System.out.print("なんで？"+attendanceFormList);
 		
-		int j = 0;
+		int j = 0;//不正入力のカウント
+//		int k = 0;//未入力のカウント
+		int l = 0;//正常入力のカウント
 		for (int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
-	    	if((attendanceFormList.getAttendanceList().get(i).getStatus() == 12 && attendanceFormList.getAttendanceList().get(i).getStartTime() == "" && attendanceFormList.getAttendanceList().get(i).getEndTime() == "") 
-	    			|| (attendanceFormList.getAttendanceList().get(i).getStatus() != 12 && attendanceFormList.getAttendanceList().get(i).getStartTime() != "") 
+			
+	    	if(attendanceFormList.getAttendanceList().get(i).getStatus() == 12 && attendanceFormList.getAttendanceList().get(i).getStartTime() == "" && attendanceFormList.getAttendanceList().get(i).getEndTime() == "") {
+	    		
+	    	} else if(
+	    			(attendanceFormList.getAttendanceList().get(i).getStatus() != 12 && attendanceFormList.getAttendanceList().get(i).getStartTime() != "") 
 	    			|| (attendanceFormList.getAttendanceList().get(i).getStatus() == 1
 	    					|| attendanceFormList.getAttendanceList().get(i).getStatus() == 2
 	    					|| attendanceFormList.getAttendanceList().get(i).getStatus() == 4 ||
@@ -118,14 +123,16 @@ public class AttendanceManagementController {
 	    					attendanceFormList.getAttendanceList().get(i).getStatus() == 9
 	    					|| attendanceFormList.getAttendanceList().get(i).getStatus() == 11
 	    							&& (attendanceFormList.getAttendanceList().get(i).getStartTime() != "" || attendanceFormList.getAttendanceList().get(i).getEndTime() != ""))) {
-	    		
+	    		++l;
 	    	} else {
 	    		++j;
 	    	}
 	    }
 		if(j != 0) {
 			model.addAttribute("attendanceError","勤務状況と出勤時間、または勤務状況と出勤時間と退勤時間を入力してください。");
-		} else  {
+		} else if(j == 0 && l == 0) {
+			model.addAttribute("attendanceComplete","勤怠の入力を行ってください。");
+		} else {
 			model.addAttribute("attendanceComplete","勤怠の登録が完了しました。");
 		}
 		

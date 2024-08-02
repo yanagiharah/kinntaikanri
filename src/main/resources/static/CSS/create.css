@@ -12,11 +12,11 @@
 }
 .buttonSize {
   width: 15%;
-  border-radius: 40% 80% 35% 65% / 50% 50% 70% 40%;
+/*  border-radius: 40% 80% 35% 65% / 50% 50% 70% 40%;*/
   background-color: yellow;
 }
 .textBox{
-	border-radius: 40% 80% 35% 65% / 50% 50% 70% 40%;
+/*	border-radius: 40% 80% 35% 65% / 50% 50% 70% 40%;*/
 }
 
 .buttonRound{
