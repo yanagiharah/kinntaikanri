@@ -59,6 +59,12 @@ public class UserManagementService {
 			  FieldError userName = new FieldError(managementForm.getUserName(), "userName", "ユーザー名は必須です");
 			  result.addError(userName);
 		}
+		
+		if (!managementForm.getUserName().matches("^[^ -~｡-ﾟ]+$")) {
+			FieldError userName = new FieldError(managementForm.getUserName(), "userName", "ユーザー名は半角で入力してください");
+			result.addError(userName);
+		}
+		
 		if(managementForm.getPassword() == null || managementForm.getPassword() == "" ) {
 			 FieldError password = new FieldError("managementForm", "password", "パスワード必須です");
 			  result.addError(password);
@@ -75,10 +81,12 @@ public class UserManagementService {
 			FieldError role = new FieldError("managementForm", "role", "権限は必須です");
 			 result.addError(role);
 		}
-		if (!"9999-99-99".equals(managementForm.getStartDate().trim())) {
+		if (!"9999/99/99".equals(managementForm.getStartDate().trim())) {
 			if(!managementForm.getStartDate().matches("^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$")|| managementForm.getStartDate() == null||managementForm.getStartDate() == ""||managementForm.getStartDate().length() != 10) {
-				FieldError startDate = new FieldError("managementForm", "startDate", "入力日は必須です");
-				 result.addError(startDate);
+				FieldError startDate = new FieldError("managementForm", "startDate", "利用開始日はyyyy-mm-ddで必ず半角で入力してください");
+				FieldError startDate2 = new FieldError("managementForm", "startDate", "削除を行いたい場合は9999/99/99で入力してください");
+				result.addError(startDate);
+				result.addError(startDate2);
 			}
 		}
 	}
