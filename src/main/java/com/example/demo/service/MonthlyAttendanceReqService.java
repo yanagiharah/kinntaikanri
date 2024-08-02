@@ -65,11 +65,11 @@ public class MonthlyAttendanceReqService {
   }
   
   
-  public void approvalStatus(Integer userId) {
-	  monthlyAttendanceReqMapper.approvalStatus(userId);
+  public void approvalStatus(Integer userId, String targetYearMonth) {
+	  monthlyAttendanceReqMapper.approvalStatus(userId, targetYearMonth);
 	  }
   
-  public void rejectedStatus(Integer userId) {
-	  monthlyAttendanceReqMapper.rejectedStatus(userId);
+  public void rejectedStatus(Integer userId, String targetYearMonth) {
+	  monthlyAttendanceReqMapper.rejectedStatus(userId, targetYearMonth);
 	  }
 }

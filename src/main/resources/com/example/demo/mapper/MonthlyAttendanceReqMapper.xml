@@ -49,14 +49,14 @@
 <update id="approvalStatus">
   UPDATE monthly_attendance_req
   SET status = 2
-  WHERE user_id = #{userId};
+  WHERE user_id = #{userId} AND target_year_month = #{targetYearMonth};
 </update>
 
 <!-- ステータス却下 -->
 <update id="rejectedStatus">
   UPDATE monthly_attendance_req
   SET status = 3
-  WHERE user_id = #{userId};
+  WHERE user_id = #{userId} AND target_year_month = #{targetYearMonth};
 </update>
 
 

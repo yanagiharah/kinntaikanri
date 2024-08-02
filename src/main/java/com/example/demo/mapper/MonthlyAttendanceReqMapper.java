@@ -24,8 +24,8 @@ public interface MonthlyAttendanceReqMapper {
 	void updateMonthlyAttendanceReq(MonthlyAttendanceReq monthlyAttendanceReq);
 	
 	//ステータス承認
-	void approvalStatus(Integer userId);
+	void approvalStatus(Integer userId, String targetYearMonth);
 	
 	//ステータス却下
-	void rejectedStatus(Integer userId);
+	void rejectedStatus(Integer userId, String targetYearMonth);
 }

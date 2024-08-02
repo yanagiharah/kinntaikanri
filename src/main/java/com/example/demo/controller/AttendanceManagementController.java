@@ -199,19 +199,27 @@ public class AttendanceManagementController {
 	
 	//マネージャー承認ボタン
 	@RequestMapping(value = "/management", params = "approval", method = RequestMethod.POST)
-	public String approval(AttendanceFormList attendanceFormList, Model model, HttpSession session) {
+	public String approval(AttendanceFormList attendanceFormList, Model model, HttpSession session, RedirectAttributes redirectAttributes) {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
-		monthlyAttendanceReqService.approvalStatus(attendanceFormList.getAttendanceList().get(0).getUserId());
+		if(attendanceFormList.getAttendanceList() == null) {
+			redirectAttributes.addFlashAttribute("madahayai","先にユーザーを選択してください。");
+		} else {
+			monthlyAttendanceReqService.approvalStatus(attendanceFormList.getAttendanceList().get(0).getUserId(), attendanceFormList.getAttendanceList().get(0).getAttendanceDateS());
+		}
 		return "redirect:/attendance/index";
 	}
 
 	//マネージャー却下ボタン押下
 	@RequestMapping(value = "/management", params = "Rejected", method = RequestMethod.POST)
-	public String Rejected(AttendanceFormList attendanceFormList, Model model, HttpSession session) {
+	public String Rejected(AttendanceFormList attendanceFormList, Model model, HttpSession session, RedirectAttributes redirectAttributes) {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
-		monthlyAttendanceReqService.rejectedStatus(attendanceFormList.getAttendanceList().get(0).getUserId());
+		if(attendanceFormList.getAttendanceList() == null) {
+			redirectAttributes.addFlashAttribute("madahayai","先にユーザーを選択してください。");
+		} else {
+			monthlyAttendanceReqService.rejectedStatus(attendanceFormList.getAttendanceList().get(0).getUserId(), attendanceFormList.getAttendanceList().get(0).getAttendanceDateS());
+		}
 		return "redirect:/attendance/index";
 	}
 	

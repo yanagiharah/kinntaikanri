@@ -17,7 +17,7 @@
 					<form th:action="@{/user/management}" name="managementForm" method="post">
 	
 	
-						<div class"text-danger" th:if="${check} != null">
+						<div class="text-danger" th:if="${check} != null">
 							<span th:text="${check}" style="color: red;"></span>
 						</div>
 	
@@ -29,7 +29,7 @@
 							<p>ユーザー名　<input type="text" name="userName" th:value="${managementForm} != null ? *{userName} :''">
 								　　　<input type="submit" value="検索" name="search" class="buttonRound">
 							</p>
-							<hr>
+							<hr style="color: midnightblue;">
 							ユーザーID　　<span th:text="${managementForm} != null ? *{userId} : ''"></span>
 							<input type="hidden" name="userId" th:value="${managementForm} != null ? *{userId} : ''">
 							
