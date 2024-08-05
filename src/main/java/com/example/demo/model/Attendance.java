@@ -40,5 +40,5 @@ public class Attendance {
 	
 	
 	
-//	private Date status
+//	private Date status;
 }
