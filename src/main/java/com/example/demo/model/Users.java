@@ -24,5 +24,5 @@ public class Users implements Serializable {
 	
 	private Integer  status;//承認状況
 	
-	//練習
+	//練習がｄｇｈ
 }
