@@ -44,42 +44,58 @@ public class AttendanceManagementController {
 	
 	//表示ボタンの処理
 	@RequestMapping(value = "/management", params = "search", method = RequestMethod.POST)
-	public String attendanceSearch(Integer userId, Integer years, Integer month, Model model,
+	public String attendanceSearch(Integer userId, String stringYears, String stringMonth, Model model,
 			RedirectAttributes redirectAttributes, HttpSession session) {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
-		if (years == null || month == null) {
+		System.out.print(stringYears + stringMonth);
+		if (stringYears == null || stringMonth == null) {
 			if(users.getStatus() != null) {
 				users.setStatus(null);
 			}
 			model.addAttribute("check", "年月を入力してください");
 			return "attendance/registration";
 		}
-		List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month);
+//		if(years != null || month != null) {
+//			String stringYears = String.valueOf(years);
+//			String stringMonth = String.valueOf(month);
+//			if(!stringYears.matches("\\d+") || !stringMonth.matches("\\d+")) {
+//				model.addAttribute("check", "大文字と英字は許さん");
+//			}
+//			return "attendance/registration";
+//		}
+		Integer years = Integer.parseInt(stringYears);
+		Integer month = Integer.parseInt(stringMonth);
+		if(stringYears != null && stringMonth != null) {
+			if(stringYears.matches("^[0-9]+$") || stringMonth.matches("^[0-9]+$")) {
+				List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month);
+				
+					// formに詰めなおす
+					AttendanceFormList attendanceFormList = new AttendanceFormList();
+					ArrayList<Attendance> attendanceList = new ArrayList<Attendance>();
+					attendanceFormList.setAttendanceList(attendanceList);
+					attendanceList.addAll(attendance);
+					model.addAttribute("attendanceFormList", attendanceFormList);
+					
+					
+					
+					//月次勤怠テーブルのstatusをユーザーモデルのstatusに詰める
+					MonthlyAttendanceReq statusCheck = monthlyAttendanceReqService.statusCheck(attendance.get(0).getAttendanceDate(), userId);
 		
-			// formに詰めなおす
-			AttendanceFormList attendanceFormList = new AttendanceFormList();
-			ArrayList<Attendance> attendanceList = new ArrayList<Attendance>();
-			attendanceFormList.setAttendanceList(attendanceList);
-			attendanceList.addAll(attendance);
-			model.addAttribute("attendanceFormList", attendanceFormList);
-			
-			
-			
-			//月次勤怠テーブルのstatusをユーザーモデルのstatusに詰める
-			MonthlyAttendanceReq statusCheck = monthlyAttendanceReqService.statusCheck(attendance.get(0).getAttendanceDate(), userId);
-
-			if (statusCheck != null) {
-			    users.setStatus(statusCheck.getStatus());
-			} else {
-				users.setStatus(4);
+					if (statusCheck != null) {
+					    users.setStatus(statusCheck.getStatus());
+					} else {
+						users.setStatus(4);
+					}
+					
+		
+					attendanceManagementService.requestActivityCheck(attendanceFormList);
+					
+		
+					
+				
 			}
-			
-
-			attendanceManagementService.requestActivityCheck(attendanceFormList);
-			
-
-			
+		}
 		return "attendance/registration";
 	}
 	
