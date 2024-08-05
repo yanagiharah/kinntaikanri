@@ -23,4 +23,6 @@ public class Users implements Serializable {
 	private Date startDate;
 	
 	private Integer  status;//承認状況
+	
+	//練習
 }
