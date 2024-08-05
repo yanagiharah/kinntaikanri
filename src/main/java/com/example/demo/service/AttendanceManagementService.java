@@ -243,8 +243,8 @@ public void requestActivityCheck(AttendanceFormList attendanceFormList) {
 
 	                if (startTime != null) {
 	                    LocalTime startInputTime = LocalTime.parse(startTime, formatter);
-	                    if (startInputTime.isAfter(endInputTime)) {
-	                        FieldError startEndTime = new FieldError("attendanceFormList", "attendanceList[" + i + "].startTime", "出勤時間より退勤時間が早くなっています。");
+	                    if (endInputTime.isBefore(startInputTime)) {
+	                        FieldError startEndTime = new FieldError("attendanceFormList", "attendanceList[" + i + "].endTime", "出勤時間より退勤時間が早くなっています。");
 	                        result.addError(startEndTime);
 	                    }
 	                }

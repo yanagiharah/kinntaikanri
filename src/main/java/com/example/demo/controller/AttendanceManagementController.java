@@ -48,14 +48,14 @@ public class AttendanceManagementController {
 			RedirectAttributes redirectAttributes, HttpSession session) {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
-		System.out.print(stringYears + stringMonth);
-		if (stringYears == null || stringMonth == null) {
-			if(users.getStatus() != null) {
-				users.setStatus(null);
-			}
-			model.addAttribute("check", "年月を入力してください");
-			return "attendance/registration";
-		}
+//		System.out.print(stringYears + stringMonth);
+//		if (stringYears == null || stringMonth == null) {
+//			if(users.getStatus() != null) {
+//				users.setStatus(null);
+//			}
+//			model.addAttribute("check", "年月を入力してください");
+//			return "attendance/registration";
+//		}
 //		if(years != null || month != null) {
 //			String stringYears = String.valueOf(years);
 //			String stringMonth = String.valueOf(month);
@@ -64,37 +64,43 @@ public class AttendanceManagementController {
 //			}
 //			return "attendance/registration";
 //		}
-		Integer years = Integer.parseInt(stringYears);
-		Integer month = Integer.parseInt(stringMonth);
-		if(stringYears != null && stringMonth != null) {
-			if(stringYears.matches("^[0-9]+$") || stringMonth.matches("^[0-9]+$")) {
-				List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month);
-				
-					// formに詰めなおす
-					AttendanceFormList attendanceFormList = new AttendanceFormList();
-					ArrayList<Attendance> attendanceList = new ArrayList<Attendance>();
-					attendanceFormList.setAttendanceList(attendanceList);
-					attendanceList.addAll(attendance);
-					model.addAttribute("attendanceFormList", attendanceFormList);
-					
-					
-					
-					//月次勤怠テーブルのstatusをユーザーモデルのstatusに詰める
-					MonthlyAttendanceReq statusCheck = monthlyAttendanceReqService.statusCheck(attendance.get(0).getAttendanceDate(), userId);
+		try {
+			Integer years = Integer.parseInt(stringYears);
+			Integer month = Integer.parseInt(stringMonth);
 		
-					if (statusCheck != null) {
-					    users.setStatus(statusCheck.getStatus());
-					} else {
-						users.setStatus(4);
-					}
+			if(stringYears != null && stringMonth != null) {
+				if(stringYears.matches("^[0-9]+$") && stringMonth.matches("^[0-9]+$")) {
+					List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month);
 					
-		
-					attendanceManagementService.requestActivityCheck(attendanceFormList);
+						// formに詰めなおす
+						AttendanceFormList attendanceFormList = new AttendanceFormList();
+						ArrayList<Attendance> attendanceList = new ArrayList<Attendance>();
+						attendanceFormList.setAttendanceList(attendanceList);
+						attendanceList.addAll(attendance);
+						model.addAttribute("attendanceFormList", attendanceFormList);
+						
+						
+						
+						//月次勤怠テーブルのstatusをユーザーモデルのstatusに詰める
+						MonthlyAttendanceReq statusCheck = monthlyAttendanceReqService.statusCheck(attendance.get(0).getAttendanceDate(), userId);
+			
+						if (statusCheck != null) {
+						    users.setStatus(statusCheck.getStatus());
+						} else {
+							users.setStatus(4);
+						}
+						
+			
+						attendanceManagementService.requestActivityCheck(attendanceFormList);
+						
+			
+						
 					
-		
-					
-				
+				}
 			}
+		}catch (NumberFormatException e) {
+			model.addAttribute("check", "半角数字で年月共に入力してください。");
+			return "attendance/registration";
 		}
 		return "attendance/registration";
 	}
