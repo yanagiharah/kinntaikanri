@@ -3,6 +3,8 @@ package com.example.demo.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,8 +21,6 @@ import com.example.demo.model.MonthlyAttendanceReq;
 import com.example.demo.model.Users;
 import com.example.demo.service.AttendanceManagementService;
 import com.example.demo.service.MonthlyAttendanceReqService;
-
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/attendance")
@@ -70,8 +70,9 @@ public class AttendanceManagementController {
 		
 			if(stringYears != null && stringMonth != null) {
 				if(stringYears.matches("^[0-9]+$") && stringMonth.matches("^[0-9]+$")) {
-					List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month);
-					
+					if(month <= 12) {
+						List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month);
+						
 						// formに詰めなおす
 						AttendanceFormList attendanceFormList = new AttendanceFormList();
 						ArrayList<Attendance> attendanceList = new ArrayList<Attendance>();
@@ -93,7 +94,11 @@ public class AttendanceManagementController {
 			
 						attendanceManagementService.requestActivityCheck(attendanceFormList);
 					
-				}
+					} else {
+						model.addAttribute("check", "年月の入力が不正です。");
+						return "attendance/registration";
+					}
+				}	
 			}
 		}catch (NumberFormatException e) {
 			model.addAttribute("check", "半角数字で年月共に入力してください。");
@@ -117,12 +122,7 @@ public class AttendanceManagementController {
 		}
 		
 		
-		 for(int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
-			  attendanceFormList.getAttendanceList().get(i).setAttendanceDate(java.sql.Date.valueOf(attendanceFormList.getAttendanceList().get(i).getAttendanceDateS()));
-			  attendanceFormList.getAttendanceList().get(i).setUserId(users.getUserId());
-		  }
-		attendanceManagementService.attendanceDelete(attendanceFormList);		
-		attendanceManagementService.attendanceCreate(attendanceFormList);
+		 
 		
 		
 		
@@ -152,11 +152,19 @@ public class AttendanceManagementController {
 	    }
 		if(j != 0) {
 			model.addAttribute("attendanceError","勤務状況と出勤時間、または勤務状況と出勤時間と退勤時間を入力してください。");
+			return "attendance/registration";
 		} else if(j == 0 && l == 0) {
 			model.addAttribute("attendanceComplete","勤怠の入力を行ってください。");
 		} else {
 			model.addAttribute("attendanceComplete","勤怠の登録が完了しました。");
 		}
+		
+		for(int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
+			  attendanceFormList.getAttendanceList().get(i).setAttendanceDate(java.sql.Date.valueOf(attendanceFormList.getAttendanceList().get(i).getAttendanceDateS()));
+			  attendanceFormList.getAttendanceList().get(i).setUserId(users.getUserId());
+		  }
+		attendanceManagementService.attendanceDelete(attendanceFormList);		
+		attendanceManagementService.attendanceCreate(attendanceFormList);
 		
 		return "attendance/registration";
 	}
