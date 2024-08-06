@@ -1,43 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.demo.mapper.UserMapper">
+<mapper namespace="com.example.demo.mapper.UsersMapper">
 
 
-<!-- 全件取得 -->
-<select id="selectAll" resultType="com.example.demo.model.Users">
-	select * from users;
-</select>
- 
- 
-<!-- １件取得 -->
+<!-- ログイン時のアカウント存在チェック -->
 <select id="selectByPrimaryKey"
 	resultType="com.example.demo.model.Users">
 	SELECT *
 	FROM users
-	WHERE user_id = #{userId} AND password = #{password}
+	WHERE user_id = #{userId} AND password = #{password}  
 </select>
 
-
-<!-- 登録 -->
-<insert id="insert">
-	insert into users(name, password, role, start_date date)
-	values(#{name})
-</insert>
-
-
-<!-- 更新 -->
-<update id="updateByPrimaryKey">
-	update users
-	set name = #{name}
-	where id = #{id}
-</update>
-
-
-<!-- 削除 -->
-<delete id="deleteByPrimaryKey">
-	delete from users
-	where id = #{id}
-</delete>
 
 
 </mapper>

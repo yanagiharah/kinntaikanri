@@ -1,8 +1,6 @@
 package com.example.demo.controller;
 import java.util.Date;
 
-import jakarta.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +14,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.demo.model.LoginForm;
 import com.example.demo.model.Users;
 import com.example.demo.service.LoginService;
+
+import jakarta.servlet.http.HttpSession;
 
 
 @Controller
@@ -50,7 +50,7 @@ public class LoginController {
 				userId = Integer.valueOf(userIds);	
 			}
 			catch(NumberFormatException e) {
-				redirectAttributes.addFlashAttribute("out", "ユーザーID無効です。");
+				redirectAttributes.addFlashAttribute("out", "ユーザーID、パスワードが不正、もしくはユーザーが無効です。");
 				return "redirect:/";
 			}
 			
@@ -64,7 +64,7 @@ public class LoginController {
 				redirectAttributes.addFlashAttribute("out", "ユーザーID、パスワードが不正、もしくはユーザーが無効です。");
 				return "redirect:/";
 			}else if (users.getStartDate().compareTo(today) == 1 ) {
-				redirectAttributes.addFlashAttribute("out", "現在は使用できません");
+				redirectAttributes.addFlashAttribute("out", "ユーザーID、パスワードが不正、もしくはユーザーが無効です。");
 				return "redirect:/";
 			}else if (users.getRole().equalsIgnoreCase("Admin")) {
 				session.setAttribute("Users", users);
