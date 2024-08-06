@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.time.DateTimeException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,6 +103,9 @@ public class AttendanceManagementController {
 			}
 		}catch (NumberFormatException e) {
 			model.addAttribute("check", "半角数字で年月共に入力してください。");
+			return "attendance/registration";
+		}catch(DateTimeException e) {
+			model.addAttribute("check", "年月の入力が不正です。");
 			return "attendance/registration";
 		}
 		return "attendance/registration";
