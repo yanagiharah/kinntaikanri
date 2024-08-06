@@ -121,7 +121,7 @@ public class AttendanceManagementService {
 					if(attendance.get(j).getEndTime() != null) {
 						attendanceDate1.get(i).setEndTime(attendance.get(j).getEndTime().substring(0, 5));
 					}else {
-						attendanceDate1.get(i).setStartTime(attendance.get(j).getStartTime());
+						attendanceDate1.get(i).setEndTime(attendance.get(j).getEndTime());
 					}
 				}
 			}
@@ -168,16 +168,14 @@ public class AttendanceManagementService {
 //勤怠登録画面で承認申請ボタンを有効にするかを決める
 public void requestActivityCheck(AttendanceFormList attendanceFormList) {
 	for (int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
-		if ((attendanceFormList.getAttendanceList().get(i).getStatus() == 12
-				&& "".equals(attendanceFormList.getAttendanceList().get(i).getStartTime())
-				&& "".equals(attendanceFormList.getAttendanceList().get(i).getEndTime()))
-				|| (attendanceFormList.getAttendanceList().get(i).getStatus() == 12
-						&& attendanceFormList.getAttendanceList().get(i).getStartTime() == null
-						&& attendanceFormList.getAttendanceList().get(i).getEndTime() == null)) {
+		if (attendanceFormList.getAttendanceList().get(i).getStatus() != 12
+				&& !("".equals(attendanceFormList.getAttendanceList().get(i).getStartTime()))
+				&& !("".equals(attendanceFormList.getAttendanceList().get(i).getEndTime()))) {
+			attendanceFormList.setRequestActivityCheck(true);
+			
+		} else {
 			attendanceFormList.setRequestActivityCheck(false);
 			break;
-		} else {
-			attendanceFormList.setRequestActivityCheck(true);
 		}
 	}
 }
