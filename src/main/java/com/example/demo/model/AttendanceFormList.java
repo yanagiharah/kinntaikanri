@@ -13,5 +13,5 @@ public class AttendanceFormList {
 	
 	private Boolean RequestActivityCheck;//承認申請ボタンの活性と非活性
 	
-	private boolean registrationActivityCheck;//登録ボタンの活性と非活性
+	private Boolean registrationActivityCheck;//登録ボタンの活性と非活性
 }

@@ -70,10 +70,10 @@
 							</div>
 						</div>
 						<div th:unless="${Users.role} == 'Manager'">
-							<span th:if="${attendanceFormList} == null or ${Users.status} == 1 or ${Users.status} == 2">
+							<span th:if="(${attendanceFormList} == null or ${attendanceFormList.RequestActivityCheck} == false) or (${Users.status} == 1 or ${Users.status} == 2)">
 								<input type="submit" id="requestApproval" name="approvalApplicationRegistration" value="承認申請" class="buttonSize" disabled>
 							</span>
-							<span th:unless="${attendanceFormList} == null or ${Users.status} == 1 or ${Users.status} == 2">
+							<span th:unless="(${attendanceFormList} == null or ${attendanceFormList.RequestActivityCheck} == false) or (${Users.status} == 1 or ${Users.status} == 2)">
 								<input type="submit" id="requestApproval" name="approvalApplicationRegistration" value="承認申請" class="buttonSize" >
 							</span>
 							<span th:if="${Users.status} == 3 or ${Users.status} == 4">

@@ -175,6 +175,7 @@ public void requestActivityCheck(AttendanceFormList attendanceFormList) {
 						&& attendanceFormList.getAttendanceList().get(i).getStartTime() == null
 						&& attendanceFormList.getAttendanceList().get(i).getEndTime() == null)) {
 			attendanceFormList.setRequestActivityCheck(false);
+			break;
 		} else {
 			attendanceFormList.setRequestActivityCheck(true);
 		}
