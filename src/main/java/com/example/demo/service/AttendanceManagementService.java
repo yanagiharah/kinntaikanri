@@ -46,8 +46,8 @@ public class AttendanceManagementService {
 		for (int i = 0; i < lastMonthAndDay; i++) {
 			Attendance attendanceDate = new Attendance();
 			attendanceDate.setStatus(12);
-			attendanceDate.setStartTime("");
-			attendanceDate.setEndTime("");
+			attendanceDate.setStartTime(null);
+			attendanceDate.setEndTime(null);
 			attendanceDate.setAttendanceRemarks(null);//備考
 			attendanceDate.setDays(i + 1);
 			attendanceDate1.add(attendanceDate);
@@ -114,6 +114,7 @@ public class AttendanceManagementService {
 					attendanceDate1.get(i).setAttendanceRemarks(attendance.get(j).getAttendanceRemarks());
 					if(attendance.get(j).getStartTime() != null) {
 						attendanceDate1.get(i).setStartTime(attendance.get(j).getStartTime().substring(0, 5));
+						System.out.print(attendanceDate1.get(i).getStartTime());
 					}else {
 						attendanceDate1.get(i).setStartTime(attendance.get(j).getStartTime());
 					}
@@ -256,3 +257,4 @@ public void requestActivityCheck(AttendanceFormList attendanceFormList) {
 	    }
 	}
 }
+

@@ -16,7 +16,15 @@
 <!-- 登録 -->
 <insert id="insert">
 	insert into attendance(user_id,status,attendance_date,start_time,end_time,attendance_remarks)
-	values(#{userId},#{status},#{attendanceDate},#{startTime},#{endTime},#{attendanceRemarks})
+	values(
+	#{userId},
+	#{status},
+	#{attendanceDate},
+	<if test="startTime != null and startTime != ''">#{startTime}</if>
+    <if test="startTime == null or startTime == ''">NULL</if>,
+    <if test="endTime != null and endTime != ''">#{endTime}</if>
+    <if test="endTime == null or endTime == ''">NULL</if>,
+	#{attendanceRemarks})
 </insert>
 
 
