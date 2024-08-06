@@ -186,6 +186,7 @@ public void requestActivityCheck(AttendanceFormList attendanceFormList) {
 		}
 	}
 }
+
   
 
 //勤怠登録のエラーチェック

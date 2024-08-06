@@ -161,6 +161,7 @@ public class AttendanceManagementController {
 		return "attendance/registration";
 	}
 	
+	
 	  //承認申請ボタン押下
 	@RequestMapping(value = "/management", params = "approvalApplicationRegistration", method = RequestMethod.POST)
 	public String monthlyAttendanceReqCreate(MonthlyAttendanceReq monthlyAttendanceReq,
