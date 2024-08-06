@@ -73,7 +73,7 @@ public class UserManagementService {
 			 FieldError password = new FieldError("managementForm", "password", "16未満で入力してください");
 			  result.addError(password);
 		}
-		if(managementForm.getPassword().matches("^[^ -~｡-ﾟ]+$")) {
+		if(managementForm.getPassword().matches(".*[^ -~｡-ﾟ]+.*")) {
 			 FieldError password = new FieldError("managementForm", "password", "半角文字で入力してください");
 			 result.addError(password);
 		}
