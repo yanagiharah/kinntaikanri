@@ -177,6 +177,13 @@ public void requestActivityCheck(AttendanceFormList attendanceFormList) {
 			attendanceFormList.setRequestActivityCheck(false);
 			break;
 		}
+		
+		if(attendanceFormList.getAttendanceList().get(i).getStatus() != 12
+				&& attendanceFormList.getAttendanceList().get(i).getStartTime() != null
+				&& attendanceFormList.getAttendanceList().get(i).getEndTime() == null) {
+			attendanceFormList.setRequestActivityCheck(false);
+			break;
+		}
 	}
 }
   
