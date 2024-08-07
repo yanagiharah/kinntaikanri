@@ -96,15 +96,18 @@ public class AttendanceManagementController {
 						attendanceManagementService.requestActivityCheck(attendanceFormList);
 					
 					} else {
+						users.setStatus(null);
 						model.addAttribute("check", "年月の入力が不正です。");
 						return "attendance/registration";
 					}
 				}	
 			}
 		}catch (NumberFormatException e) {
+			users.setStatus(null);
 			model.addAttribute("check", "半角数字で年月共に入力してください。");
 			return "attendance/registration";
 		}catch(DateTimeException e) {
+			users.setStatus(null);
 			model.addAttribute("check", "年月の入力が不正です。");
 			return "attendance/registration";
 		}
