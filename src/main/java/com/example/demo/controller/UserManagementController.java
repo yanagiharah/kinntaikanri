@@ -4,8 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Random;
 
-import jakarta.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -19,6 +17,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.demo.model.ManagementForm;
 import com.example.demo.model.Users;
 import com.example.demo.service.UserManagementService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/user")
@@ -57,7 +57,7 @@ public class UserManagementController {
 	}
 	
 	//名前を引数にserviceクラスでリストの取得
-	Users users = userManagementService.userSearchListUp(userName);	
+	Users users = userManagementService.SelectByAccount(userName,null);	
 	//リストがあった場合
 	if(users != null) {
 		ManagementForm managementForm = new ManagementForm();
@@ -95,12 +95,19 @@ public class UserManagementController {
 		    return "User/manegement";
 		  }
 		
+		Users users = userManagementService.SelectByAccount(managementForm.getUserName(),managementForm.getUserId());
+		
 		if ("9999/99/99".equals(managementForm.getStartDate().trim())) {
-			userManagementService.userDelete(managementForm);
-			String agree = messageSource.getMessage("delete",new String[] {managementForm.getUserName()} , Locale.getDefault());
-			model.addAttribute("check",agree);
+			if(users != null) {
+				userManagementService.userDelete(managementForm);
+				String agree = messageSource.getMessage("delete",new String[] {managementForm.getUserName()} , Locale.getDefault());
+				model.addAttribute("check",agree);
+			}else {
+				String agree = messageSource.getMessage("missTake",new String[] {managementForm.getUserName()} , Locale.getDefault());
+				model.addAttribute("check",agree);
+			}
+			
 		} else {
-			Users users = userManagementService.userSearchListUp(managementForm.getUserName());
 			if (users != null) {
 				userManagementService.userUpdate(managementForm);
 				String agree = messageSource.getMessage("update",new String[] {managementForm.getUserName()} , Locale.getDefault());

@@ -7,18 +7,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
-import com.example.demo.mapper.UserSearchMapper;
+import com.example.demo.mapper.UsersMapper;
 import com.example.demo.model.ManagementForm;
 import com.example.demo.model.Users;
 
 @Service
 public class UserManagementService {
-  @Autowired
-  public UserSearchMapper userSearchMapper;
+	@Autowired
+	  public UsersMapper userSearchMapper;
 
 	//ユーザー管理画面 検索処理
-	public Users userSearchListUp(String userName) {
-		Users users = userSearchMapper.selectByPrimaryKey(userName);
+	public Users SelectByAccount(String userName, Integer userId) {
+		Users users = userSearchMapper.SelectByAccount(userName, userId);
 		return users;
 	}
 
@@ -61,7 +61,7 @@ public class UserManagementService {
 		}
 		
 		if (!managementForm.getUserName().matches("^[^ -~｡-ﾟ]+$")) {
-			FieldError userName = new FieldError(managementForm.getUserName(), "userName", "ユーザー名は半角で入力してください");
+			FieldError userName = new FieldError(managementForm.getUserName(), "userName", "ユーザー名は全角で入力してください");
 			result.addError(userName);
 		}
 		

@@ -27,7 +27,7 @@
 								<span th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></span>
 							</div>
 							<p>ユーザー名　<input type="text" name="userName" th:value="${managementForm} != null ? *{userName} :''">
-								　　　<input type="submit" value="検索" name="search" class="buttonRound">
+								　　<input type="submit" value="検索" name="search" class="buttonRound">
 							</p>
 							<hr style="color: midnightblue;">
 							<div class="text-danger">

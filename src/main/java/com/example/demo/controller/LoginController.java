@@ -56,7 +56,7 @@ public class LoginController {
 			
 			userId = Integer.valueOf(loginForm.getUserId());	
 			
-			Users users = loginService.LoginListUp(userId, loginForm.getPassword());
+			Users users = loginService.loginCheck(userId, loginForm.getPassword());
 			
 			Date today = new Date();
 

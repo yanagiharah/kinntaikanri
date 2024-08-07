@@ -3,14 +3,49 @@
 <mapper namespace="com.example.demo.mapper.UsersMapper">
 
 
+
 <!-- ログイン時のアカウント存在チェック -->
-<select id="selectByPrimaryKey"
+<select id="loginCheck"
 	resultType="com.example.demo.model.Users">
 	SELECT *
 	FROM users
 	WHERE user_id = #{userId} AND password = #{password}  
 </select>
+ 
+ 
+<!-- １件取得 -->
+<select id="SelectByAccount" resultType="com.example.demo.model.Users">
+	SELECT * 
+	FROM users 
+    WHERE user_name = #{userName} 
+    <if test="userId != null">
+        AND user_id = #{userId}
+    </if>
+</select>
 
+
+<!-- 登録 -->
+<insert id="insert">
+	insert into users (user_id,password, user_name, role, start_date) 
+	values(#{userId},#{password}, #{userName}, #{role}, #{startDate});
+</insert>
+
+
+<!-- 更新 -->
+<update id="update" parameterType="com.example.demo.model.Users">
+    UPDATE users
+    SET password = #{password},
+        role = #{role},
+        start_date = #{startDate}
+    WHERE user_id = #{userId}
+</update>
+
+
+<!-- 削除 -->
+<delete id="delete">
+	delete from users
+	where user_id = #{userId}
+</delete>
 
 
 </mapper>

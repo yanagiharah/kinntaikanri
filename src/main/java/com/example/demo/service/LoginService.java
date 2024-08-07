@@ -8,10 +8,10 @@ import com.example.demo.model.Users;
 
 @Service
 public class LoginService {
-  @Autowired
-  private UsersMapper usersMapper;
-	public Users LoginListUp(Integer userId ,String password) {
-		Users users = usersMapper.selectByPrimaryKey(userId, password);
+	@Autowired
+	  private UsersMapper usersMapper;
+	public Users loginCheck(Integer userId ,String password) {
+		Users users = usersMapper.loginCheck(userId, password);
 		return users;
 		
 	}
