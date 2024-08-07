@@ -25,22 +25,16 @@ public class AttendanceManagementService {
   @Autowired
   public AttendanceSearchMapper attendanceSearchMapper;
   
-  //勤怠表の取得
-  public List<Attendance> attendanceSearchListUp(Integer userId, Integer years, Integer month) {
-		
-		LocalDate targetDate = LocalDate.of(years, month, 1);
-		LocalDate endDate = targetDate.with(TemporalAdjusters.lastDayOfMonth());
-		
-		
+  	//勤怠表の取得
+	public List<Attendance> attendanceSearchListUp(Integer userId, Integer years, Integer month) {
+
 		//年月から最終月日を算出
 		Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, years);
-        calendar.set(Calendar.MONTH, month - 1);
-        int lastMonthAndDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+		calendar.set(Calendar.YEAR, years);
+		calendar.set(Calendar.MONTH, month - 1);
+		int lastMonthAndDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 
-       
-               
-        //monthlyAttendanceListは1日～31日までの日付のattendance型が入ったList
+		//monthlyAttendanceListは1日～31日までの日付のattendance型の空の勤怠表を作成
         List<Attendance> monthlyAttendanceList = new ArrayList<Attendance>();
 
 		for (int i = 0; i < lastMonthAndDay; i++) {
@@ -88,6 +82,7 @@ public class AttendanceManagementService {
 			}
 			Date newDate = cal.getTime();
 			monthlyAttendance.setAttendanceDate(newDate);
+			
 			//String型の日付を取得
 			String newDateS = new SimpleDateFormat("yyyy-MM-dd").format(newDate);
 			monthlyAttendance.setAttendanceDateS(String.valueOf(newDateS));
@@ -95,9 +90,10 @@ public class AttendanceManagementService {
 		}
 		
 		//DBから勤怠表を取得
+		LocalDate targetDate = LocalDate.of(years, month, 1);
+		LocalDate endDate = targetDate.with(TemporalAdjusters.lastDayOfMonth());
 		List<Attendance> attendance = attendanceSearchMapper.selectByYearMonth(userId, targetDate, endDate);
 
-		
 		
 		//DBに存在する勤怠表の日付を日、月、string型日付で取得する
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -110,7 +106,7 @@ public class AttendanceManagementService {
 		}
 		
 		
-		//空の月の勤怠表とDBから取得した勤怠表を統合する
+		//空の勤怠表とDBから取得した勤怠表を統合する
 		for (int i = 0; i < lastMonthAndDay; i++) {
 			for (int j = 0; j < attendance.size(); j++) {
 				
@@ -138,14 +134,14 @@ public class AttendanceManagementService {
 	}
   
   
-  //勤怠テーブルのデータを物理削除
+	//勤怠テーブルのデータを物理削除
 	public void attendanceDelete(AttendanceFormList attendanceFormList) {
 		attendanceSearchMapper.deleteByAttendanceOfMonth(attendanceFormList.getAttendanceList().get(0).getUserId(),
 				attendanceFormList.getAttendanceList().get(0).getAttendanceDate(),
 				attendanceFormList.getAttendanceList().get(attendanceFormList.getAttendanceList().size() - 1).getAttendanceDate());
 	}
   
-  //勤怠テーブルに登録処理
+	//勤怠テーブルに登録処理
 	public void attendanceCreate(AttendanceFormList attendanceFormList) {
 		for (int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
 			//出勤の場合
@@ -173,35 +169,38 @@ public class AttendanceManagementService {
 	}
   
   
-//勤怠登録画面で承認申請ボタンを有効にするかを決める
-public void requestActivityCheck(AttendanceFormList attendanceFormList) {
-	for (int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
-		if (attendanceFormList.getAttendanceList().get(i).getStatus() != 12
-				&& attendanceFormList.getAttendanceList().get(i).getStartTime() != null
-				&& attendanceFormList.getAttendanceList().get(i).getEndTime() != null) {
-			attendanceFormList.setRequestActivityCheck(true);
+	//勤怠登録画面で承認申請ボタンを有効にするかを決める
+	public void requestActivityCheck(AttendanceFormList attendanceFormList) {
+		for (int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
 			
-		} else {
-			attendanceFormList.setRequestActivityCheck(false);
-			break;
-		}
-		
-		if(attendanceFormList.getAttendanceList().get(i).getStatus() != 12
-				&& attendanceFormList.getAttendanceList().get(i).getStartTime() != ""
-				&& attendanceFormList.getAttendanceList().get(i).getEndTime() == "") {
-			attendanceFormList.setRequestActivityCheck(false);
-			break;
+			//条件1 ステータスに記入があり、出勤退勤がnullじゃない場合
+			if (attendanceFormList.getAttendanceList().get(i).getStatus() != 12
+					&& attendanceFormList.getAttendanceList().get(i).getStartTime() != null
+					&& attendanceFormList.getAttendanceList().get(i).getEndTime() != null) {
+				attendanceFormList.setRequestActivityCheck(true);
+
+			} else {
+				attendanceFormList.setRequestActivityCheck(false);
+				break;
+			}
+			
+			//条件2 ステータスに記入があり、出勤のみ記入がある場合
+			if (attendanceFormList.getAttendanceList().get(i).getStatus() != 12
+					&& attendanceFormList.getAttendanceList().get(i).getStartTime() != ""
+					&& attendanceFormList.getAttendanceList().get(i).getEndTime() == "") {
+				attendanceFormList.setRequestActivityCheck(false);
+				break;
+			}
 		}
 	}
-}
 
   
 
-//勤怠登録のエラーチェック
-  public void errorCheck(AttendanceFormList attendanceFormList, BindingResult result) {
+	//勤怠登録のエラーチェック
+	public void errorCheck(AttendanceFormList attendanceFormList, BindingResult result) {
 	    for (int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
-	        // 備考欄
 	        
+	    	// 備考欄
 	    	if (attendanceFormList.getAttendanceList().get(i).getAttendanceRemarks().length() > 20) {
 	    		    FieldError attendanceRemarks = new FieldError("attendanceFormList", "attendanceList[" + i + "].attendanceRemarks", "20文字以内で入力してください。");
 	    		    result.addError(attendanceRemarks);
@@ -272,4 +271,5 @@ public void requestActivityCheck(AttendanceFormList attendanceFormList) {
 	    }
 	}
 }
+
 
