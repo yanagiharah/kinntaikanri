@@ -121,6 +121,8 @@ public class AttendanceManagementController {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
 		
+		attendanceManagementService.requestActivityCheck(attendanceFormList);
+		
 		attendanceManagementService.errorCheck(attendanceFormList, result);
 		
 		if(result.hasErrors()) {
@@ -133,7 +135,7 @@ public class AttendanceManagementController {
 		
 		
 		
-		attendanceManagementService.requestActivityCheck(attendanceFormList);
+		
 		System.out.print("なんで？"+attendanceFormList);
 		
 		int j = 0;//不正入力のカウント
