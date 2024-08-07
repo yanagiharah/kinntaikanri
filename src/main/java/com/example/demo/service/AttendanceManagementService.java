@@ -40,65 +40,67 @@ public class AttendanceManagementService {
 
        
                
-        //attendanceDate1は１日～３１日までの日付のattendance型が入ったList
-        List<Attendance> attendanceDate1 = new ArrayList<Attendance>();
+        //monthlyAttendanceListは1日～31日までの日付のattendance型が入ったList
+        List<Attendance> monthlyAttendanceList = new ArrayList<Attendance>();
 
 		for (int i = 0; i < lastMonthAndDay; i++) {
-			Attendance attendanceDate = new Attendance();
-			attendanceDate.setStatus(12);
-			attendanceDate.setStartTime(null);
-			attendanceDate.setEndTime(null);
-			attendanceDate.setAttendanceRemarks(null);//備考
-			attendanceDate.setDays(i + 1);
-			attendanceDate1.add(attendanceDate);
+			Attendance monthlyAttendance = new Attendance();
+			monthlyAttendance.setStatus(12);
+			monthlyAttendance.setStartTime(null);
+			monthlyAttendance.setEndTime(null);
+			monthlyAttendance.setAttendanceRemarks(null);//備考
+			monthlyAttendance.setDays(i + 1);
+			monthlyAttendanceList.add(monthlyAttendance);
 
 			Calendar cal = Calendar.getInstance();
-			cal.set(years, month - 1, attendanceDate.getDays());
+			cal.set(years, month - 1, monthlyAttendance.getDays());
 
 			// 日付から曜日を取得する
 			switch (cal.get(Calendar.DAY_OF_WEEK)) {
 			case Calendar.SUNDAY: // Calendar.SUNDAY:1 
 				//日曜日
-				attendanceDate.setDayOfWeek("日");
+				monthlyAttendance.setDayOfWeek("日");
 				break;
 			case Calendar.MONDAY: // Calendar.MONDAY:2
 				//月曜日
-				attendanceDate.setDayOfWeek("月");
+				monthlyAttendance.setDayOfWeek("月");
 				break;
 			case Calendar.TUESDAY: // Calendar.TUESDAY:3
 				//火曜日
-				attendanceDate.setDayOfWeek("火");
+				monthlyAttendance.setDayOfWeek("火");
 				break;
 			case Calendar.WEDNESDAY: // Calendar.WEDNESDAY:4
 				//水曜日
-				attendanceDate.setDayOfWeek("水");
+				monthlyAttendance.setDayOfWeek("水");
 				break;
 			case Calendar.THURSDAY: // Calendar.THURSDAY:5
 				//木曜日
-				attendanceDate.setDayOfWeek("木");
+				monthlyAttendance.setDayOfWeek("木");
 				break;
 			case Calendar.FRIDAY: // Calendar.FRIDAY:6
 				//金曜日
-				attendanceDate.setDayOfWeek("金");
+				monthlyAttendance.setDayOfWeek("金");
 				break;
 			case Calendar.SATURDAY: // Calendar.SATURDAY:7
 				//土曜日
-				attendanceDate.setDayOfWeek("土");
+				monthlyAttendance.setDayOfWeek("土");
 				break;
 			}
 			Date newDate = cal.getTime();
-			attendanceDate.setAttendanceDate(newDate);
+			monthlyAttendance.setAttendanceDate(newDate);
 			//String型の日付を取得
 			String newDateS = new SimpleDateFormat("yyyy-MM-dd").format(newDate);
-			attendanceDate.setAttendanceDateS(String.valueOf(newDateS));
+			monthlyAttendance.setAttendanceDateS(String.valueOf(newDateS));
 
 		}
+		
 		//DBから勤怠表を取得
 		List<Attendance> attendance = attendanceSearchMapper.selectByYearMonth(userId, targetDate, endDate);
 
-		 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		
 		
 		//DBに存在する勤怠表の日付を日、月、string型日付で取得する
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		for (int j = 0; j < attendance.size(); j++) {
 			String str = sdf.format(attendance.get(j).getAttendanceDate());
 			String monthStr = str.substring(5, 7);
@@ -106,27 +108,33 @@ public class AttendanceManagementService {
 			attendance.get(j).setMonth(Integer.parseInt(monthStr));
 			attendance.get(j).setDays(Integer.parseInt(dayStr));
 		}
-
+		
+		
+		//空の月の勤怠表とDBから取得した勤怠表を統合する
 		for (int i = 0; i < lastMonthAndDay; i++) {
 			for (int j = 0; j < attendance.size(); j++) {
-				if (attendanceDate1.get(i).getDays().equals(attendance.get(j).getDays())) {
-					attendanceDate1.get(i).setStatus(attendance.get(j).getStatus());
-					attendanceDate1.get(i).setAttendanceRemarks(attendance.get(j).getAttendanceRemarks());
+				
+				//日付で比較
+				if (monthlyAttendanceList.get(i).getDays().equals(attendance.get(j).getDays())) {
+					
+					monthlyAttendanceList.get(i).setStatus(attendance.get(j).getStatus());
+					monthlyAttendanceList.get(i).setAttendanceRemarks(attendance.get(j).getAttendanceRemarks());
+					
 					if(attendance.get(j).getStartTime() != null) {
-						attendanceDate1.get(i).setStartTime(attendance.get(j).getStartTime().substring(0, 5));
-						System.out.print(attendanceDate1.get(i).getStartTime());
+						monthlyAttendanceList.get(i).setStartTime(attendance.get(j).getStartTime().substring(0, 5));
 					}else {
-						attendanceDate1.get(i).setStartTime(attendance.get(j).getStartTime());
+						monthlyAttendanceList.get(i).setStartTime("");
 					}
+					
 					if(attendance.get(j).getEndTime() != null) {
-						attendanceDate1.get(i).setEndTime(attendance.get(j).getEndTime().substring(0, 5));
+						monthlyAttendanceList.get(i).setEndTime(attendance.get(j).getEndTime().substring(0, 5));
 					}else {
-						attendanceDate1.get(i).setEndTime(attendance.get(j).getEndTime());
+						monthlyAttendanceList.get(i).setEndTime("");
 					}
 				}
 			}
 		}
-		return attendanceDate1;
+		return monthlyAttendanceList;
 	}
   
   
