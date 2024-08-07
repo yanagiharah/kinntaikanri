@@ -169,8 +169,8 @@ public class AttendanceManagementService {
 public void requestActivityCheck(AttendanceFormList attendanceFormList) {
 	for (int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
 		if (attendanceFormList.getAttendanceList().get(i).getStatus() != 12
-				&& !("".equals(attendanceFormList.getAttendanceList().get(i).getStartTime()))
-				&& !("".equals(attendanceFormList.getAttendanceList().get(i).getEndTime()))) {
+				&& attendanceFormList.getAttendanceList().get(i).getStartTime() != null
+				&& attendanceFormList.getAttendanceList().get(i).getEndTime() != null) {
 			attendanceFormList.setRequestActivityCheck(true);
 			
 		} else {
@@ -179,8 +179,8 @@ public void requestActivityCheck(AttendanceFormList attendanceFormList) {
 		}
 		
 		if(attendanceFormList.getAttendanceList().get(i).getStatus() != 12
-				&& attendanceFormList.getAttendanceList().get(i).getStartTime() != null
-				&& attendanceFormList.getAttendanceList().get(i).getEndTime() == null) {
+				&& attendanceFormList.getAttendanceList().get(i).getStartTime() != ""
+				&& attendanceFormList.getAttendanceList().get(i).getEndTime() == "") {
 			attendanceFormList.setRequestActivityCheck(false);
 			break;
 		}
