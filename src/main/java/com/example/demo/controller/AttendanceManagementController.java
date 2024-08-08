@@ -4,8 +4,6 @@ import java.time.DateTimeException;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +20,8 @@ import com.example.demo.model.MonthlyAttendanceReq;
 import com.example.demo.model.Users;
 import com.example.demo.service.AttendanceManagementService;
 import com.example.demo.service.MonthlyAttendanceReqService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/attendance")
@@ -115,14 +115,6 @@ public class AttendanceManagementController {
 			return "attendance/registration";
 		}
 		
-		
-		 
-		
-		
-		
-		
-		System.out.print("なんで？"+attendanceFormList);
-		
 		int j = 0;//不正入力のカウント
 //		int k = 0;//未入力のカウント
 		int l = 0;//正常入力のカウント
@@ -176,7 +168,9 @@ public class AttendanceManagementController {
 		
 		System.out.print(monthlyAttendanceReq);
 		for(int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
-			attendanceFormList.getAttendanceList().get(i).setAttendanceDate(java.sql.Date.valueOf(attendanceFormList.getAttendanceList().get(i).getAttendanceDateS()));
+			String inputDate = attendanceFormList.getAttendanceList().get(i).getAttendanceDateS();
+			String conversion = inputDate.replace("/","-");
+			attendanceFormList.getAttendanceList().get(i).setAttendanceDate(java.sql.Date.valueOf(conversion));
 		}
 		MonthlyAttendanceReq monthlyAttendanceDoubleCheck  = monthlyAttendanceReqService.statusCheck(attendanceFormList.getAttendanceList().get(0).getAttendanceDate(), monthlyAttendanceReq.getUserId());
 
@@ -193,8 +187,6 @@ public class AttendanceManagementController {
 			  //承認申請が承認待ち、もしくは承認された際の処理。statusは1 or 2
 			  model.addAttribute("double","既に申請されています。");
 		  }
-		
-		
 		
 		
 		MonthlyAttendanceReq statusCheck = monthlyAttendanceReqService.statusCheck(attendanceFormList.getAttendanceList().get(0).getAttendanceDate(), users.getUserId());
@@ -240,7 +232,9 @@ public class AttendanceManagementController {
 		if(attendanceFormList.getAttendanceList() == null) {
 			redirectAttributes.addFlashAttribute("madahayai","先にユーザーを選択してください。");
 		} else {
-			monthlyAttendanceReqService.approvalStatus(attendanceFormList.getAttendanceList().get(0).getUserId(), attendanceFormList.getAttendanceList().get(0).getAttendanceDateS());
+			String inputDate = attendanceFormList.getAttendanceList().get(0).getAttendanceDateS();
+			String conversion = inputDate.replace("/","-");
+			monthlyAttendanceReqService.approvalStatus(attendanceFormList.getAttendanceList().get(0).getUserId(), conversion);
 		}
 		return "redirect:/attendance/index";
 	}
@@ -253,7 +247,9 @@ public class AttendanceManagementController {
 		if(attendanceFormList.getAttendanceList() == null) {
 			redirectAttributes.addFlashAttribute("madahayai","先にユーザーを選択してください。");
 		} else {
-			monthlyAttendanceReqService.rejectedStatus(attendanceFormList.getAttendanceList().get(0).getUserId(), attendanceFormList.getAttendanceList().get(0).getAttendanceDateS());
+			String inputDate = attendanceFormList.getAttendanceList().get(0).getAttendanceDateS();
+			String conversion = inputDate.replace("/","-");
+			monthlyAttendanceReqService.rejectedStatus(attendanceFormList.getAttendanceList().get(0).getUserId(), conversion);
 		}
 		return "redirect:/attendance/index";
 	}

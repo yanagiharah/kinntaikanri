@@ -34,7 +34,9 @@ public class MonthlyAttendanceReqService {
   public void monthlyAttendanceReqCreate(MonthlyAttendanceReq monthlyAttendanceReq, AttendanceFormList attendanceFormList){
 	  
 	  //申請月の１日をtargetYearMonthにいれる
-	  monthlyAttendanceReq.setTargetYearMonth(java.sql.Date.valueOf(attendanceFormList.getAttendanceList().get(0).getAttendanceDateS()));
+	  String inputDate = attendanceFormList.getAttendanceList().get(0).getAttendanceDateS();
+	  String conversion = inputDate.replace("/","-");
+	  monthlyAttendanceReq.setTargetYearMonth(java.sql.Date.valueOf(conversion));
 	  //今日の日付をmonthlyAttendanceReqDateに入れる
 	  Date date = new Date();
 	  monthlyAttendanceReq.setMonthlyAttendanceReqDate(date);
