@@ -4,6 +4,8 @@ import java.time.DateTimeException;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,8 +22,6 @@ import com.example.demo.model.MonthlyAttendanceReq;
 import com.example.demo.model.Users;
 import com.example.demo.service.AttendanceManagementService;
 import com.example.demo.service.MonthlyAttendanceReqService;
-
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/attendance")
@@ -49,22 +49,7 @@ public class AttendanceManagementController {
 			RedirectAttributes redirectAttributes, HttpSession session) {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
-//		System.out.print(stringYears + stringMonth);
-//		if (stringYears == null || stringMonth == null) {
-//			if(users.getStatus() != null) {
-//				users.setStatus(null);
-//			}
-//			model.addAttribute("check", "年月を入力してください");
-//			return "attendance/registration";
-//		}
-//		if(years != null || month != null) {
-//			String stringYears = String.valueOf(years);
-//			String stringMonth = String.valueOf(month);
-//			if(!stringYears.matches("\\d+") || !stringMonth.matches("\\d+")) {
-//				model.addAttribute("check", "大文字と英字は許さん");
-//			}
-//			return "attendance/registration";
-//		}
+		
 		try {
 			Integer years = Integer.parseInt(stringYears);
 			Integer month = Integer.parseInt(stringMonth);
@@ -169,9 +154,11 @@ public class AttendanceManagementController {
 			model.addAttribute("attendanceComplete","勤怠の登録が完了しました。");
 		}
 		
-		for(int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
-			  attendanceFormList.getAttendanceList().get(i).setAttendanceDate(java.sql.Date.valueOf(attendanceFormList.getAttendanceList().get(i).getAttendanceDateS()));
-			  attendanceFormList.getAttendanceList().get(i).setUserId(users.getUserId());
+		for(int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {  
+			String inputDate = attendanceFormList.getAttendanceList().get(i).getAttendanceDateS();
+			String conversion = inputDate.replace("/","-");
+			attendanceFormList.getAttendanceList().get(i).setAttendanceDate(java.sql.Date.valueOf(conversion));
+			attendanceFormList.getAttendanceList().get(i).setUserId(users.getUserId());
 		  }
 		attendanceManagementService.attendanceDelete(attendanceFormList);		
 		attendanceManagementService.attendanceCreate(attendanceFormList);
