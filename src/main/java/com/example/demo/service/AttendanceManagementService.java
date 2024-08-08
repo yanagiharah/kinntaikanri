@@ -84,7 +84,7 @@ public class AttendanceManagementService {
 			monthlyAttendance.setAttendanceDate(newDate);
 			
 			//String型の日付を取得
-			String newDateS = new SimpleDateFormat("yyyy-MM-dd").format(newDate);
+			String newDateS = new SimpleDateFormat("yyyy/MM/dd").format(newDate);
 			monthlyAttendance.setAttendanceDateS(String.valueOf(newDateS));
 
 		}
@@ -96,7 +96,7 @@ public class AttendanceManagementService {
 
 		
 		//DBに存在する勤怠表の日付を日、月、string型日付で取得する
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 		for (int j = 0; j < attendance.size(); j++) {
 			String str = sdf.format(attendance.get(j).getAttendanceDate());
 			String monthStr = str.substring(5, 7);

@@ -4,8 +4,6 @@ import java.time.DateTimeException;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +20,8 @@ import com.example.demo.model.MonthlyAttendanceReq;
 import com.example.demo.model.Users;
 import com.example.demo.service.AttendanceManagementService;
 import com.example.demo.service.MonthlyAttendanceReqService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/attendance")
@@ -47,24 +47,10 @@ public class AttendanceManagementController {
 	@RequestMapping(value = "/management", params = "search", method = RequestMethod.POST)
 	public String attendanceSearch(Integer userId, String stringYears, String stringMonth, Model model,
 			RedirectAttributes redirectAttributes, HttpSession session) {
+
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
-//		System.out.print(stringYears + stringMonth);
-//		if (stringYears == null || stringMonth == null) {
-//			if(users.getStatus() != null) {
-//				users.setStatus(null);
-//			}
-//			model.addAttribute("check", "年月を入力してください");
-//			return "attendance/registration";
-//		}
-//		if(years != null || month != null) {
-//			String stringYears = String.valueOf(years);
-//			String stringMonth = String.valueOf(month);
-//			if(!stringYears.matches("\\d+") || !stringMonth.matches("\\d+")) {
-//				model.addAttribute("check", "大文字と英字は許さん");
-//			}
-//			return "attendance/registration";
-//		}
+
 		try {
 			Integer years = Integer.parseInt(stringYears);
 			Integer month = Integer.parseInt(stringMonth);
@@ -81,8 +67,6 @@ public class AttendanceManagementController {
 						attendanceList.addAll(attendance);
 						model.addAttribute("attendanceFormList", attendanceFormList);
 						
-						
-						
 						//月次勤怠テーブルのstatusをユーザーモデルのstatusに詰める
 						MonthlyAttendanceReq statusCheck = monthlyAttendanceReqService.statusCheck(attendance.get(0).getAttendanceDate(), userId);
 			
@@ -91,7 +75,6 @@ public class AttendanceManagementController {
 						} else {
 							users.setStatus(4);
 						}
-						
 			
 						attendanceManagementService.requestActivityCheck(attendanceFormList);
 					
@@ -106,11 +89,13 @@ public class AttendanceManagementController {
 			users.setStatus(null);
 			model.addAttribute("check", "半角数字で年月共に入力してください。");
 			return "attendance/registration";
+			
 		}catch(DateTimeException e) {
 			users.setStatus(null);
 			model.addAttribute("check", "年月の入力が不正です。");
 			return "attendance/registration";
 		}
+		
 		return "attendance/registration";
 	}
 	
@@ -128,13 +113,7 @@ public class AttendanceManagementController {
 			return "attendance/registration";
 		}
 		
-		
-		 
-		
-		
-		
 		attendanceManagementService.requestActivityCheck(attendanceFormList);
-		System.out.print("なんで？"+attendanceFormList);
 		
 		int j = 0;//不正入力のカウント
 //		int k = 0;//未入力のカウント
@@ -166,9 +145,11 @@ public class AttendanceManagementController {
 			model.addAttribute("attendanceComplete","勤怠の登録が完了しました。");
 		}
 		
-		for(int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
-			  attendanceFormList.getAttendanceList().get(i).setAttendanceDate(java.sql.Date.valueOf(attendanceFormList.getAttendanceList().get(i).getAttendanceDateS()));
-			  attendanceFormList.getAttendanceList().get(i).setUserId(users.getUserId());
+		for(int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {  
+			String inputDate = attendanceFormList.getAttendanceList().get(i).getAttendanceDateS();
+			String conversion = inputDate.replace("/","-");
+			attendanceFormList.getAttendanceList().get(i).setAttendanceDate(java.sql.Date.valueOf(conversion));
+			attendanceFormList.getAttendanceList().get(i).setUserId(users.getUserId());
 		  }
 		attendanceManagementService.attendanceDelete(attendanceFormList);		
 		attendanceManagementService.attendanceCreate(attendanceFormList);
