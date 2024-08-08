@@ -55,9 +55,9 @@
 					</div>
 					<div class="col-6" th:if="${Users.role} == 'Regular' or ${Users.role} == 'UnitManager'">
 						表示年月：
-						<input type="text" class="textBox" id="years" name="stringYears" >
+						<input type="text" class="textBox" id="years" name="stringYears" th:value="${attendanceFormList != null? attendanceFormList.stringYears: ''}">
 						<label for="stringYears">年</label>
-						<input type="text" class="textBox" id="month" name="stringMonth">
+						<input type="text" class="textBox" id="month" name="stringMonth" th:value="${attendanceFormList != null? attendanceFormList.stringMonth: ''}">
 						<label for="stringMonth">月</label>
 						<input type="submit" id="display" value="表示" name="search" class="buttonSize">
 					</div>
@@ -96,30 +96,33 @@
 				</div>
 				
 				<div th:if="${ApprovalPending} != null">
-					<div class="col-7" th:each="ApprovalPending : ${ApprovalPending}">
-						<table class="table table-bordered border border-dark ">
-							<thead>
-								<tr>
-									<td>承認申請者</td>
-									<td>申請対象年月</td>
-									<td>申請日</td>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<th:block>
+					<div class="row m-2">
+						<div class="col-7">
+							<table class="table table-bordered border border-dark ">
+								<thead>
+									<tr>
+										<td>承認申請者</td>
+										<td>申請対象年月</td>
+										<td>申請日</td>
+									</tr>
+								</thead>
+								<tbody th:each="ApprovalPending : ${ApprovalPending}">
+									<tr>
+										<th:block>
 											<input type="hidden" name="approvalUserId" th:value="${ApprovalPending.userId}">
 											<input type="hidden" name="Years" th:value="${ApprovalPending.years}">
 											<input type="hidden" name="Month" th:value="${ApprovalPending.month}">
-									</th:block>
-									<td>
-										<input type="submit" name="ApprovalApplicantDisplay" th:value ="${ApprovalPending.userName}"class="linklike" >
-									</td>
-									<td th:text="${#dates.format(ApprovalPending.targetYearMonth,'yyyy/MM/dd')}"></td>
-									<td th:text="${#dates.format(ApprovalPending.monthlyAttendanceReqDate,'yyyy/MM/dd')}"></td>
-								</tr>
-							</tbody>
-						</table>
+										</th:block>
+										<td>
+											<input type="submit" name="ApprovalApplicantDisplay" th:value="${ApprovalPending.userName}"
+												class="linklike">
+										</td>
+										<td th:text="${#dates.format(ApprovalPending.targetYearMonth,'yyyy/MM/dd')}"></td>
+										<td th:text="${#dates.format(ApprovalPending.monthlyAttendanceReqDate,'yyyy/MM/dd')}"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div>
 				

@@ -17,8 +17,15 @@ public class UserManagementService {
 	  public UsersMapper userSearchMapper;
 
 	//ユーザー管理画面 検索処理
-	public Users SelectByAccount(String userName, Integer userId) {
-		Users users = userSearchMapper.SelectByAccount(userName, userId);
+	public Users selectByAccount(String userName, Integer userId) {
+		
+		Users users = new Users();
+		
+		if(userName != null) {
+			users = userSearchMapper.selectByAccount(userName, userId);
+		} else {
+			users = userSearchMapper.selectByAccountBy(userId);
+		}
 		return users;
 	}
 
@@ -41,6 +48,7 @@ public class UserManagementService {
 		Date sqlDate = java.sql.Date.valueOf(strDate);
 		Users users = new Users();
 		users.setUserId(managementForm.getUserId());
+		users.setUserName(managementForm.getUserName());
 		users.setPassword(managementForm.getPassword());
 		users.setRole(managementForm.getRole());
 		users.setStartDate(sqlDate);
@@ -88,7 +96,7 @@ public class UserManagementService {
 		if (!"9999/99/99".equals(managementForm.getStartDate().trim())) {
 			if(!managementForm.getStartDate().matches("^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$")|| managementForm.getStartDate() == null||managementForm.getStartDate() == ""||managementForm.getStartDate().length() != 10) {
 				FieldError startDate = new FieldError("managementForm", "startDate", "利用開始日はyyyy-mm-ddで必ず半角で入力してください");
-				FieldError startDate2 = new FieldError("managementForm", "startDate", "削除を行いたい場合は9999/99/99で入力してください");
+				FieldError startDate2 = new FieldError("managementForm", "startDate", "休職やアカウントの一時停止を行いたい場合は9999/99/99で入力してください");
 				result.addError(startDate);
 				result.addError(startDate2);
 			}

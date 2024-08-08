@@ -57,7 +57,7 @@ public class UserManagementController {
 	}
 	
 	//名前を引数にserviceクラスでリストの取得
-	Users users = userManagementService.SelectByAccount(userName,null);	
+	Users users = userManagementService.selectByAccount(userName,null);	
 	//リストがあった場合
 	if(users != null) {
 		ManagementForm managementForm = new ManagementForm();
@@ -95,12 +95,13 @@ public class UserManagementController {
 		    return "User/manegement";
 		  }
 		
-		Users users = userManagementService.SelectByAccount(managementForm.getUserName(),managementForm.getUserId());
+		Users users = userManagementService.selectByAccount(null,managementForm.getUserId());
 		
 		if ("9999/99/99".equals(managementForm.getStartDate().trim())) {
 			if(users != null) {
-				userManagementService.userDelete(managementForm);
-				String agree = messageSource.getMessage("delete",new String[] {managementForm.getUserName()} , Locale.getDefault());
+				managementForm.setStartDate("9999-12-31");
+				userManagementService.userUpdate(managementForm);
+				String agree = messageSource.getMessage("update",new String[] {managementForm.getUserName()} , Locale.getDefault());
 				model.addAttribute("check",agree);
 			}else {
 				String agree = messageSource.getMessage("missTake",new String[] {managementForm.getUserName()} , Locale.getDefault());
@@ -122,4 +123,5 @@ public class UserManagementController {
 	}
 }
 //@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)Date startDate
+
 

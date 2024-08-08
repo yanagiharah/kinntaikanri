@@ -13,14 +13,21 @@
 </select>
  
  
-<!-- １件取得 -->
-<select id="SelectByAccount" resultType="com.example.demo.model.Users">
+<!-- 検索ボタン押下時アカウント取得 -->
+<select id="selectByAccount" resultType="com.example.demo.model.Users">
 	SELECT * 
 	FROM users 
     WHERE user_name = #{userName} 
     <if test="userId != null">
         AND user_id = #{userId}
     </if>
+</select>
+
+<!-- 登録ボタン押下時アカウント取得 -->
+<select id="selectByAccountBy" resultType="com.example.demo.model.Users">
+	SELECT * 
+	FROM users 
+    WHERE user_id = #{userId}
 </select>
 
 
@@ -34,7 +41,9 @@
 <!-- 更新 -->
 <update id="update" parameterType="com.example.demo.model.Users">
     UPDATE users
-    SET password = #{password},
+    SET 
+    	password = #{password},
+    	user_name = #{userName},
         role = #{role},
         start_date = #{startDate}
     WHERE user_id = #{userId}

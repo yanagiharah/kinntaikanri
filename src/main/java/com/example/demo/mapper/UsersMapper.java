@@ -10,8 +10,12 @@ import com.example.demo.model.Users;
 public interface UsersMapper {
 	
 
-	//１件取得
-	Users SelectByAccount(@Param("userName")String userName ,@Param("userId")Integer userId);
+	//検索押下時アカウント取得
+	Users selectByAccount(@Param("userName")String userName ,@Param("userId")Integer userId);
+	
+	//登録押下時アカウント取得
+	Users selectByAccountBy(@Param("userId")Integer userId);
+	
 	
 	//登録
 	void insert(Users users);
