@@ -106,16 +106,17 @@
 										<td>申請日</td>
 									</tr>
 								</thead>
-								<tbody th:each="ApprovalPending : ${ApprovalPending}">
-									<tr>
-										<th:block>
-											<input type="hidden" name="approvalUserId" th:value="${ApprovalPending.userId}">
-											<input type="hidden" name="Years" th:value="${ApprovalPending.years}">
-											<input type="hidden" name="Month" th:value="${ApprovalPending.month}">
-										</th:block>
+								<tbody >
+									<tr th:each="ApprovalPending : ${ApprovalPending}">
 										<td>
-											<input type="submit" name="ApprovalApplicantDisplay" th:value="${ApprovalPending.userName}"
-												class="linklike">
+											<form th:action="@{/attendance/management}" method="post">
+												<th:block>
+													<input type="hidden" name="approvalUserId" th:value="${ApprovalPending.userId}">
+													<input type="hidden" name="Years" th:value="${ApprovalPending.years}">
+													<input type="hidden" name="Month" th:value="${ApprovalPending.month}">
+												</th:block>
+												<button type="submit" name="ApprovalApplicantDisplay" class="linklike"> [[${ApprovalPending.userName}]]</button>
+											</form>
 										</td>
 										<td th:text="${#dates.format(ApprovalPending.targetYearMonth,'yyyy/MM/dd')}"></td>
 										<td th:text="${#dates.format(ApprovalPending.monthlyAttendanceReqDate,'yyyy/MM/dd')}"></td>
