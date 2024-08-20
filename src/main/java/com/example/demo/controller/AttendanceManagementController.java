@@ -4,7 +4,6 @@ import java.time.DateTimeException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,10 +25,14 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/attendance")
 public class AttendanceManagementController {
-	@Autowired
-	private AttendanceManagementService attendanceManagementService;
-	@Autowired
-	private MonthlyAttendanceReqService monthlyAttendanceReqService;
+
+	private final AttendanceManagementService attendanceManagementService;
+	private final MonthlyAttendanceReqService monthlyAttendanceReqService;
+	
+	public AttendanceManagementController(AttendanceManagementService attendanceManagementService,MonthlyAttendanceReqService monthlyAttendanceReqService){
+		this.attendanceManagementService = attendanceManagementService;
+		this.monthlyAttendanceReqService = monthlyAttendanceReqService;
+	}
 
 	@RequestMapping("/index")
 	public String start(HttpSession session, MonthlyAttendanceReq monthlyAttendanceReq, Model model) {

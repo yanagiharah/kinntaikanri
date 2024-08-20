@@ -7,11 +7,11 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -22,8 +22,14 @@ import com.example.demo.model.AttendanceFormList;
 
 @Service
 public class AttendanceManagementService {
-  @Autowired
-  public AttendanceSearchMapper attendanceSearchMapper;
+
+  
+  private final AttendanceSearchMapper attendanceSearchMapper;
+  
+  public AttendanceManagementService(AttendanceSearchMapper attendanceSearchMapper){
+	  this.attendanceSearchMapper = attendanceSearchMapper;
+  }
+  
   
   	//勤怠表の取得
 	public List<Attendance> attendanceSearchListUp(Integer userId, Integer years, Integer month) {
@@ -143,29 +149,19 @@ public class AttendanceManagementService {
   
 	//勤怠テーブルに登録処理
 	public void attendanceCreate(AttendanceFormList attendanceFormList) {
-		for (int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
-			//出勤の場合
-			if ((attendanceFormList.getAttendanceList().get(i).getStatus() == 0 ||
-					attendanceFormList.getAttendanceList().get(i).getStatus() == 3 ||
-					attendanceFormList.getAttendanceList().get(i).getStatus() == 6 ||
-					attendanceFormList.getAttendanceList().get(i).getStatus() == 7 ||
-					attendanceFormList.getAttendanceList().get(i).getStatus() == 8 ||
-					attendanceFormList.getAttendanceList().get(i).getStatus() == 10)
-					&& attendanceFormList.getAttendanceList().get(i).getStartTime() != "") {
-				attendanceSearchMapper.insert(attendanceFormList.getAttendanceList().get(i));
-			}
-			//休日の場合
-			if ((attendanceFormList.getAttendanceList().get(i).getStatus() == 1
-					|| attendanceFormList.getAttendanceList().get(i).getStatus() == 2
-					|| attendanceFormList.getAttendanceList().get(i).getStatus() == 4 ||
-					attendanceFormList.getAttendanceList().get(i).getStatus() == 5 ||
-					attendanceFormList.getAttendanceList().get(i).getStatus() == 9
-					|| attendanceFormList.getAttendanceList().get(i).getStatus() == 11)
-							&& (attendanceFormList.getAttendanceList().get(i).getStartTime() == ""
-									&& attendanceFormList.getAttendanceList().get(i).getEndTime() == "")) {
-				attendanceSearchMapper.insert(attendanceFormList.getAttendanceList().get(i));
-			}
-		}
+		// List<Attendance> attendanceList = new ArrayList<Attendance>();
+		List<Integer> workDay = Arrays.asList(0, 3, 6, 7, 8, 10);
+		attendanceFormList.getAttendanceList().stream()
+				.filter(attendance -> workDay.contains(attendance.getStatus()))
+				.filter(attendance -> !attendance.getStartTime().isEmpty())
+				.forEach(attendance -> attendanceSearchMapper.insert(attendance));
+
+		List<Integer> holiday = Arrays.asList(1, 2, 4, 5, 9, 11);
+		attendanceFormList.getAttendanceList().stream()
+				.filter(attendance -> holiday.contains(attendance.getStatus()))
+				.filter(attendance -> attendance.getStartTime().isEmpty())
+				.filter(attendance -> attendance.getEndTime().isEmpty())
+				.forEach(attendance -> attendanceSearchMapper.insert(attendance));
 	}
   
   
@@ -206,13 +202,10 @@ public class AttendanceManagementService {
 	    		    result.addError(attendanceRemarks);
 	    		}
 
-	        
 	        if (attendanceFormList.getAttendanceList().get(i).getAttendanceRemarks() != "" && attendanceFormList.getAttendanceList().get(i).getAttendanceRemarks().matches("^[a-zA-Z0-9!-/:-@\\[-`{-~]*$")) {
 	        	    FieldError attendanceRemarks = new FieldError("attendanceFormList", "attendanceList[" + i + "].attendanceRemarks", "全角で入力してください。");
 	        	    result.addError(attendanceRemarks);
-	        	}
-
-	        
+	        	}	        
 
 	        // 出勤時間と退勤時間の整合性
 	        String startTime = attendanceFormList.getAttendanceList().get(i).getStartTime();
