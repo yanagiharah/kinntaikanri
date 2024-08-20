@@ -4,6 +4,8 @@ import java.time.DateTimeException;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,8 +21,6 @@ import com.example.demo.model.MonthlyAttendanceReq;
 import com.example.demo.model.Users;
 import com.example.demo.service.AttendanceManagementService;
 import com.example.demo.service.MonthlyAttendanceReqService;
-
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/attendance")
@@ -255,7 +255,7 @@ public class AttendanceManagementController {
 	}
 
 	//マネージャー却下ボタン押下
-	@RequestMapping(value = "/management", params = "Rejected", method = RequestMethod.POST)
+	@RequestMapping(value = "/management", params = "rejected", method = RequestMethod.POST)
 	public String Rejected(AttendanceFormList attendanceFormList, Model model, HttpSession session, RedirectAttributes redirectAttributes) {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
@@ -268,6 +268,14 @@ public class AttendanceManagementController {
 		}
 		return "redirect:/attendance/index";
 	}
+	
+	//戻るボタン
+		@RequestMapping(value = "/management", params = "back", method = RequestMethod.POST)
+		public String back(Model model, HttpSession session) {
+			Users users = (Users) session.getAttribute("Users");
+			 model.addAttribute("Users", users);
+			return "menu/processMenu";
+		}
 	
 }
 

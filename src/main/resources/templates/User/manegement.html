@@ -12,11 +12,15 @@
 	<div class="container d-flex align-items-center justify-content-center vh-100">
 		<div class="row" >
 			<div class=>
-	
-				<div class="m-50 border border-dark" style="padding:30px;">
-					<form th:action="@{/user/management}" name="managementForm" method="post">
-	
-	
+				
+				<form th:action="@{/user/management}" name="managementForm" method="post">
+					
+					<div align="right">
+						<input type="submit" id="back" value="戻る" name="back" class="buttonSize">
+					</div>
+					<div class="m-50 border border-dark" style="padding:30px;">
+					
+						
 						<div class="text-danger" th:if="${check} != null">
 							<span th:text="${check}" style="color: red;"></span>
 						</div>

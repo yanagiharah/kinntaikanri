@@ -63,7 +63,7 @@
 					</div>
 					<div class="col-6">
 						<div th:if="${Users.role} == 'Manager'">
-							<input type="submit" id="reject" value="却下" name="Rejected"class="buttonSize">
+							<input type="submit" id="reject" value="却下" name="rejected"class="buttonSize">
 							<input type="submit" id="approve" value="承認" name="approval"class="buttonSize">
 							<div class="text-danger" th:if="${madahayai} != null">
 								<span th:text="${madahayai}" style="color: red;"></span>
@@ -83,6 +83,7 @@
 								<input type="submit" id="register" value="登録" name="insert" class="buttonSize" disabled>
 							</span>
 						</div>
+						<input type="submit" id="back" value="戻る" name="back"class="buttonSize">
 						<div class="text-danger" th:if="${double} != null">
 							<span th:text="${double}" style="color: red;"></span>
 						</div>
