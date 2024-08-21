@@ -21,10 +21,20 @@ public class DailyReportController {
 	public String dailyReport(HttpSession session,Model model) {
 		Users users = (Users)session.getAttribute("Users");
 		Integer userId = users.getUserId();
+		model.addAttribute("Report",
+							dailyReportService.getDailyReport(userId));
 		
-		model.addAttribute("Report",dailyReportService.getDailyReport(userId));
+			return "DailyReport/dailyReport";
 		
-		return "DailyReport/dailyReport";
-		
+	}
+	
+	@RequestMapping("/detail")
+	public String dailyReportDetail(HttpSession session,Model model) {
+		Users users = (Users)session.getAttribute("Users");
+		Integer userId = users.getUserId();
+		model.addAttribute("ReportDailyDetail",
+							dailyReportService.getDailyReportDetail(userId));
+			
+			return "DailyReport/dailyReport";
 	}
 }
