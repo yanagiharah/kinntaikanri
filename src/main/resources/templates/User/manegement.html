@@ -60,8 +60,12 @@
 								<option value="Admin" th:selected="*{role} == 'Admin'">Admin</option>
 							</select>
 							
-							
-	
+							<div class="text-danger">
+								<span th:if="${#fields.hasErrors('departmentId')}" th:errors="*{departmentId}"></span>
+							</div>
+							<div>所属部署　
+								<input type="text" name="departmentId" th:value="${managementForm != null} ? *{departmentId} : ''">
+							</div>
 	
 							<div class="text-danger">
 								<span th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}"></span>

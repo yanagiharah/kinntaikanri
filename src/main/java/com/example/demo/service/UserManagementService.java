@@ -38,6 +38,7 @@ public class UserManagementService {
 		users.setUserName(managementForm.getUserName());
 		users.setPassword(managementForm.getPassword());
 		users.setRole(managementForm.getRole());
+		users.setDepartmentId(managementForm.getDepartmentId());
 		users.setStartDate(sqlDate);
 		userSearchMapper.insert(users);
 	}
@@ -51,6 +52,7 @@ public class UserManagementService {
 		users.setUserName(managementForm.getUserName());
 		users.setPassword(managementForm.getPassword());
 		users.setRole(managementForm.getRole());
+		users.setDepartmentId(managementForm.getDepartmentId());
 		users.setStartDate(sqlDate);
 		userSearchMapper.update(users);
 	}

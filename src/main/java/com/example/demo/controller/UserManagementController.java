@@ -65,6 +65,7 @@ public class UserManagementController {
 		managementForm.setUserName(users.getUserName());
 		managementForm.setPassword(users.getPassword());
 		managementForm.setRole(users.getRole());
+		managementForm.setDepartmentId(users.getDepartmentId());
 		String str = new SimpleDateFormat("yyyy-MM-dd").format(users.getStartDate());
 		managementForm.setStartDate(str);
 		model.addAttribute("managementForm", managementForm);

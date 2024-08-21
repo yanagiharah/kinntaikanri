@@ -13,5 +13,7 @@ public class ManagementForm {
 	
 	private String role;
 	
+	private Integer departmentId;
+	
 	private String startDate;
 }

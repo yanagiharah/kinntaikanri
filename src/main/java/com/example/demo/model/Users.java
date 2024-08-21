@@ -20,6 +20,8 @@ public class Users implements Serializable {
 	
 	private String role;
 	
+	private Integer departmentId;
+	
 	private Date startDate;
 	
 	private Integer  status;//承認状況

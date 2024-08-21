@@ -33,8 +33,8 @@
 
 <!-- 登録 -->
 <insert id="insert">
-	insert into users (user_id,password, user_name, role, start_date) 
-	values(#{userId},#{password}, #{userName}, #{role}, #{startDate});
+	insert into users (user_id,password, user_name, role, department_id, start_date) 
+	values(#{userId},#{password}, #{userName}, #{role}, #{departmentId}, #{startDate});
 </insert>
 
 
@@ -45,6 +45,7 @@
     	password = #{password},
     	user_name = #{userName},
         role = #{role},
+        department_id = #{departmentId},
         start_date = #{startDate}
     WHERE user_id = #{userId}
 </update>
