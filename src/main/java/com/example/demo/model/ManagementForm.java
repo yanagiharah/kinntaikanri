@@ -1,9 +1,16 @@
 package com.example.demo.model;
 
+import java.util.List;
+
+import org.springframework.stereotype.Component;
+
 import lombok.Data;
 
 @Data
+@Component
 public class ManagementForm {
+	
+	private List<Department> department;
 	
 	private Integer userId;
 

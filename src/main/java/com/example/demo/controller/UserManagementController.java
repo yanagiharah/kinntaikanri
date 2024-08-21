@@ -27,12 +27,19 @@ public class UserManagementController {
 	private UserManagementService userManagementService;
 	@Autowired
 	private MessageSource messageSource;
+	@Autowired
+	private ManagementForm managementForm;
 	
 	@RequestMapping("/")
-		public String user(@ModelAttribute ManagementForm managementForm,HttpSession session, Model model) {
+		public String user(@ModelAttribute HttpSession session, Model model) {
 		Users users = (Users) session.getAttribute("Users");
-		 model.addAttribute("Users", users);
-		 model.addAttribute("managementForm", new ManagementForm());
+		model.addAttribute("Users", users);
+//		model.addAttribute("department", userManagementService.departmentSearchListUp());
+//		 model.addAttribute("managementForm", new ManagementForm());
+		 
+		 managementForm.setDepartment(userManagementService.departmentSearchListUp());
+		 model.addAttribute("managementForm", managementForm);
+		 
 			return "User/manegement";
 		}
 	
@@ -69,6 +76,7 @@ public class UserManagementController {
 		String str = new SimpleDateFormat("yyyy-MM-dd").format(users.getStartDate());
 		managementForm.setStartDate(str);
 		model.addAttribute("managementForm", managementForm);
+//		model.addAttribute("department", userManagementService.departmentSearchListUp());
 		return "User/manegement";
 	}
 	
@@ -81,6 +89,7 @@ public class UserManagementController {
     managementForm2.setUserName(userName);
     
     model.addAttribute("managementForm", managementForm2);
+//    model.addAttribute("department", userManagementService.departmentSearchListUp());
     return "User/manegement";
 	}
 	
