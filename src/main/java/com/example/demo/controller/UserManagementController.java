@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Random;
 
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -17,8 +19,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.demo.model.ManagementForm;
 import com.example.demo.model.Users;
 import com.example.demo.service.UserManagementService;
-
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/user")
@@ -99,6 +99,7 @@ public class UserManagementController {
 		
 		if(result.hasErrors()) {
 			//フィールドにエラー入るからmodelに入れない
+			managementForm.setDepartment(userManagementService.departmentSearchListUp());
 		    return "User/manegement";
 		  }
 		
@@ -126,6 +127,7 @@ public class UserManagementController {
 				model.addAttribute("check",agree);
 			}
 		}
+		managementForm.setDepartment(userManagementService.departmentSearchListUp());
 		return "User/manegement";
 	}
 	

@@ -102,6 +102,10 @@ public class UserManagementService {
 			FieldError role = new FieldError("managementForm", "role", "権限は必須です");
 			 result.addError(role);
 		}
+		if(managementForm.getDepartmentId() == 1) {
+			FieldError department = new FieldError("managementForm", "department", "所属部署は必須です");
+			 result.addError(department);
+		}
 		if(managementForm.getUserId() == null||managementForm.getUserId() == 0) {
 			FieldError userId = new FieldError("managementForm", "userId", "ユーザーIDは必須です");
 			 result.addError(userId);
