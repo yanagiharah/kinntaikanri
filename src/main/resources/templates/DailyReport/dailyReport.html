@@ -5,9 +5,9 @@
 <title>Insert title here</title>
 </head>
 <body>
-<!--	<div th:object="${Report}">-->
-<!--		<div th:text="*{status}"></div>-->
-<!--	</div>-->
+	<div th:object="${Report}">
+		<div th:text="*{status}"></div>
+	</div>
 	<div th:each = "DailyDetail : ${ReportDailyDetail}"  >	
 		<div th:text="*{content}"></div>
 		<div th:text="${DailyDetail.content}"></div>
