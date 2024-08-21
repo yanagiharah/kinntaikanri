@@ -10,6 +10,7 @@ import com.example.demo.model.Users;
 public class LoginService {
 	@Autowired
 	  private UsersMapper usersMapper;
+	
 	public Users loginCheck(Integer userId ,String password) {
 		Users users = usersMapper.loginCheck(userId, password);
 		return users;

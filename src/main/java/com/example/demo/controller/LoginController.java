@@ -66,15 +66,12 @@ public class LoginController {
 			}else if (users.getStartDate().compareTo(today) == 1 ) {
 				redirectAttributes.addFlashAttribute("out", "ユーザーID、パスワードが不正、もしくはユーザーが無効です。");
 				return "redirect:/";
-			}else if (users.getRole().equalsIgnoreCase("Admin")) {
-				session.setAttribute("Users", users);
-				return "redirect:/user/";
 			} 
 		
 			session.setAttribute("Users", users);
 			 System.out.println("セッションに保存されたユーザー: " + session.getAttribute("Users"));
 
-			return "redirect:/attendance/index";
+			return "redirect:/menu";
 		}
 
 }
