@@ -167,6 +167,17 @@ public class AttendanceManagementService {
   
 	//勤怠登録画面で承認申請ボタンを有効にするかを決める
 	public void requestActivityCheck(AttendanceFormList attendanceFormList) {
+		
+//		List<Integer> activity = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11);
+//		boolean allMatch = attendanceFormList.getAttendanceList().stream()
+//			    .allMatch(attendance -> 
+//			        activity.contains(attendance.getStatus()) &&
+//			        attendance.getStartTime() != null &&
+//			        attendance.getEndTime() != null
+//			    );
+//
+//		attendanceFormList.setRequestActivityCheck(allMatch);
+		
 		for (int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
 			
 			//条件1 ステータスに記入があり、出勤退勤がnullじゃない場合

@@ -37,6 +37,12 @@
 .loginFontsize{
 	  font-size:30px;
 }
+
+.menuButtonSize{
+	width:260px;
+  	height:80px;
+	
+}
 /*.buttonSize {*/
 /*  color: #fff;*/
 /*  font-size: 16px;*/

@@ -8,6 +8,8 @@
 	<div th:object="${Report}">
 		<div th:text="*{status}"></div>
 	</div>
-
+	<div th:each = "DailyDetail : ${ReportDailyDetail}"  >	
+		<div th:text="*{content}"></div>
+	</div>
 </body>
 </html>

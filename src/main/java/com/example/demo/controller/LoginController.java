@@ -15,6 +15,8 @@ import com.example.demo.model.LoginForm;
 import com.example.demo.model.Users;
 import com.example.demo.service.LoginService;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 
@@ -72,6 +74,19 @@ public class LoginController {
 			 System.out.println("セッションに保存されたユーザー: " + session.getAttribute("Users"));
 
 			return "redirect:/menu";
+		}
+		
+		@RequestMapping("/logOff")
+		public String logout(HttpServletRequest request, HttpServletResponse response) {
+	        // セッションを無効にする
+	        HttpSession session = request.getSession(false);
+	        if (session != null) {
+	            session.invalidate();
+	        }
+	       // session.getAttribute("session");
+
+	        // ログアウト処理が完了したらトップページにリダイレクトする
+	        return "redirect:/";
 		}
 
 }
