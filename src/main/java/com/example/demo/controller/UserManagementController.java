@@ -4,8 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Random;
 
-import jakarta.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -20,6 +18,8 @@ import com.example.demo.model.ManagementForm;
 import com.example.demo.model.Users;
 import com.example.demo.service.UserManagementService;
 
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 @RequestMapping("/user")
 public class UserManagementController {
@@ -31,15 +31,11 @@ public class UserManagementController {
 	private ManagementForm managementForm;
 	
 	@RequestMapping("/")
-		public String user(@ModelAttribute HttpSession session, Model model) {
+		public String user(HttpSession session, Model model) {
 		Users users = (Users) session.getAttribute("Users");
-		model.addAttribute("Users", users);
-//		model.addAttribute("department", userManagementService.departmentSearchListUp());
-//		 model.addAttribute("managementForm", new ManagementForm());
-		 
+		model.addAttribute("Users", users); 
 		 managementForm.setDepartment(userManagementService.departmentSearchListUp());
 		 model.addAttribute("managementForm", managementForm);
-		 
 			return "User/manegement";
 		}
 	
@@ -73,10 +69,11 @@ public class UserManagementController {
 		managementForm.setPassword(users.getPassword());
 		managementForm.setRole(users.getRole());
 		managementForm.setDepartmentId(users.getDepartmentId());
+		managementForm.setDepartment(userManagementService.departmentSearchListUp());
 		String str = new SimpleDateFormat("yyyy-MM-dd").format(users.getStartDate());
 		managementForm.setStartDate(str);
 		model.addAttribute("managementForm", managementForm);
-//		model.addAttribute("department", userManagementService.departmentSearchListUp());
+		
 		return "User/manegement";
 	}
 	
@@ -87,9 +84,9 @@ public class UserManagementController {
     //dbに存在した場合再度RandomNumberの生成forぶんで繰り返す、dbに存在しない数字がでるまで
     managementForm2.setUserId(randomNumber);
     managementForm2.setUserName(userName);
-    
+    managementForm2.setDepartment(userManagementService.departmentSearchListUp());
     model.addAttribute("managementForm", managementForm2);
-//    model.addAttribute("department", userManagementService.departmentSearchListUp());
+    
     return "User/manegement";
 	}
 	
