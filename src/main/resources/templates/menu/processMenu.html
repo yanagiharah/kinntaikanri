@@ -54,7 +54,12 @@
 	
 					<!--マネージャー用-->
 					<div th:if="${Users.role=='Manager'}">
-						<!--部署登録-->
+						<p>
+							<form th:action="@{/menu/index}" method="get">
+							<input type="submit" value="勤怠登録" class="menuButtonSize"
+								style="background-color: rgb(255, 128, 64);">
+						</form>
+						</p>
 						<form th:action="@{/menu/department}" method="get">
 							<input type="submit" value="部署登録" class="menuButtonSize"
 								style="background-color: rgb(128, 255, 255);">
