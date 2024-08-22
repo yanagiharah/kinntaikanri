@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.DailyReportDetailMapper">
+
+<!--日報詳細取得-->
+<select id="getDailyReportDetail"
+	resultType = "com.example.demo.model.DailyReportDetailForm">
+	SELECT *
+	FROM daily_report_detail
+	WHERE user_id = #{userId}
+</select>
+
+<!-- 日報内容追加 -->
+<insert id="insertDailyReportDetail">
+	INSERT INTO
+		daily_report_detail
+			(user_id,daily_report_detail_date,daily_report_detail_time,contet)
+	VALUES
+		(#{userId},#{dailyReportDetailDate},#{DailyReportDetailTime},#{content})
+</insert>
+
+<!-- 日報更新 -->
+<update id="updateDailyReportDetail">
+	UPDATE daily_report_detail
+	SET
+		daily_report_detail_date = #{dailyReportDetailDate}
+		daily_report_detail_time = #{dailyReportDetailTime}
+		content = #{content}
+	WHERE user_id = #{userId}
+</update>
+
+</mapper>
