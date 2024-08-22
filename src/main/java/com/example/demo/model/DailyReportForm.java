@@ -24,3 +24,4 @@ public class DailyReportForm {
 	
 	private Integer status;
 }
+ 
