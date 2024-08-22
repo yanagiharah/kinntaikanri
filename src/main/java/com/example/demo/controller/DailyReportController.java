@@ -72,3 +72,4 @@ public class DailyReportController {
 		return "DailyReport/dailyReport";
 	}
 }
+

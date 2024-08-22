@@ -17,5 +17,4 @@ public class DailyReportForm {
 	private Date dailyReportDate;
 	
 	private Integer status;
-	
 }

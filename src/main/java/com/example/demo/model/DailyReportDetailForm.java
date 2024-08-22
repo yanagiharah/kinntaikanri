@@ -16,5 +16,4 @@ public class DailyReportDetailForm {
 	private Integer dailyReportDetailTime;
 	
 	private String content;
-		
 }
