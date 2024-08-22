@@ -38,8 +38,13 @@ public class DailyReportService {
 	}
 	
 	//日報更新
-	public void updateDailyReportDetail( DailyReportForm dailyReportForm) {
-		dailyReportDetailMapper.updateDailyReportDetail(dailyReportForm);
+	public void updateDailyReportDetail(DailyReportForm dailyReportForm) {
+		
+		//日報フォームの中にある日報詳細リストを取り出す。それを元にDBを更新
+		for(DailyReportDetailForm dailyReportDetailForm : dailyReportForm.getDailyReportDetailForm()) {
+			
+			dailyReportDetailMapper.updateDailyReportDetail(dailyReportDetailForm);
+		}
 	}
 
 }

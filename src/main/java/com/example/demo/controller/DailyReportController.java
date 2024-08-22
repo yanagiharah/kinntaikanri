@@ -44,6 +44,13 @@ public class DailyReportController {
 		Users users = (Users)session.getAttribute("Users");
 		model.addAttribute("Users", users);
 		
+		//required属性を引数に加えてnullもしくはfalseの場合にtodatで検索かける
+		
+				//日報テーブルのデータを取得
+				
+				//詳細のデータを取得
+		
+		
 		List<DailyReportDetailForm> list = dailyReportService.getDailyReportDetail(users.getUserId());		
 		
 		DailyReportForm dailyReportForm = new DailyReportForm();

@@ -15,6 +15,7 @@ public class DailyReportForm {
 	private Integer id;
 	
 	private Integer userId;
+	
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	private Date dailyReportDate;
 	

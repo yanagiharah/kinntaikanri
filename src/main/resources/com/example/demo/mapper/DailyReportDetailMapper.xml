@@ -24,10 +24,11 @@
 <update id="updateDailyReportDetail">
 	UPDATE daily_report_detail
 	SET
-		daily_report_detail_date = #{dailyReportDetailDate}
-		daily_report_detail_time = #{dailyReportDetailTime}
+		daily_report_detail_date = #{dailyReportDetailDate},
+		daily_report_detail_time = #{dailyReportDetailTime},
 		content = #{content}
-	WHERE user_id = #{userId}
+	WHERE user_id = #{userId} 
+	  AND daily_report_detail_id = #{dailyReportDetailId}
 </update>
 
 </mapper>

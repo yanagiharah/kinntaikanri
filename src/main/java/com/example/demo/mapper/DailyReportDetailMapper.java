@@ -16,5 +16,5 @@ public interface DailyReportDetailMapper {
 	public void insertDailyReportDetail(List<DailyReportDetailForm> list);
 	
 	//日報更新
-	public void updateDailyReportDetail(List<DailyReportDetailForm> list);
+	public void updateDailyReportDetail(DailyReportDetailForm dailyReportDetailFrom);
 }
