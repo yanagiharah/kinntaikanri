@@ -28,8 +28,8 @@ public class DailyReportService {
 	
 	//日報詳細取得
 	public List<DailyReportDetailForm> getDailyReportDetail(Integer integer){
-		List<DailyReportDetailForm> list = dailyReportDetailMapper.getDailyReportDetail(integer);
-			return list;
+		List<DailyReportDetailForm> dailyReportDetailForm = dailyReportDetailMapper.getDailyReportDetail(integer);
+			return dailyReportDetailForm;
 	}
 	
 	//日報内容追加

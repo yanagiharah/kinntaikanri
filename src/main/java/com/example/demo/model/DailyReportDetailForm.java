@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class DailyReportDetailForm {
 
-	private Integer dailyReprtDetailId;
+	private Integer dailyReportDetailId;
 	
 	private Integer userId;
 	

@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +9,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.example.demo.model.DailyReportDetailForm;
+import com.example.demo.model.DailyReportForm;
 import com.example.demo.model.Users;
 import com.example.demo.service.DailyReportService;
 
@@ -26,6 +29,7 @@ public class DailyReportController {
 	@RequestMapping("")
 	public String dailyReport(HttpSession session,Model model) {
 		Users users = (Users)session.getAttribute("Users");
+		model.addAttribute("Users", users);
 		Integer userId = users.getUserId();
 		model.addAttribute("Report",
 							dailyReportService.getDailyReport(userId));
@@ -37,24 +41,34 @@ public class DailyReportController {
 	@RequestMapping("/detail")
 	public String dailyReportDetail(HttpSession session,Model model) {
 		Users users = (Users)session.getAttribute("Users");
-		Integer userId = users.getUserId();
-		model.addAttribute("ReportDailyDetail",
-							dailyReportService.getDailyReportDetail(userId));
-			
+		model.addAttribute("Users", users);
+		
+		List<DailyReportDetailForm> list = dailyReportService.getDailyReportDetail(users.getUserId());		
+		
+		DailyReportForm dailyReportForm = new DailyReportForm();
+		ArrayList<DailyReportDetailForm> dailyReportDetailList = new ArrayList<DailyReportDetailForm>();
+		dailyReportForm.setDailyReportDetailForm(dailyReportDetailList);
+		dailyReportDetailList.addAll(list);
+		
+		model.addAttribute("dailyReportForm",dailyReportForm);
 			return "DailyReport/dailyReport";
 	}
 	
 	//日報内容追加
-	@PostMapping("/detail/insert")
-	public void insertDailyReportDetail(@ModelAttribute 
-										List<DailyReportDetailForm> list) {
+	@PostMapping("/detailInsert")
+	public void insertDailyReportDetail(List<DailyReportDetailForm> list,HttpSession session,Model model) {
+		Users users = (Users)session.getAttribute("Users");
+		model.addAttribute("Users", users);
 		dailyReportService.insertDailyReportDetail(list);
 	}
 	
 	//日報更新
-	@PostMapping("/detail/update")
-	public void updateDailyReportDetail(@ModelAttribute 
-										List<DailyReportDetailForm> list) {
-		dailyReportService.updateDailyReportDetail(list);
+	@RequestMapping( value = "/detailUpdate", params = "submission", method = RequestMethod.POST)
+	public String updateDailyReportDetail(@ModelAttribute("dailyReportForm") DailyReportForm dailyReportForm,HttpSession session,Model model) {
+		Users users = (Users)session.getAttribute("Users");
+		model.addAttribute("Users", users);
+		System.out.print(dailyReportForm.getDailyReportDetailForm());
+//		dailyReportService.updateDailyReportDetail(dailyReportDetailForm);
+		return "DailyReport/dailyReport";
 	}
 }

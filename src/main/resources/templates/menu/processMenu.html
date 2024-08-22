@@ -37,7 +37,7 @@
 						</form>
 						</p>
 	
-						<form th:action="@{/menu/daily}" method="get">
+						<form th:action="@{/menu/daily/detail}" method="get">
 							<input type="submit" value="日報登録" class="menuButtonSize"
 								style="background-color: rgb(128, 128, 64);">
 						</form>
@@ -56,7 +56,7 @@
 					<div th:if="${Users.role=='Manager'}">
 						<p>
 							<form th:action="@{/menu/index}" method="get">
-							<input type="submit" value="勤怠登録" class="menuButtonSize"
+							<input type="submit" value="勤怠管理" class="menuButtonSize"
 								style="background-color: rgb(255, 128, 64);">
 						</form>
 						</p>
