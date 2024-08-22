@@ -20,15 +20,15 @@ public class DailyReportService {
 	private DailyReportDetailMapper dailyReportDetailMapper;
 		
 	//日報取得
-	public DailyReportForm getDailyReport(Integer integer) {
-		DailyReportForm dailyReportform = dailyReportMapper.getDailyReport(integer);
+	public DailyReportForm getDailyReport(Integer userId) {
+		DailyReportForm dailyReportform = dailyReportMapper.getDailyReport(userId);
 			return dailyReportform;
 		
 	}
 	
 	//日報詳細取得
-	public List<DailyReportDetailForm> getDailyReportDetail(Integer integer){
-		List<DailyReportDetailForm> dailyReportDetailForm = dailyReportDetailMapper.getDailyReportDetail(integer);
+	public List<DailyReportDetailForm> getDailyReportDetail(Integer userId) {
+		List<DailyReportDetailForm> dailyReportDetailForm = dailyReportDetailMapper.getDailyReportDetail(userId);
 			return dailyReportDetailForm;
 	}
 	
@@ -38,8 +38,8 @@ public class DailyReportService {
 	}
 	
 	//日報更新
-	public void updateDailyReportDetail(List<DailyReportDetailForm> list) {
-		dailyReportDetailMapper.updateDailyReportDetail(list);
+	public void updateDailyReportDetail( DailyReportForm dailyReportForm) {
+		dailyReportDetailMapper.updateDailyReportDetail(dailyReportForm);
 	}
 
 }

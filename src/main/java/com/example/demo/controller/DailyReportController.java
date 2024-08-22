@@ -17,6 +17,7 @@ import com.example.demo.model.Users;
 import com.example.demo.service.DailyReportService;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/daily")
@@ -64,11 +65,11 @@ public class DailyReportController {
 	
 	//日報更新
 	@RequestMapping( value = "/detailUpdate", params = "submission", method = RequestMethod.POST)
-	public String updateDailyReportDetail(@ModelAttribute("dailyReportForm") DailyReportForm dailyReportForm,HttpSession session,Model model) {
+	public String updateDailyReportDetail(@Valid @ModelAttribute("dailyReportForm") DailyReportForm dailyReportForm,HttpSession session,Model model) {
 		Users users = (Users)session.getAttribute("Users");
 		model.addAttribute("Users", users);
 		System.out.print(dailyReportForm.getDailyReportDetailForm());
-//		dailyReportService.updateDailyReportDetail(dailyReportDetailForm);
+		dailyReportService.updateDailyReportDetail(dailyReportForm);
 		return "DailyReport/dailyReport";
 	}
 }
