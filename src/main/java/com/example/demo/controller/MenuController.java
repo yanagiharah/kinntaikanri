@@ -29,11 +29,11 @@ public class MenuController {
 	}
 
 	//日報登録画面に遷移
-	@RequestMapping("/daily")
+	@RequestMapping("/daily/detail")
 	public String dailyReport(HttpSession session, Model model) {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
-		return "hoge";
+		return "redirect:/daily/detail";
 	}
 
 	//ユーザー情報登録画面に遷移
