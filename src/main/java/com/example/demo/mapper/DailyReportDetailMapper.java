@@ -18,4 +18,3 @@ public interface DailyReportDetailMapper {
 	//日報更新
 	public void updateDailyReportDetail(DailyReportDetailForm dailyReportDetailFrom);
 }
- 
