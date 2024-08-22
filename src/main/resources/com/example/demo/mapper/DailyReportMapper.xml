@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.DailyReportMapper">
+
+<!--日報取得-->
+<select id = "getDailyReport"
+	resultType = "com.example.demo.model.DailyReportForm">
+	SELECT *
+	FROM daily_report
+	WHERE user_id = #{userId} 
+<!--	and daily_report_date = #{dailyReportDate}-->
+</select>
+
+</mapper>
+
+
