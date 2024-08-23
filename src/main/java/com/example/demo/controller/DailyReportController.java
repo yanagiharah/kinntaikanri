@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,16 +28,24 @@ public class DailyReportController {
 	private DailyReportService dailyReportService;
 	
 	//日報取得
-	@RequestMapping("")
-	public String dailyReport(HttpSession session,Model model) {
-		Users users = (Users)session.getAttribute("Users");
-		model.addAttribute("Users", users);
-		Integer userId = users.getUserId();
-		model.addAttribute("Report",
-							dailyReportService.getDailyReport(userId));
-		
-			return "DailyReport/dailyReport";
-	}
+//	@RequestMapping("")
+//	public String dailyReport(HttpSession session,Model model) {
+//		Users users = (Users)session.getAttribute("Users");
+//		model.addAttribute("Users", users);
+//		Integer userId = users.getUserId();
+//		model.addAttribute("Report",
+//							dailyReportService.getDailyReport(userId));
+//		
+//			return "DailyReport/dailyReport";
+//	}
+	//required属性を引数に加えてnullもしくはfalseの場合にtodatで検索かける
+	
+	//日報テーブルのデータを取得
+	
+	//詳細のデータを取得
+	
+	
+	
 	
 	//日報詳細取得
 	@RequestMapping("/detail")
@@ -44,14 +53,23 @@ public class DailyReportController {
 		Users users = (Users)session.getAttribute("Users");
 		model.addAttribute("Users", users);
 		
-		//required属性を引数に加えてnullもしくはfalseの場合にtodatで検索かける
 		
-				//日報テーブルのデータを取得
-				
-				//詳細のデータを取得
+		Integer userId = users.getUserId();																	//ユーザーID取得
+		LocalDate today = LocalDate.now();																	//今日の日付取得
+		
+		DailyReportForm todayDailyReportForm = dailyReportService.getDailyReport(userId,today);					//ユーザーIDと日付でDBから日報をとってくる
+
+		
+		List<DailyReportDetailForm> dailyReportDetailForm = todayDailyReportForm.getDailyReportDetailForm();	//とってきた日報から日報詳細を取り出す
+		
+		if(dailyReportDetailForm == null) {																	//日報詳細がない場合はそのままHTMLを表示
+			return "DailyReort/dailyReport";
+			
+		}																									//日報詳細がある場合は詳細をDBから取得してHTMLを表示
 		
 		
-		List<DailyReportDetailForm> list = dailyReportService.getDailyReportDetail(users.getUserId());		
+		
+		List<DailyReportDetailForm> list = dailyReportService.getDailyReportDetail(userId,today);		
 		
 		DailyReportForm dailyReportForm = new DailyReportForm();
 		ArrayList<DailyReportDetailForm> dailyReportDetailList = new ArrayList<DailyReportDetailForm>();
