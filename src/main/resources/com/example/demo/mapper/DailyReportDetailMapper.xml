@@ -8,7 +8,8 @@
 	resultType = "com.example.demo.model.DailyReportDetailForm">
 	SELECT *
 	FROM daily_report_detail
-	WHERE user_id = #{userId}
+	WHERE user_id = #{userId} 
+	and daily_report_detail_date = #{dailyReportDetailDate}
 </select>
 
 <!-- 日報内容追加 -->

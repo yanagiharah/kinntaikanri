@@ -9,7 +9,7 @@
 	SELECT *
 	FROM daily_report
 	WHERE user_id = #{userId} 
-<!--	and daily_report_date = #{dailyReportDate}-->
+	and daily_report_date = #{dailyReportDate}
 </select>
 
 </mapper>
