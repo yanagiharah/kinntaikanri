@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,9 +19,6 @@ import com.example.demo.model.DailyReportDetailForm;
 import com.example.demo.model.DailyReportForm;
 import com.example.demo.model.Users;
 import com.example.demo.service.DailyReportService;
-
-import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/daily")
@@ -77,5 +77,13 @@ public class DailyReportController {
 		System.out.print(dailyReportForm.getDailyReportDetailForm());
 		dailyReportService.updateDailyReportDetail(dailyReportForm);
 		return "DailyReport/dailyReport";
+	}
+	
+	//戻るボタン
+	@RequestMapping(value = "/detailUpdate", params = "back", method = RequestMethod.POST)
+	public String back(Model model, HttpSession session) {
+		Users users = (Users) session.getAttribute("Users");
+		model.addAttribute("Users", users);
+		return "menu/processMenu";
 	}
 }

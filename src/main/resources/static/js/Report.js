@@ -27,14 +27,14 @@ function setTodayDate() {
             // 戻るボタンのクリックイベントを設定
         });
 
-$(document).ready(function() {
-    // 戻るボタンのクリックイベントを設定
-    $('#back').click(function(event) {
-        event.preventDefault(); // フォームの送信を防止（必要に応じて）
-        console.log('戻るボタンがクリックされました。'); // コンソールにメッセージを表示
-    });
-    
-});
+//$(document).ready(function() {
+//    // 戻るボタンのクリックイベントを設定
+//    $('#back').click(function(event) {
+//        event.preventDefault(); // フォームの送信を防止（必要に応じて）
+//        console.log('戻るボタンがクリックされました。'); // コンソールにメッセージを表示
+//    });
+//    
+//});
 
 document.addEventListener('DOMContentLoaded', function() {
     // テーブル内の「作業時間」と「作業内容」のすべての入力フィールドを取得
