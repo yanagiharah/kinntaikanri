@@ -16,7 +16,7 @@
 <insert id="insertDailyReportDetail">
 	INSERT INTO
 		daily_report_detail
-			(user_id,daily_report_detail_date,daily_report_detail_time,contet)
+			(user_id,daily_report_detail_date,daily_report_detail_time,content)
 	VALUES
 		(#{userId},#{dailyReportDetailDate},#{DailyReportDetailTime},#{content})
 </insert>

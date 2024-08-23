@@ -15,7 +15,7 @@ public interface DailyReportDetailMapper {
 	public List<DailyReportDetailForm> getDailyReportDetail(@Param("userId")Integer userId, @Param("dailyReportDetailDate")LocalDateTime dailyReportDetailDate);
 	
 	//日報内容追加
-	public void insertDailyReportDetail(List<DailyReportDetailForm> list);
+	public void insertDailyReportDetail(List<DailyReportDetailForm> dailyReportDetailForm);
 	
 	//日報更新
 	public void updateDailyReportDetail(DailyReportDetailForm dailyReportDetailFrom);
