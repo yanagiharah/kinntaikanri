@@ -1,8 +1,6 @@
 package com.example.demo.model;
 
-import java.time.LocalDateTime;
-
-import org.springframework.format.annotation.DateTimeFormat;
+import java.time.LocalDate;
 
 import lombok.Data;
 
@@ -13,8 +11,8 @@ public class DailyReportDetailForm {
 	
 	private Integer userId;
 	
-	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-	private LocalDateTime dailyReportDetailDate;
+//	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+	private LocalDate dailyReportDetailDate;
 	
 	private Integer dailyReportDetailTime;
 	

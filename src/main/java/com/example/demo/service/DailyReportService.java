@@ -1,7 +1,6 @@
 package com.example.demo.service;
 
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,15 +21,15 @@ public class DailyReportService {
 	private DailyReportDetailMapper dailyReportDetailMapper;
 		
 	//日報取得
-	public DailyReportForm getDailyReport(Integer userId ,Date dailyReportDate) {
-		DailyReportForm dailyReportform = dailyReportMapper.getDailyReport(userId, dailyReportDate);
+	public DailyReportForm getDailyReport(Integer userId ,LocalDate today) {
+		DailyReportForm dailyReportform = dailyReportMapper.getDailyReport(userId, today);
 			return dailyReportform;
 		
 	}
 	
 	//日報詳細取得
-	public List<DailyReportDetailForm> getDailyReportDetail(Integer userId, LocalDateTime dailyReportDetailDate) {
-		List<DailyReportDetailForm> dailyReportDetailForm = dailyReportDetailMapper.getDailyReportDetail(userId, dailyReportDetailDate);
+	public List<DailyReportDetailForm> getDailyReportDetail(Integer userId, LocalDate today) {
+		List<DailyReportDetailForm> dailyReportDetailForm = dailyReportDetailMapper.getDailyReportDetail(userId, today);
 			return dailyReportDetailForm;
 	}
 	

@@ -54,23 +54,15 @@ public class DailyReportController {
 		model.addAttribute("Users", users);
 		
 		
-		Integer userId = users.getUserId();																	//ユーザーID取得
-		LocalDate today = LocalDate.now();																	//今日の日付取得
-		
-		DailyReportForm todayDailyReportForm = dailyReportService.getDailyReport(userId,today);					//ユーザーIDと日付でDBから日報をとってくる
-
-		
-		List<DailyReportDetailForm> dailyReportDetailForm = todayDailyReportForm.getDailyReportDetailForm();	//とってきた日報から日報詳細を取り出す
-		
-		if(dailyReportDetailForm == null) {																	//日報詳細がない場合はそのままHTMLを表示
-			return "DailyReort/dailyReport";
-			
-		}																									//日報詳細がある場合は詳細をDBから取得してHTMLを表示
-		
-		
-		
-		List<DailyReportDetailForm> list = dailyReportService.getDailyReportDetail(userId,today);		
-		
+		Integer userId = users.getUserId();	
+		LocalDate today = LocalDate.now();
+		DailyReportForm todayDailyReportForm = dailyReportService.getDailyReport(userId, today);	//今日の日報取得　nullなら初期表示
+			if(todayDailyReportForm == null) {
+			todayDailyReportForm = new DailyReportForm();
+			}
+	
+		List<DailyReportDetailForm> list = dailyReportService.getDailyReportDetail(userId, today);	//今日の詳細取得
+		System.out.println(list);
 		DailyReportForm dailyReportForm = new DailyReportForm();
 		ArrayList<DailyReportDetailForm> dailyReportDetailList = new ArrayList<DailyReportDetailForm>();
 		dailyReportForm.setDailyReportDetailForm(dailyReportDetailList);
