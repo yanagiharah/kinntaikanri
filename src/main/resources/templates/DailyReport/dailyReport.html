@@ -23,10 +23,26 @@
 						<span th:text="${Users.userId}"></span>
 					</div>
 	
-					<div class="col-3">
-						ステータス
-						<span th:text="${dailyReportForm.status}">
-					</div>
+					<th:block th:if="(${DailyReportForm} == null or ${DailyReportForm.status} == null)">
+						<div class="col-3">
+							ステータス　
+						</div>
+					</th:block>
+					<th:block th:if="(${DailyReportForm} != null and ${DailyReportForm.status} == 0)">
+						<div class="col-3">
+							ステータス　未提出
+						</div>
+					</th:block>
+					<th:block th:if="(${DailyReportForm} != null and ${DailyReportForm.status} == 1)">
+						<div class="col-3">
+							ステータス　提出済承認前
+						</div>
+					</th:block>
+					<th:block th:if="(${DailyReportForm} != null and ${DailyReportForm.status} == 2)">
+						<div class="col-3">
+							ステータス　承認済
+						</div>
+					</th:block>
 				</div>
 	
 	
