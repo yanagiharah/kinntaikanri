@@ -43,6 +43,12 @@
   	height:80px;
 	
 }
+
+.error-message {
+    color: red;
+    font-weight: bold; 
+}
+
 /*.buttonSize {*/
 /*  color: #fff;*/
 /*  font-size: 16px;*/
