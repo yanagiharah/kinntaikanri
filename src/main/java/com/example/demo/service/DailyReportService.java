@@ -13,40 +13,51 @@ import com.example.demo.model.DailyReportForm;
 
 @Service
 public class DailyReportService {
-	
+
 	@Autowired
 	private DailyReportMapper dailyReportMapper;
-	
+
 	@Autowired
 	private DailyReportDetailMapper dailyReportDetailMapper;
-		
+
 	//日報取得
-	public DailyReportForm getDailyReport(Integer userId ,LocalDate today) {
+	public DailyReportForm getDailyReport(Integer userId, LocalDate today) {
 		DailyReportForm dailyReportform = dailyReportMapper.getDailyReport(userId, today);
-			return dailyReportform;
-		
+		return dailyReportform;
+
 	}
-	
+
 	//日報詳細取得
 	public List<DailyReportDetailForm> getDailyReportDetail(Integer userId, LocalDate today) {
 		List<DailyReportDetailForm> dailyReportDetailForm = dailyReportDetailMapper.getDailyReportDetail(userId, today);
-			return dailyReportDetailForm;
+		return dailyReportDetailForm;
 	}
-	
+
 	//日報内容追加
-	public void insertDailyReportDetail(List<DailyReportDetailForm> list) {
-		dailyReportDetailMapper.insertDailyReportDetail(list);
+	public void insertDailyReportDetail(DailyReportDetailForm dailyReportDetailForm) {
+		dailyReportDetailMapper.insertDailyReportDetail(dailyReportDetailForm);
 	}
-	
+
 	//日報更新
 	public void updateDailyReportDetail(DailyReportForm dailyReportForm) {
-		
+
 		//日報フォームの中にある日報詳細リストを取り出す。それを元にDBを更新
-		for(DailyReportDetailForm dailyReportDetailForm : dailyReportForm.getDailyReportDetailForm()) {
+		for (DailyReportDetailForm dailyReportDetailForm : dailyReportForm.getDailyReportDetailForm()) {
 			
-			dailyReportDetailMapper.updateDailyReportDetail(dailyReportDetailForm);
+			//INSERT処理
+			if (dailyReportDetailForm.getDailyReportDetailId() == null &&
+				dailyReportDetailForm.getDailyReportDetailTime() != null &&
+				dailyReportDetailForm.getContent() != null) {
+				
+				dailyReportDetailMapper.insertDailyReportDetail(dailyReportDetailForm);
+				
+			//UPDATE処理
+			} else if (dailyReportDetailForm.getDailyReportDetailId() != null &&
+					   dailyReportDetailForm.getContent() != null &&
+					   dailyReportDetailForm.getDailyReportDetailDate() != null) {
+				
+				dailyReportDetailMapper.updateDailyReportDetail(dailyReportDetailForm);
+			}
 		}
 	}
-
 }
-

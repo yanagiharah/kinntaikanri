@@ -18,7 +18,7 @@
 		daily_report_detail
 			(user_id,daily_report_detail_date,daily_report_detail_time,content)
 	VALUES
-		(#{userId},#{dailyReportDetailDate},#{DailyReportDetailTime},#{content})
+		(#{userId},#{dailyReportDetailDate},#{dailyReportDetailTime},#{content})
 </insert>
 
 <!-- 日報更新 -->
