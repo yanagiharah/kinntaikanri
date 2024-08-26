@@ -7,9 +7,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.model.DailyReportDetailForm;
 import com.example.demo.model.DailyReportForm;
@@ -28,59 +30,64 @@ public class DailyReportController {
 
 	//日報の初期表示画面（今日時点のものを表示）
 	@RequestMapping("/detail")
-	public String dailyReportDetail(String day, HttpSession session, Model model) {
+	public String dailyReportDetail(String date, HttpSession session, Model model) {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
-		
-		Integer userId = users.getUserId();
-		LocalDate localDateDay ;
-		
-		if(day == null) {
-			 localDateDay = LocalDate.now();
-		} else {
-			 localDateDay = LocalDate.parse(day);
-		}
-		
 
+		Integer userId = users.getUserId();
+		LocalDate calendarDate ;
 		
-		//今日の日報取得　nullなら新しいフォームを作成
-		DailyReportForm todayDailyReportForm = dailyReportService.getDailyReport(userId, localDateDay); 
-		if (todayDailyReportForm == null) {
-			todayDailyReportForm = new DailyReportForm();
-			todayDailyReportForm.setUserId(userId);
-			todayDailyReportForm.setDailyReportDate(localDateDay);
+		if(date == null) {
+			calendarDate = LocalDate.now();
+		} else {
+			calendarDate = LocalDate.parse(date);
 		}
 		
-		// 今日の日報詳細を取得し、nullまたは空なら新しいリストを初期化
-		List<DailyReportDetailForm> dailyReportDetailForm = dailyReportService.getDailyReportDetail(userId, localDateDay);
+		
+		//日報取得 nullなら新しいフォームを作成
+		DailyReportForm dailyReportForm = dailyReportService.getDailyReport(userId, calendarDate); 
+		if (dailyReportForm== null) {
+			dailyReportForm= new DailyReportForm();
+			dailyReportForm.setUserId(userId);
+			dailyReportForm.setDailyReportDate(calendarDate);
+		}
+		
+		
+		// 日報詳細を取得 nullまたは空なら新しいリストを初期化
+		List<DailyReportDetailForm> dailyReportDetailForm = dailyReportService.getDailyReportDetail(userId, calendarDate);
 	    if (dailyReportDetailForm == null || dailyReportDetailForm.isEmpty()) {
 	        dailyReportDetailForm = new ArrayList<>();
 	    }
 	    
-	    //リストを10行まで追加で作成（今日の日付とユーザーIDをセット）
+	    //空のリストを10行まで追加で作成（今日の日付とユーザーIDをセット）
 	    
 	    for( dailyReportDetailForm.size() ; dailyReportDetailForm.size() < 10 ; ) {
 	    	DailyReportDetailForm emptyDetailForm = new DailyReportDetailForm();
 	    	emptyDetailForm.setUserId(userId);
-	    	emptyDetailForm.setDailyReportDetailDate(localDateDay);
+	    	emptyDetailForm.setDailyReportDetailDate(calendarDate);
 	    	dailyReportDetailForm.add(emptyDetailForm);
 	    }
 	    
-	    todayDailyReportForm.setDailyReportDetailForm(dailyReportDetailForm);
-	    todayDailyReportForm.setUserId(userId);
+	    dailyReportForm.setDailyReportDetailForm(dailyReportDetailForm);
+	    dailyReportForm.setUserId(userId);
 	    
-	    model.addAttribute("dailyReportForm", todayDailyReportForm);
+	    model.addAttribute("dailyReportForm", dailyReportForm);
 	    return "DailyReport/dailyReport";
 	    
 	}
 
-	//日報更新
+	//提出ボタン押下後
 	@RequestMapping(value = "/detailUpdate", params = "submission", method = RequestMethod.POST)
 	public String updateDailyReportDetail(@Valid @ModelAttribute("dailyReportForm") DailyReportForm dailyReportForm,
-			HttpSession session, Model model) {
+			BindingResult result, HttpSession session, Model model) {
+		
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
-		System.out.print(dailyReportForm.getDailyReportDetailForm());
+ 
+		if(result.hasErrors()) {
+		return "DailyReport/dailyReport";
+		}
+
 		dailyReportService.updateDailyReportDetail(dailyReportForm);
 		return "DailyReport/dailyReport";
 	}
@@ -92,4 +99,63 @@ public class DailyReportController {
 		model.addAttribute("Users", users);
 		return "menu/processMenu";
 	}
+	
+	//カレンダーコントロール押下後
+	@RequestMapping(value = "/your-endpoint", params = "dailyReportDate", method = RequestMethod.POST)
+    public ModelAndView handleDateSubmission(@ModelAttribute("dailyReportDate") String dateS,HttpSession session, Model model) {
+        return new ModelAndView(dailyReportDetail(dateS,session,model));
+    }
+	
+///----------★一時的にとっておきたい(javaScript連携の為)------------------
+	
+	//カレンダーコントロール押下後
+//	@ResponseBody
+//	@PostMapping("/calendarDate")
+//	public  Map<String, Object> receiveDate(@RequestParam("date") String date, HttpSession session, Model model) {
+//		Users users = (Users) session.getAttribute("Users");
+//		
+//		Integer userId = users.getUserId();
+//		LocalDate calendarDate ;
+//		
+//		if(date == null) {
+//			calendarDate = LocalDate.now();
+//		} else {
+//			calendarDate = LocalDate.parse(date);
+//		}
+//		
+//		DailyReportForm dailyReportForm = dailyReportService.getDailyReport(userId, calendarDate); 
+//		if (dailyReportForm== null) {
+//			dailyReportForm= new DailyReportForm();
+//			dailyReportForm.setUserId(userId);
+//			dailyReportForm.setDailyReportDate(calendarDate);
+//		}
+//		
+//		
+//		// 日報詳細を取得 nullまたは空なら新しいリストを初期化
+//		List<DailyReportDetailForm> dailyReportDetailForm = dailyReportService.getDailyReportDetail(userId, calendarDate);
+//	    if (dailyReportDetailForm == null || dailyReportDetailForm.isEmpty()) {
+//	        dailyReportDetailForm = new ArrayList<>();
+//	    }
+//	    
+//	    //空のリストを10行まで追加で作成（今日の日付とユーザーIDをセット）
+//	    
+//	    for( dailyReportDetailForm.size() ; dailyReportDetailForm.size() < 10 ; ) {
+//	    	DailyReportDetailForm emptyDetailForm = new DailyReportDetailForm();
+//	    	emptyDetailForm.setUserId(userId);
+//	    	emptyDetailForm.setDailyReportDetailDate(calendarDate);
+//	    	dailyReportDetailForm.add(emptyDetailForm);
+//	    }
+//	    
+//	    dailyReportForm.setDailyReportDetailForm(dailyReportDetailForm);
+//	    dailyReportForm.setUserId(userId);
+//		
+//		Map<String, Object> response = new HashMap<>();
+//	    response.put("dailyReportForm", dailyReportForm);
+//	    response.put("Users", users);
+//		return response;
+//	    //return "redirect:/daily/detail?date=" + date;
+//	}
+	
+
+
 }

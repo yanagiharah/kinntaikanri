@@ -10,8 +10,7 @@
 <body>
 	
 	<div class="concontainer" th:object="${Users}">
-		<div class="row">
-			<form th:action="@{/daily/detailUpdate}" method="post" th:object="${dailyReportForm}">
+		<div class="row" th:object="${dailyReportForm}">
 				<div class="row m-4">
 					<div class="col-6">
 						ユーザー名
@@ -48,74 +47,75 @@
 	
 	
 				<div class="row m-4">
-					<div class="col-6">
-            <input type="date" name="dailyReportDate" id="today">
-          </div>
-<!--          <form id="myForm" action="/daily/send-date" method="post">-->
-
-<!--            <div class="col-6">-->
-
-<!--              <input type="date" name="today" id="today">-->
-
-<!--            </div>-->
-
-<!--          </form>-->
-	
-					<div class="col-3">
-						<!--					コントローラーと紐づけていないので付ける必要があります-->
-						<input type="submit" id="back" value="戻る" name="back" class="buttonSize">
-					</div>
-	
-					<div class="col-3">
-						<input type="submit" id="submission" value="提出" name="submission" class="buttonSize">
-					</div>
+					
+					<form id="dateForm" th:action="@{/daily/your-endpoint}" method="post">
+						<div class="col-6">
+							<input type="date" name="dailyReportDate" id="today">
+						</div>
+					</form>
+					
+					<form th:action="@{/daily/detailUpdate}" method="post">
+						<div class="col-3">
+							<!--					コントローラーと紐づけていないので付ける必要があります-->
+							<input type="submit" id="back" value="戻る" name="back" class="buttonSize">
+						</div>
+					
+						<div class="col-3">
+							<input type="submit" id="submission" value="提出" name="submission" class="buttonSize">
+						</div>
+					
+						<div class="row m-2">
+							<div class="col-12 ml-5">
+								<table class="table table-bordered border border-dark">
+									<thead>
+										<tr>
+											<td>作業時間(h)</td>
+											<td>作業内容</td>
+										</tr>
+									</thead>
+									<tbody id="dailyReportDetail" th:each="dailyReportDetail, start : ${dailyReportForm.dailyReportDetailForm}">
+						
+										<th:block>
+											<input type="hidden" th:name="|dailyReportDetailForm[__${start.index}__].dailyReportDetailId|"
+												th:value="${dailyReportDetail.dailyReportDetailId}">
+											<input type="hidden" th:name="|dailyReportDetailForm[__${start.index}__].userId|"
+												th:value="${dailyReportDetail.userId}">
+											<input type="hidden" th:name="|dailyReportDetailForm[__${start.index}__].dailyReportDetailDate|"
+												th:value="${dailyReportDetail.dailyReportDetailDate}">
+										</th:block>
+						
+										<tr>
+											<td>
+												<div>
+													<input type="number"
+														th:field="*{dailyReportDetailForm[__${start.index}__].dailyReportDetailTime}"
+														th:value="${dailyReportDetail.dailyReportDetailTime}" class="noneBox" />
+													<div th:if="${#fields.hasErrors('dailyReportDetailForm[__${start.index}__].dailyReportDetailTime')}"
+														th:errors="*{dailyReportDetailForm[__${start.index}__].dailyReportDetailTime}"
+														class="error-message"></div>
+												</div>
+											</td>
+											<td>
+												<input type="text" th:field="*{dailyReportDetailForm[__${start.index}__].content}"
+													th:value="${dailyReportDetail.content}" class="noneBox" />
+												<div th:if="${#fields.hasErrors('dailyReportDetailForm[__${start.index}__].content')}"
+													th:errors="*{dailyReportDetailForm[__${start.index}__].content}" class="error-message">
+												</div>
+											</td>
+										</tr>
+						
+									</tbody>
+						
+								</table>
+							</div>
+						</div>
+					</form>
 				</div>
-	
-				<div class="row m-2">
-					<div class="col-12 ml-5">
-						<table class="table table-bordered border border-dark">
-							<thead>
-								<tr>
-									<td>作業時間(h)</td>
-									<td>作業内容</td>
-								</tr>
-							</thead>
-							<tbody th:each="dailyReportDetail, start : ${dailyReportForm.dailyReportDetailForm}">
-	
-								<th:block>
-									<input type="hidden"
-										th:name="|dailyReportDetailForm[__${start.index}__].dailyReportDetailId|"
-										th:value="${dailyReportDetail.dailyReportDetailId}">
-									<input type="hidden" th:name="|dailyReportDetailForm[__${start.index}__].userId|"
-										th:value="${dailyReportDetail.userId}">
-									<input type="hidden"
-										th:name="|dailyReportDetailForm[__${start.index}__].dailyReportDetailDate|"
-										th:value="${dailyReportDetail.dailyReportDetailDate}">
-	
-								</th:block>
-	
-								<tr>
-									<td>
-										<input type="text"
-											th:field="*{dailyReportDetailForm[__${start.index}__].dailyReportDetailTime}"
-											th:value="${dailyReportDetail.dailyReportDetailTime}" class="noneBox" />
-									</td>
-									<td>
-										<input type="text" th:field="*{dailyReportDetailForm[__${start.index}__].content}"
-											th:value="${dailyReportDetail.content}" class="noneBox" />
-									</td>
-								</tr>
-	
-							</tbody>
-	
-						</table>
-					</div>
-				</div>
-			</form>
 		</div>
 	</div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script th:src="@{/js/Report.js}"></script>
+
 
     
 </body>
