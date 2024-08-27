@@ -9,6 +9,8 @@ $(document).ready(function() {
     $('#today').change(function() {
         $(this).closest('form').submit();
     });
+    //ページ遷移時に提出ボタンの活性化確認必要
+    
 });
 
 // カレンダーに現在の日付を登録
@@ -25,45 +27,97 @@ function setTodayDate() {
     }
 }
 
-//表に対しての提出ボタンの活性化処理
 document.addEventListener('DOMContentLoaded', function() {
 	// テーブル内の「作業時間」と「作業内容」のすべての入力フィールドを取得
-	const dailyReportDetailTime = document.querySelectorAll('input[name^="dailyReportDetailForm"][name$=".dailyReportDetailTime"]');
-	const content = document.querySelectorAll('input[name^="dailyReportDetailForm"][name$=".content"]');
-	const dailyReportDetailId =document.querySelectorAll('input[name^="dailyReportDetailForm"][name$=".dailyReportDetailId"]');
-	
-	// 作業時間の入力フィールドに対してinputイベントを設定
-	dailyReportDetailTime.forEach(input => {
-		input.addEventListener('input', function(event) {
-			if (event.target.value.trim() == "" && event.target.value.trim() == "") {
+	const dailyReportDetailTime = Array.from(document.querySelectorAll('input[name^="dailyReportDetailForm"][name$=".dailyReportDetailTime"]'));
+	const content = Array.from(document.querySelectorAll('input[name^="dailyReportDetailForm"][name$=".content"]'));
+	const dailyReportDetailId = Array.from(document.querySelectorAll('input[name^="dailyReportDetailForm"][name$=".dailyReportDetailId"]'));
 
-				document.getElementById("submission").disabled = true;
-			} else {
-				document.getElementById("submission").disabled = false;
+	function checkTable() {
+		let activeFlag = false;
+
+		// 入力フィールドを全てチェック
+		dailyReportDetailTime.some((taskTime, index) => {
+
+			//taskTime 作業時間
+			const taskContent = content[index]; //作業内容
+			const detailId = dailyReportDetailId[index]; //日報(サブ)ID
+
+			//日報(サブ).IDがある場合： 作業時間または作業内容が空白、かつIDが存在する場合、活性にする
+			if (detailId.value.trim() !== "") {
+				if ((taskTime.value.trim() == "" || taskContent.value.trim() === "")) {
+					activeFlag = false;
+					return true;
+				} else {
+					activeFlag = true;
+				}
+			} else { //日報(サブ).IDがない場合
+				if ((taskTime.value.trim() != "" && taskContent.value.trim() != "")) {
+					activeFlag = true;
+				}
+				else if ((taskTime.value.trim() != "" || taskContent.value.trim() != "")) {
+					activeFlag = false;
+					return true;
+				}
 			}
 		});
-	});
 
-	// 作業内容の入力フィールドに対してinputイベントを設定
-	content.forEach(input => {
-		input.addEventListener('input', function(event) {
-			if (event.target.value.trim() == "" && event.target.value.trim() == "") {
+		// 結果に応じて提出ボタンを活性化/非活性化
+		document.getElementById("submission").disabled = !activeFlag;
+	}
 
-				//if文の条件が真の場合、カウントを+1する　カウントが入っている場合非活性
-				//もしかしたら表の一行のみにforEachを起こしているので
-				//全行数に対してforEachを行う作りに変える必要がある
-				//if条件に日報詳細IDを加えて、IDが存在してる時だけcheckする
+    // 全ての作業時間と作業内容の入力フィールドに対してinputイベントを設定
+    dailyReportDetailTime.forEach(input => input.addEventListener('input', checkTable));
+    content.forEach(input => input.addEventListener('input', checkTable));
 
-				//              	console.log("作業時間が入力されました: " + event.target.value);
-				document.getElementById("submission").disabled = true;
-			} else {
-				document.getElementById("submission").disabled = false;
-			}
-		});
-	});
+    // ページ読み込み時に初回チェックを実行
+    checkTable();
 });
 
-// ----------------------------------------------------------下記使用していない----------------------------------------
+//表に対しての提出ボタンの活性化処理
+//document.addEventListener('DOMContentLoaded', function() {
+//	// テーブル内の「作業時間」と「作業内容」のすべての入力フィールドを取得
+//	const dailyReportDetailTime = document.querySelectorAll('input[name^="dailyReportDetailForm"][name$=".dailyReportDetailTime"]');
+//	const content = document.querySelectorAll('input[name^="dailyReportDetailForm"][name$=".content"]');
+//	const dailyReportDetailId =document.querySelectorAll('input[name^="dailyReportDetailForm"][name$=".dailyReportDetailId"]');
+//	var countNumber = 0; 
+//	
+//	// 作業時間の入力フィールドに対してinputイベントを設定
+//	dailyReportDetailTime.forEach(input => {
+//		input.addEventListener('input', function(event) {
+//			if (event.target.value.trim() == "" && event.target.value.trim() == "") {
+//
+//				document.getElementById("submission").disabled = true;
+//			} else {
+//				document.getElementById("submission").disabled = false;
+//			}
+//		});
+//	});
+//
+//	// 作業内容の入力フィールドに対してinputイベントを設定
+//	content.forEach(input => {
+//		input.addEventListener('input', function(event) {
+//			if (event.target.value.trim() == "" && event.target.value.trim() == "" && dailyReportDetailId !=null) {
+//				countNumber++;
+//				//if条件に日報詳細IDを加えて、IDが存在してる時だけcheckする
+//				//if文の条件が真の場合、カウントを+1する　カウントが入っている場合非活性
+//				//もしかしたら表の一行のみにforEachを起こしているので
+//				//全行数に対してforEachを行う作りに変える必要がある
+//				console.log("作業時間が入力されました: " + dailyReportDetailId);
+//				
+//			}
+//			
+//			if(countNumber !=0 ){
+//				document.getElementById("submission").disabled = true;
+//			} else {
+//				document.getElementById("submission").disabled = false;
+//			}
+//			countNumber = 0; 
+//		});
+//	});
+//});
+
+// ----------------------------------------------------------下記使用していない(★とっておきたい)----------------------------------------
 
 // 選択した日付をサーバーに送信する関数(Ajax)
 function sendSelectedDate() {
