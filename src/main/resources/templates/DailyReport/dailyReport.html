@@ -84,34 +84,14 @@
 											th:value="${dailyReportDetail.dailyReportDetailDate}">
 									</th:block>
 									
-									<th:block th:if="${dailyReportForm.status} == 2">
-										<tr>
-											<td>
-												<div>
-													<input type="number" th:field="*{dailyReportDetailForm[__${start.index}__].dailyReportDetailTime}"
-														th:value="${dailyReportDetail.dailyReportDetailTime}" class="noneBox" readonly/>
-													<div th:if="${#fields.hasErrors('dailyReportDetailForm[__${start.index}__].dailyReportDetailTime')}"
-														th:errors="*{dailyReportDetailForm[__${start.index}__].dailyReportDetailTime}"
-														class="error-message"></div>
-												</div>
-											</td>
-											<td>
-												<input type="text" th:field="*{dailyReportDetailForm[__${start.index}__].content}"
-													th:value="${dailyReportDetail.content}" class="noneBox" readonly/>
-												<div th:if="${#fields.hasErrors('dailyReportDetailForm[__${start.index}__].content')}"
-													th:errors="*{dailyReportDetailForm[__${start.index}__].content}" class="error-message">
-												</div>
-											</td>
-										</tr>
-									</th:block>
-	
-									<th:block th:unless="${dailyReportForm.status} == 2">
+									<th:block>
 										<tr>
 											<td>
 												<div>
 													<input type="number"
 														th:field="*{dailyReportDetailForm[__${start.index}__].dailyReportDetailTime}"
-														th:value="${dailyReportDetail.dailyReportDetailTime}" class="noneBox" />
+														th:value="${dailyReportDetail.dailyReportDetailTime}" class="noneBox" 
+														th:disabled="${dailyReportForm.status} == 2"/>
 													<div th:if="${#fields.hasErrors('dailyReportDetailForm[__${start.index}__].dailyReportDetailTime')}"
 														th:errors="*{dailyReportDetailForm[__${start.index}__].dailyReportDetailTime}"
 														class="error-message"></div>
@@ -120,7 +100,8 @@
 											<td>
 												<input type="text"
 													th:field="*{dailyReportDetailForm[__${start.index}__].content}"
-													th:value="${dailyReportDetail.content}" class="noneBox" />
+													th:value="${dailyReportDetail.content}" class="noneBox" 
+													th:disabled="${dailyReportForm.status} == 2"/>
 												<div th:if="${#fields.hasErrors('dailyReportDetailForm[__${start.index}__].content')}"
 													th:errors="*{dailyReportDetailForm[__${start.index}__].content}"
 													class="error-message">
