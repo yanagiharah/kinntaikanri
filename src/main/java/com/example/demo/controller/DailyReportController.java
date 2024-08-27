@@ -4,11 +4,10 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
-import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
+import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,12 +21,18 @@ import com.example.demo.model.DailyReportForm;
 import com.example.demo.model.Users;
 import com.example.demo.service.DailyReportService;
 
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+
 @Controller
 @RequestMapping("/daily")
 public class DailyReportController {
 
 	@Autowired
 	private DailyReportService dailyReportService;
+	
+	@Autowired
+	private MessageSource messageSource;
 
 	//日報の初期表示画面（今日時点のものを表示）
 	@RequestMapping("/detail")
@@ -82,7 +87,7 @@ public class DailyReportController {
 	//提出ボタン押下後
 	@RequestMapping(value = "/detailUpdate", params = "submission", method = RequestMethod.POST)
 	public String updateDailyReportDetail(@Valid @ModelAttribute("dailyReportForm") DailyReportForm dailyReportForm,
-			BindingResult result, HttpSession session, Model model) {
+			BindingResult result, HttpSession session, Model model, Locale locale) {
 		
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
@@ -92,6 +97,8 @@ public class DailyReportController {
 		}
 
 		dailyReportService.updateDailyReportDetail(dailyReportForm);
+		String successMessage = messageSource.getMessage("dailyReport.update.success", null, locale);
+		model.addAttribute("message", successMessage);
 		LocalDate calendarDate = dailyReportForm.getDailyReportDetailForm().get(0).getDailyReportDetailDate();
 		String calendarDateS = calendarDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		return dailyReportDetail(calendarDateS,session,model);

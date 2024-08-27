@@ -12,11 +12,16 @@ import com.example.demo.model.DailyReportDetailForm;
 public interface DailyReportDetailMapper {
 
 	//日報詳細取得
-	public List<DailyReportDetailForm> getDailyReportDetail(@Param("userId")Integer userId, @Param("dailyReportDetailDate")LocalDate dailyReportDetailDate);
-	
+	public List<DailyReportDetailForm> getDailyReportDetail(
+			@Param("userId") Integer userId,
+			@Param("dailyReportDetailDate") LocalDate dailyReportDetailDate);
+
 	//日報内容追加
 	public void insertDailyReportDetail(DailyReportDetailForm dailyReportDetailForm);
-	
+
 	//日報更新
 	public void updateDailyReportDetail(DailyReportDetailForm dailyReportDetailFrom);
+
+	//日報削除
+	public void deleteDailyReportDetail(Integer dailyReportDetailId);
 }

@@ -43,27 +43,31 @@ public class DailyReportService {
 
 		//日報フォームの中にある日報詳細リストを取り出す。それを元にDBを更新
 		for (DailyReportDetailForm dailyReportDetailForm : dailyReportForm.getDailyReportDetailForm()) {
-//			System.out.print("ここです！！！！！！！！"+dailyReportForm);
+
 			//INSERT処理
 			if (dailyReportDetailForm.getDailyReportDetailId() == null &&
 				dailyReportDetailForm.getDailyReportDetailTime() != null &&
 				dailyReportDetailForm.getContent() != null) {
 				
-				
 				dailyReportForm.setUserId(dailyReportDetailForm.getUserId());
-				
 				
 				dailyReportDetailMapper.insertDailyReportDetail(dailyReportDetailForm);
 				
 			//UPDATE処理
 			} else if (dailyReportDetailForm.getDailyReportDetailId() != null &&
-					   dailyReportDetailForm.getContent() != null &&
+					   !dailyReportDetailForm.getContent().isEmpty() &&
 					   dailyReportDetailForm.getDailyReportDetailDate() != null) {
 				
 				dailyReportForm.setUserId(dailyReportDetailForm.getUserId());
 				
-//				
 				dailyReportDetailMapper.updateDailyReportDetail(dailyReportDetailForm);
+			
+			//DELETE処理
+			}else if (dailyReportDetailForm.getDailyReportDetailId() != null &&
+					  dailyReportDetailForm.getContent().isEmpty() &&
+					  dailyReportDetailForm.getDailyReportDetailTime() == null) {
+				
+				dailyReportDetailMapper.deleteDailyReportDetail(dailyReportDetailForm.getDailyReportDetailId());
 			}
 		}
 		if(dailyReportForm.getStatus() == null) {

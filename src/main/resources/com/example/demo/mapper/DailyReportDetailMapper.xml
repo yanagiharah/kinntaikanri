@@ -4,7 +4,7 @@
 <mapper namespace="com.example.demo.mapper.DailyReportDetailMapper">
 
 <!--日報詳細取得-->
-<select id="getDailyReportDetail"
+<select id = "getDailyReportDetail"
 	resultType = "com.example.demo.model.DailyReportDetailForm">
 	SELECT *
 	FROM daily_report_detail
@@ -13,7 +13,7 @@
 </select>
 
 <!-- 日報内容追加 -->
-<insert id="insertDailyReportDetail">
+<insert id = "insertDailyReportDetail">
 	INSERT INTO
 		daily_report_detail
 			(user_id,daily_report_detail_date,daily_report_detail_time,content)
@@ -22,14 +22,24 @@
 </insert>
 
 <!-- 日報更新 -->
-<update id="updateDailyReportDetail">
+<update id ="updateDailyReportDetail">
 	UPDATE daily_report_detail
 	SET
 		daily_report_detail_date = #{dailyReportDetailDate},
 		daily_report_detail_time = #{dailyReportDetailTime},
 		content = #{content}
-	WHERE user_id = #{userId} 
-	  AND daily_report_detail_id = #{dailyReportDetailId}
+	WHERE
+		user_id = #{userId} AND 
+		daily_report_detail_id = #{dailyReportDetailId}
 </update>
+
+<!-- 日報削除 -->
+<delete id = "deleteDailyReportDetail">
+	DELETE 
+	FROM
+		daily_report_detail
+	WHERE
+		daily_report_detail_id = #{dailyReportDetailId}
+</delete>
 
 </mapper>
