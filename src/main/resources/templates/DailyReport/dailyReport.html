@@ -11,6 +11,9 @@
 	
 	<div class="concontainer" th:object="${Users}">
 		<div th:object="${dailyReportForm}">
+			<div class="alert alert-success text-center" th:if="${message}">
+				<p th:text="${message}"></p>
+			</div>
 			<div class="row">
 				<div class="row m-4">
 					<div class="col-6">
@@ -80,28 +83,51 @@
 											th:name="|dailyReportDetailForm[__${start.index}__].dailyReportDetailDate|"
 											th:value="${dailyReportDetail.dailyReportDetailDate}">
 									</th:block>
+									
+									<th:block th:if="${dailyReportForm.status} == 2">
+										<tr>
+											<td>
+												<div>
+													<input type="number" th:field="*{dailyReportDetailForm[__${start.index}__].dailyReportDetailTime}"
+														th:value="${dailyReportDetail.dailyReportDetailTime}" class="noneBox" readonly/>
+													<div th:if="${#fields.hasErrors('dailyReportDetailForm[__${start.index}__].dailyReportDetailTime')}"
+														th:errors="*{dailyReportDetailForm[__${start.index}__].dailyReportDetailTime}"
+														class="error-message"></div>
+												</div>
+											</td>
+											<td>
+												<input type="text" th:field="*{dailyReportDetailForm[__${start.index}__].content}"
+													th:value="${dailyReportDetail.content}" class="noneBox" readonly/>
+												<div th:if="${#fields.hasErrors('dailyReportDetailForm[__${start.index}__].content')}"
+													th:errors="*{dailyReportDetailForm[__${start.index}__].content}" class="error-message">
+												</div>
+											</td>
+										</tr>
+									</th:block>
 	
-									<tr>
-										<td>
-											<div>
-												<input type="number"
-													th:field="*{dailyReportDetailForm[__${start.index}__].dailyReportDetailTime}"
-													th:value="${dailyReportDetail.dailyReportDetailTime}" class="noneBox" />
-												<div th:if="${#fields.hasErrors('dailyReportDetailForm[__${start.index}__].dailyReportDetailTime')}"
-													th:errors="*{dailyReportDetailForm[__${start.index}__].dailyReportDetailTime}"
-													class="error-message"></div>
-											</div>
-										</td>
-										<td>
-											<input type="text"
-												th:field="*{dailyReportDetailForm[__${start.index}__].content}"
-												th:value="${dailyReportDetail.content}" class="noneBox" />
-											<div th:if="${#fields.hasErrors('dailyReportDetailForm[__${start.index}__].content')}"
-												th:errors="*{dailyReportDetailForm[__${start.index}__].content}"
-												class="error-message">
-											</div>
-										</td>
-									</tr>
+									<th:block th:unless="${dailyReportForm.status} == 2">
+										<tr>
+											<td>
+												<div>
+													<input type="number"
+														th:field="*{dailyReportDetailForm[__${start.index}__].dailyReportDetailTime}"
+														th:value="${dailyReportDetail.dailyReportDetailTime}" class="noneBox" />
+													<div th:if="${#fields.hasErrors('dailyReportDetailForm[__${start.index}__].dailyReportDetailTime')}"
+														th:errors="*{dailyReportDetailForm[__${start.index}__].dailyReportDetailTime}"
+														class="error-message"></div>
+												</div>
+											</td>
+											<td>
+												<input type="text"
+													th:field="*{dailyReportDetailForm[__${start.index}__].content}"
+													th:value="${dailyReportDetail.content}" class="noneBox" />
+												<div th:if="${#fields.hasErrors('dailyReportDetailForm[__${start.index}__].content')}"
+													th:errors="*{dailyReportDetailForm[__${start.index}__].content}"
+													class="error-message">
+												</div>
+											</td>
+										</tr>
+									</th:block>
 								</tbody>
 							</table>
 						</div>
