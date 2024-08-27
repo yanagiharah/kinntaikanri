@@ -18,7 +18,7 @@
 		daily_report
 			(user_id,daily_report_date,status)
 	VALUES
-		(#{userId},#{dailyReportDate},#{status})
+		(#{userId},#{dailyReportDate},1)
 </insert>
 
 <!-- 日報更新 -->
