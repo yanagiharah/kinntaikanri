@@ -1,26 +1,28 @@
 
-// ページが完全に読み込まれた後に実行する
 $(document).ready(function() {
-	  // ボタンを押したときに日付を送信
-     $('#today').change(function() {
+    // ページロード時に、カレンダーコントロールが空の場合にのみ今日の日付をセット
+    if ($('#today').val() === '') {
+        setTodayDate();
+    }
+
+    // 日付が変更された際にフォームを送信
+    $('#today').change(function() {
         $(this).closest('form').submit();
     });
-	
-	setTodayDate(); // 今日の日付をセット
-	
 });
 
-
-//カレンダーに現在の日付を登録
+// カレンダーに現在の日付を登録
 function setTodayDate() {
-	var today = new Date();
-	var yyyy = today.getFullYear();
-	var mm = ("0" + (today.getMonth() + 1)).slice(-2);
-	var dd = ("0" + today.getDate()).slice(-2);
-	var todayDate = yyyy + '-' + mm + '-' + dd;
-	
-	 // フィールドが空の場合のみ日付をセット
-   $('#today').val(todayDate);
+    var today = new Date();
+    var yyyy = today.getFullYear();
+    var mm = ("0" + (today.getMonth() + 1)).slice(-2);
+    var dd = ("0" + today.getDate()).slice(-2);
+    var todayDate = yyyy + '-' + mm + '-' + dd;
+
+    // フィールドが空の場合のみ日付をセット
+    if ($('#today').val() === '') {
+        $('#today').val(todayDate);
+    }
 }
 
 //表に対しての提出ボタンの活性化処理

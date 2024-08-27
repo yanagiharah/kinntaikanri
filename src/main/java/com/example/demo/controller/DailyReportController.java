@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +50,7 @@ public class DailyReportController {
 		if (dailyReportForm== null) {
 			dailyReportForm= new DailyReportForm();
 			dailyReportForm.setUserId(userId);
+			dailyReportForm.setStatus(0);
 			dailyReportForm.setDailyReportDate(calendarDate);
 		}
 		
@@ -71,6 +73,8 @@ public class DailyReportController {
 	    dailyReportForm.setDailyReportDetailForm(dailyReportDetailForm);
 	    dailyReportForm.setUserId(userId);
 	    
+	    
+	    
 	    model.addAttribute("dailyReportForm", dailyReportForm);
 	    return "DailyReport/dailyReport";
 	    
@@ -89,7 +93,9 @@ public class DailyReportController {
 		}
 
 		dailyReportService.updateDailyReportDetail(dailyReportForm);
-		return "DailyReport/dailyReport";
+		LocalDate calendarDate = dailyReportForm.getDailyReportDetailForm().get(0).getDailyReportDetailDate();
+		String calendarDateS = calendarDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		return dailyReportDetail(calendarDateS,session,model);
 	}
 	
 	//戻るボタン
@@ -101,10 +107,12 @@ public class DailyReportController {
 	}
 	
 	//カレンダーコントロール押下後
-	@RequestMapping(value = "/your-endpoint", params = "dailyReportDate", method = RequestMethod.POST)
+	@RequestMapping(value = "/date", params = "dailyReportDate", method = RequestMethod.POST)
     public ModelAndView handleDateSubmission(@ModelAttribute("dailyReportDate") String dateS,HttpSession session, Model model) {
         return new ModelAndView(dailyReportDetail(dateS,session,model));
     }
+	
+
 	
 ///----------★一時的にとっておきたい(javaScript連携の為)------------------
 	
