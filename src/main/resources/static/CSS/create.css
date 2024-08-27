@@ -11,12 +11,9 @@
  width: 100%
 }
 .buttonSize {
-  width: 15%;
+  width: 100px;
 /*  border-radius: 40% 80% 35% 65% / 50% 50% 70% 40%;*/
   background-color: yellow;
-}
-.textBox{
-/*	border-radius: 40% 80% 35% 65% / 50% 50% 70% 40%;*/
 }
 
 .buttonRound{
@@ -25,7 +22,6 @@
   background-color: yellow;
 /*  border-radius:30px;*/
 }
-
 
 .linklike {
   border:none;
@@ -49,6 +45,9 @@
     font-weight: bold; 
 }
 
+/*.textBox{*/
+/*	border-radius: 40% 80% 35% 65% / 50% 50% 70% 40%;*/
+/*}*/
 /*.buttonSize {*/
 /*  color: #fff;*/
 /*  font-size: 16px;*/

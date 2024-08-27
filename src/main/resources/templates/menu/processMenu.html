@@ -13,9 +13,8 @@
 <body>
 	<div class="container" th:object="${Users}">
 		<div class="row">
-			<form id="mainForm" th:action="@{/logOff}" method="post" >
-				<div class="row">
-					<div class="col-5 ">
+			<form id="mainForm" th:action="@{/logOff}" method="post" class="d-flex align-items-center justify-content-center" >
+					<div class="col-4 ">
 						ユーザー名:<span th:text="${Users.userName}"></span>
 						<input type="hidden" name="userName" th:value="${Users.userName}">
 					</div>
@@ -23,8 +22,9 @@
 						ユーザーID:<span th:text="${Users.userId}"></span>
 						<input type="hidden" name="userId" th:value="${Users.userId}">
 					</div>
-					<input type="submit" id="logOff" value="ログオフ" name="logOff" class="buttonSize">
-				</div>
+					<div class="col-4">
+						<input type="submit" id="logOff" value="ログオフ" name="logOff" class="buttonSize">
+					</div>
 			</form>
 			<div class="d-flex align-items-center justify-content-center " style="padding:300px;">
 					
