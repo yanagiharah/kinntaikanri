@@ -45,9 +45,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 			//日報(サブ).IDがある場合： 作業時間または作業内容が空白、かつIDが存在する場合、活性にする
 			if (detailId.value.trim() !== "") {
-				if ((taskTime.value.trim() == "" || taskContent.value.trim() === "")) {
-					activeFlag = false;
+				if (taskTime.value.trim() == "" || taskContent.value.trim() == "") {	
+					if( (taskTime.value.trim() == "" && taskContent.value.trim() === "")){
+						activeFlag = true
+					}else{
+						activeFlag = false;
 					return true;
+					}
 				} else {
 					activeFlag = true;
 				}
