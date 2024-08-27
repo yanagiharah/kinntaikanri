@@ -24,6 +24,6 @@ public class DailyReportDetailForm {
 	private Integer dailyReportDetailTime;
 	
 	@Size(max = 20, message = "{DailyReportDetailForm.content}")
-	@Pattern(regexp = "^[\\p{IsHiragana}\\p{IsKatakana}\\p{IsIdeographic}]*$", message = "{DailyReportDetailForm.wide}")
+	@Pattern(regexp = "^[\\p{IsHiragana}\\p{IsKatakana}\\p{IsIdeographic}ー]*$", message = "{DailyReportDetailForm.wide}")
 	private String content;
 }
