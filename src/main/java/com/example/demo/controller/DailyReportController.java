@@ -50,7 +50,6 @@ public class DailyReportController {
 		if (dailyReportForm== null) {
 			dailyReportForm= new DailyReportForm();
 			dailyReportForm.setUserId(userId);
-			dailyReportForm.setStatus(0);
 			dailyReportForm.setDailyReportDate(calendarDate);
 		}
 		
