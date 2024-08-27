@@ -22,22 +22,17 @@
 						<span th:text="${Users.userId}"></span>
 					</div>
 	
-					<th:block th:if="(${DailyReportForm} == null or ${DailyReportForm.status} == null)">
-						<div class="col-3">
-							ステータス　
-						</div>
-					</th:block>
-					<th:block th:if="(${DailyReportForm} != null and ${DailyReportForm.status} == 0)">
+					<th:block th:if="(${dailyReportForm} == null or ${dailyReportForm.status} == null or (${dailyReportForm} != null and ${dailyReportForm.status} == 0))">
 						<div class="col-3">
 							ステータス　未提出
 						</div>
 					</th:block>
-					<th:block th:if="(${DailyReportForm} != null and ${DailyReportForm.status} == 1)">
+					<th:block th:if="(${dailyReportForm} != null and ${dailyReportForm.status} == 1)">
 						<div class="col-3">
 							ステータス　提出済承認前
 						</div>
 					</th:block>
-					<th:block th:if="(${DailyReportForm} != null and ${DailyReportForm.status} == 2)">
+					<th:block th:if="(${dailyReportForm} != null and ${dailyReportForm.status} == 2)">
 						<div class="col-3">
 							ステータス　承認済
 						</div>
@@ -57,6 +52,10 @@
 					<span class="d-flex flex-row-reverse">
 						<input type="submit" id="submission" value="提出" name="submission" class="buttonSize offset-1">
 						<input type="submit" id="back" value="戻る" name="back" class="buttonSize ">
+						<input type="hidden" name="dailyReportId" th:value="${dailyReportForm.dailyReportId}">
+						<input type="hidden" name="userId" th:value="${dailyReportForm.userId}">
+						<input type="hidden" name="status" th:value="${dailyReportForm.status}">
+						<input type="hidden" name="dailyReportDate" th:value="${dailyReportForm.dailyReportDate}">
 					</span>
 	
 					<div class="row m-2">

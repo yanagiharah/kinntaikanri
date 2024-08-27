@@ -3,9 +3,10 @@ package com.example.demo.model;
 import java.time.LocalDate;
 import java.util.List;
 
+import jakarta.validation.Valid;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
-import jakarta.validation.Valid;
 import lombok.Data;
 
 @Data
@@ -14,7 +15,7 @@ public class DailyReportForm {
 	@Valid
 	private List< DailyReportDetailForm> dailyReportDetailForm;
 
-	private Integer id;
+	private Integer dailyReportId;
 	
 	private Integer userId;
 	

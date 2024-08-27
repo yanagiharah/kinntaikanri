@@ -12,6 +12,23 @@
 	and daily_report_date = #{dailyReportDate}
 </select>
 
+<!-- 日報追加 -->
+<insert id="insertDailyReport">
+	INSERT INTO
+		daily_report
+			(user_id,daily_report_date,status)
+	VALUES
+		(#{userId},#{dailyReportDate},#{status})
+</insert>
+
+<!-- 日報更新 -->
+<update id="updateDailyReport">
+	UPDATE daily_report
+	SET
+		status = 1
+	WHERE daily_report_id = #{dailyReportId}
+</update>
+
 </mapper>
 
 

@@ -5,6 +5,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,9 +21,6 @@ import com.example.demo.model.DailyReportDetailForm;
 import com.example.demo.model.DailyReportForm;
 import com.example.demo.model.Users;
 import com.example.demo.service.DailyReportService;
-
-import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/daily")
@@ -73,7 +73,7 @@ public class DailyReportController {
 	    dailyReportForm.setDailyReportDetailForm(dailyReportDetailForm);
 	    dailyReportForm.setUserId(userId);
 	    
-	    
+//	    System.out.print("提出はここです！！！！！！！！"+dailyReportForm);
 	    
 	    model.addAttribute("dailyReportForm", dailyReportForm);
 	    return "DailyReport/dailyReport";
@@ -87,7 +87,7 @@ public class DailyReportController {
 		
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
- 
+		System.out.print("提出はここです！！！！！！！！"+dailyReportForm);
 		if(result.hasErrors()) {
 		return "DailyReport/dailyReport";
 		}
