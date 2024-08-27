@@ -25,9 +25,18 @@
 <update id="updateDailyReport">
 	UPDATE daily_report
 	SET
-		status = 1
+		status = 2
 	WHERE daily_report_id = #{dailyReportId}
 </update>
+
+<!-- 日報削除 -->
+<delete id="deleteDailyReport">
+	DELETE
+	FROM
+		daily_report
+	WHERE
+		daily_report_id = #{dailyReportId}
+</delete>
 
 </mapper>
 

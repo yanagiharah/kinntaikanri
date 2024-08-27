@@ -17,6 +17,9 @@ public interface DailyReportMapper {
 	public void insertDailyReport(DailyReportForm dailyReportForm);
 	
 	//日報更新
-		public void updateDailyReport(DailyReportForm dailyReportForm);
+	public void updateDailyReport(DailyReportForm dailyReportForm);
+		
+	//日報削除
+	public void deleteDailyReport(Integer dailyReportId);
 	
 }

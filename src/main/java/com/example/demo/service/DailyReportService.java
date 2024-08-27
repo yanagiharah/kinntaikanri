@@ -68,15 +68,14 @@ public class DailyReportService {
 					  dailyReportDetailForm.getDailyReportDetailTime() == null) {
 				
 				dailyReportDetailMapper.deleteDailyReportDetail(dailyReportDetailForm.getDailyReportDetailId());
+				dailyReportMapper.deleteDailyReport(dailyReportForm.getDailyReportId());
 			}
 		}
 		if(dailyReportForm.getStatus() == null) {
 			dailyReportMapper.insertDailyReport(dailyReportForm);
-		}else {
-			dailyReportMapper.updateDailyReport(dailyReportForm);
 		}
 		
-		//更新用
+		//更新用（マネージャーが承認済みにするときに使う）
 		//dailyReportMapper.updateDailyReport(dailyReportForm);
 	}
 }
