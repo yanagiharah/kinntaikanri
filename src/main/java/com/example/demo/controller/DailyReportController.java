@@ -91,11 +91,11 @@ public class DailyReportController {
 		
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
-		System.out.print("提出はここです！！！！！！！！"+dailyReportForm);
+		
 		if(result.hasErrors()) {
 		return "DailyReport/dailyReport";
 		}
-
+		
 		dailyReportService.updateDailyReportDetail(dailyReportForm);
 		String successMessage = messageSource.getMessage("dailyReport.update.success", null, locale);
 		model.addAttribute("message", successMessage);

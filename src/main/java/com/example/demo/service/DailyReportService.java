@@ -33,11 +33,6 @@ public class DailyReportService {
 		return dailyReportDetailForm;
 	}
 
-	//日報内容追加
-//	public void insertDailyReportDetail(DailyReportDetailForm dailyReportDetailForm) {
-//		dailyReportDetailMapper.insertDailyReportDetail(dailyReportDetailForm);
-//	}
-
 	//日報更新
 	public void updateDailyReportDetail(DailyReportForm dailyReportForm) {
 
@@ -53,6 +48,10 @@ public class DailyReportService {
 				
 				dailyReportDetailMapper.insertDailyReportDetail(dailyReportDetailForm);
 				
+				if(dailyReportForm.getStatus() == null) {
+					dailyReportMapper.insertDailyReport(dailyReportForm);
+				}
+				
 			//UPDATE処理
 			} else if (dailyReportDetailForm.getDailyReportDetailId() != null &&
 					   !dailyReportDetailForm.getContent().isEmpty() &&
@@ -61,6 +60,7 @@ public class DailyReportService {
 				dailyReportForm.setUserId(dailyReportDetailForm.getUserId());
 				
 				dailyReportDetailMapper.updateDailyReportDetail(dailyReportDetailForm);
+				
 			
 			//DELETE処理
 			}else if (dailyReportDetailForm.getDailyReportDetailId() != null &&
@@ -68,11 +68,13 @@ public class DailyReportService {
 					  dailyReportDetailForm.getDailyReportDetailTime() == null) {
 				
 				dailyReportDetailMapper.deleteDailyReportDetail(dailyReportDetailForm.getDailyReportDetailId());
-				dailyReportMapper.deleteDailyReport(dailyReportForm.getDailyReportId());
 			}
 		}
-		if(dailyReportForm.getStatus() == null) {
-			dailyReportMapper.insertDailyReport(dailyReportForm);
+		
+		//最後に日報詳細を取得し空なら日報を削除
+		if(getDailyReportDetail(dailyReportForm.getUserId(), dailyReportForm.getDailyReportDate()) .isEmpty()) {
+			
+			dailyReportMapper.deleteDailyReport(dailyReportForm.getDailyReportId());	
 		}
 		
 		//更新用（マネージャーが承認済みにするときに使う）
