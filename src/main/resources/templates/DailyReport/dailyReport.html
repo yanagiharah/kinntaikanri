@@ -91,7 +91,8 @@
 													<input type="number"
 														th:field="*{dailyReportDetailForm[__${start.index}__].dailyReportDetailTime}"
 														th:value="${dailyReportDetail.dailyReportDetailTime}" class="noneBox" 
-														th:disabled="${dailyReportForm.status == 2}"/>
+														th:disabled="${dailyReportForm.status == 2}"
+														th:placeholder="${start.index == 0} ? '半角数字で入力' : ''"/>
 													<div th:if="${#fields.hasErrors('dailyReportDetailForm[__${start.index}__].dailyReportDetailTime')}"
 														th:errors="*{dailyReportDetailForm[__${start.index}__].dailyReportDetailTime}"
 														class="error-message"></div>
@@ -101,7 +102,8 @@
 												<input type="text"
 													th:field="*{dailyReportDetailForm[__${start.index}__].content}"
 													th:value="${dailyReportDetail.content}" class="noneBox" 
-													th:disabled="${dailyReportForm.status == 2}"/>
+													th:disabled="${dailyReportForm.status == 2}"
+													th:placeholder="${start.index == 0} ? '全角文字で入力' : ''"/>
 												<div th:if="${#fields.hasErrors('dailyReportDetailForm[__${start.index}__].content')}"
 													th:errors="*{dailyReportDetailForm[__${start.index}__].content}"
 													class="error-message">
