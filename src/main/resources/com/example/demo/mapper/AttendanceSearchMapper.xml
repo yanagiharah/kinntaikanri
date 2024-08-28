@@ -12,6 +12,12 @@
 	WHERE attendance.user_id = #{userId} AND attendance_date BETWEEN #{targetDate} AND #{endDate};
 </select>
 
+<!--昨日の勤怠が出ているかを確認する-->
+<select id="selectYesterdayCheck"
+	resultType="com.example.demo.model.Attendance">
+	SELECT end_time FROM attendance WHERE user_id = #{userId} AND attendance_date = #{yesterday};
+</select>
+
 
 <!-- 登録 -->
 <insert id="insert">
