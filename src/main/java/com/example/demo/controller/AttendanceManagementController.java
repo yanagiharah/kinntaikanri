@@ -61,6 +61,13 @@ public class AttendanceManagementController {
 		
 			if(stringYears != null && stringMonth != null) {
 				if(stringYears.matches("^[0-9]+$") && stringMonth.matches("^[0-9]+$")) {
+					
+					if(years < 1800 || years > 3000) {
+						users.setStatus(null);
+						model.addAttribute("check", "表示年は1800～3000の間で入力してください。");
+						return "attendance/registration";
+					}
+					
 					if(month <= 12) {
 						List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month);
 						
