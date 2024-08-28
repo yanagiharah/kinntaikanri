@@ -19,27 +19,29 @@
 						<div class"text-danger" th:if="${out} != null">
 							<span th:text="${out}" style="color: red;"></span>
 						</div>
-		
+
 						<div class="text-danger">
 							<span th:errors="*{userId}"></span>
 						</div>
-		
+
 						<span>ユーザーID<input type="text" th:field="*{userId}" class="m-3"></span>
-		
+
 						<div class="text-danger">
 							<span th:errors="*{password}"></span>
 						</div>
-		
+
 						<span>パスワード<input type="password" th:field="*{password}" class="m-3"></span>
-		
+
 					</center>
 					<center>
 						<input type="submit" id="check" value="ログイン" class="buttonRound">
 					</center>
 			</form>
 		</div>
-		</div>
 	</div>
-	
+	</div>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script th:src="@{/js/common.js}"></script>
+
 </body>
 </html>

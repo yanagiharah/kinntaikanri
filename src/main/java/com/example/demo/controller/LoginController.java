@@ -33,10 +33,11 @@ public class LoginController {
 	}
 	
 		@GetMapping("")
-		public String login(@ModelAttribute LoginForm loginForm,HttpSession session, Model model) {
+		public String login(@ModelAttribute LoginForm loginForm,Model model,HttpSession session) {
 			 Users users = (Users) session.getAttribute("Users");
 			 model.addAttribute("Users", users);
 			 model.addAttribute("loginForm", new LoginForm()); 
+			 System.out.print("ここに表示"+users);
 			return "Login/index";	
 		}
 		
@@ -71,14 +72,14 @@ public class LoginController {
 		@RequestMapping("/logOff")
 		public String logout(HttpServletRequest request, HttpServletResponse response) {
 	        // セッションを無効にする
-	        HttpSession session = request.getSession(false);
+			sessionOut(request,response);
+	        return "redirect:/";
+		}
+
+		public void sessionOut(HttpServletRequest request, HttpServletResponse response) {
+			HttpSession session = request.getSession(false);
 	        if (session != null) {
 	            session.invalidate();
 	        }
-	       // session.getAttribute("session");
-	        return "redirect:/";
 		}
-		
-		
-		
 }
