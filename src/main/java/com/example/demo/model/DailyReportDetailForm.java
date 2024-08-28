@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 import lombok.Data;
@@ -24,6 +23,6 @@ public class DailyReportDetailForm {
 	private Integer dailyReportDetailTime;
 	
 	@Size(max = 20, message = "{DailyReportDetailForm.content}")
-	@Pattern(regexp = "^[\\p{IsHiragana}\\p{IsKatakana}\\p{IsIdeographic}ー]*$", message = "{DailyReportDetailForm.wide}")
+//	@Pattern(regexp = "^[\\p{IsHiragana}\\p{IsKatakana}\\p{IsIdeographic}ー]*$", message = "{DailyReportDetailForm.wide}")
 	private String content;
 }
