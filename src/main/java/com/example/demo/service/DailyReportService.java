@@ -20,6 +20,12 @@ public class DailyReportService {
 	@Autowired
 	private DailyReportDetailMapper dailyReportDetailMapper;
 
+	//昨日の日報のステータス取得
+	public Integer checkYesterdayDailyReport(Integer userId, LocalDate yesterday) {
+		Integer checkDailyReport = dailyReportMapper.selectYesterdayCheck(userId, yesterday);
+		return checkDailyReport;
+	}
+	
 	//日報取得
 	public DailyReportForm getDailyReport(Integer userId, LocalDate localDateDay) {
 		DailyReportForm dailyReportForm = dailyReportMapper.getDailyReport(userId, localDateDay);

@@ -13,8 +13,7 @@
 </select>
 
 <!--昨日の日報が出ているかを確認する-->
-<select id="selectYesterdayCheck"
-	resultType="com.example.demo.model.DailyReportForm">
+<select id="selectYesterdayCheck">
 	SELECT EXISTS (SELECT * FROM daily_report WHERE user_id = #{userId} AND daily_report_date = #{yesterday});
 </select>
 

@@ -23,6 +23,6 @@ public interface DailyReportMapper {
 	public void deleteDailyReport(Integer dailyReportId);
 	
 	//昨日の日報存在確認
-	public Boolean selectYesterdayCheck(Integer userId, LocalDate yesterday);
+	public Integer selectYesterdayCheck(Integer userId, LocalDate yesterday);
 	
 }
