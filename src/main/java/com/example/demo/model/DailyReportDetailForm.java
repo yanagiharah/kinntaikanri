@@ -18,7 +18,7 @@ public class DailyReportDetailForm {
 //	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	private LocalDate dailyReportDetailDate;
 	
-	@Min(value = 0, message = "{DailyReportDetailForm.time}")
+	@Min(value = 1, message = "{DailyReportDetailForm.time}")
 	@Max(value = 99, message = "{DailyReportDetailForm.time}")
 	private Integer dailyReportDetailTime;
 	
