@@ -26,8 +26,13 @@
 						<input type="submit" id="logOff" value="ログオフ" name="logOff" class="buttonSize">
 					</div>
 			</form>
-			<div class="d-flex align-items-center justify-content-center " style="padding:300px;">
-					
+			<div th:if="${CheckAttendance}" class="alert alert-warning" role="alert">
+				<p th:text="${CheckAttendance}"></p>
+			</div>
+			<div th:if="${CheckDailyReport}" class="alert alert-warning" role="alert">
+				<p th:text="${CheckDailyReport}"></p>
+			</div>
+			<div class="d-flex align-items-center justify-content-center " style="padding:300px;">		
 					<!--レギュラー＆ユニットマネージャー用-->
 					<div th:if="${Users.role=='Regular'||Users.role=='UnitManager'}">
 						<p>
@@ -65,7 +70,7 @@
 								style="background-color: rgb(128, 255, 255);">
 						</form>
 				</div>
-			</div>
+			</p>
 		</div>
 	</div>
 </body>
