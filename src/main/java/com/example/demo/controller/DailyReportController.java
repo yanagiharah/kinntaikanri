@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -92,20 +93,25 @@ public class DailyReportController {
 	@RequestMapping(value = "/detailUpdate", params = "submission", method = RequestMethod.POST)
 	public String updateDailyReportDetail(@Valid @ModelAttribute("dailyReportForm") DailyReportForm dailyReportForm,
 			BindingResult result, HttpSession session, Model model, Locale locale) {
-		
+
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
-		
-		if(result.hasErrors()) {
-		return "DailyReport/dailyReport";
+
+		if (result.hasErrors()) {
+			return "DailyReport/dailyReport";
 		}
-		
-		dailyReportService.updateDailyReportDetail(dailyReportForm);
+
+		try {
+			dailyReportService.updateDailyReportDetail(dailyReportForm);
+		} catch (DuplicateKeyException e) {
+			return "DailyReport/dailyReport";
+		}
+
 		String successMessage = messageSource.getMessage("dailyReport.update.success", null, locale);
 		model.addAttribute("message", successMessage);
 		LocalDate calendarDate = dailyReportForm.getDailyReportDetailForm().get(0).getDailyReportDetailDate();
 		String calendarDateS = calendarDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-		return dailyReportDetail(calendarDateS,session,model);
+		return dailyReportDetail(calendarDateS, session, model);
 	}
 	
 	//戻るボタン
