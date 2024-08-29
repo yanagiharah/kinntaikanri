@@ -18,7 +18,7 @@ public interface AttendanceSearchMapper {
 	//登録
 	void insert(Attendance attendance);
 	
-	//日付指定範囲削除 
+	//日付指定範囲削除
 	int deleteByAttendanceOfMonth(@Param("userId")Integer userId, @Param("targetDate")Date targetDate, @Param("endDate")Date endDate);
 	
 	//昨日の勤怠存在確認
