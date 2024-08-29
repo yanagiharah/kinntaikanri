@@ -30,7 +30,7 @@
 <update id="updateDailyReport">
 	UPDATE daily_report
 	SET
-		status = 2
+		status = 1
 	WHERE daily_report_id = #{dailyReportId}
 </update>
 

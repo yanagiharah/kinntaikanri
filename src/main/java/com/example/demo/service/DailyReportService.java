@@ -81,6 +81,8 @@ public class DailyReportService {
 		if(getDailyReportDetail(dailyReportForm.getUserId(), dailyReportForm.getDailyReportDate()) .isEmpty()) {
 			
 			dailyReportMapper.deleteDailyReport(dailyReportForm.getDailyReportId());	
+		}else {
+			dailyReportMapper.updateDailyReport(dailyReportForm);
 		}
 		
 		//更新用（マネージャーが承認済みにするときに使う）
