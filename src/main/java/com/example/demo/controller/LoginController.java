@@ -33,11 +33,11 @@ public class LoginController {
 	}
 	
 		@GetMapping("")
-		public String login(@ModelAttribute LoginForm loginForm,Model model,HttpSession session) {
+		public String login(@ModelAttribute LoginForm loginForm,Model model,HttpSession session,HttpServletRequest request, HttpServletResponse response) {
 			 Users users = (Users) session.getAttribute("Users");
 			 model.addAttribute("Users", users);
 			 model.addAttribute("loginForm", new LoginForm()); 
-			 System.out.print("ここに表示"+users);
+			 sessionOut (request, response);
 			return "Login/index";	
 		}
 		
@@ -82,4 +82,6 @@ public class LoginController {
 	            session.invalidate();
 	        }
 		}
+		
+		
 }
