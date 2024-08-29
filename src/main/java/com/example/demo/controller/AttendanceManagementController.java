@@ -1,11 +1,13 @@
 package com.example.demo.controller;
 
 import java.time.DateTimeException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,11 +22,14 @@ import com.example.demo.model.AttendanceFormList;
 import com.example.demo.model.MonthlyAttendanceReq;
 import com.example.demo.model.Users;
 import com.example.demo.service.AttendanceManagementService;
+import com.example.demo.service.DailyReportService;
 import com.example.demo.service.MonthlyAttendanceReqService;
 
 @Controller
 @RequestMapping("/attendance")
 public class AttendanceManagementController {
+	@Autowired
+	private DailyReportService dailyReportService;
 
 	private final AttendanceManagementService attendanceManagementService;
 	private final MonthlyAttendanceReqService monthlyAttendanceReqService;
@@ -281,6 +286,17 @@ public class AttendanceManagementController {
 		public String back(Model model, HttpSession session) {
 			Users users = (Users) session.getAttribute("Users");
 			 model.addAttribute("Users", users);
+			 model.addAttribute("Users", users);
+				LocalDate today = LocalDate.now();
+				LocalDate yesterday = today.minusDays(1);
+				Integer checkDailyReport = dailyReportService.checkYesterdayDailyReport(users.getUserId(),yesterday);
+				Boolean checkAttendance = attendanceManagementService.checkYesterdayAttendance(users.getUserId(),yesterday);
+				if(checkDailyReport == 0) {
+					model.addAttribute("CheckDailyReport", "日報未提出");
+				}
+				if(checkAttendance == false) {
+					model.addAttribute("CheckAttendance", "勤怠未提出");
+				}
 			return "menu/processMenu";
 		}
 	

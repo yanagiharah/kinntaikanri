@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -19,10 +22,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.example.demo.model.DailyReportDetailForm;
 import com.example.demo.model.DailyReportForm;
 import com.example.demo.model.Users;
+import com.example.demo.service.AttendanceManagementService;
 import com.example.demo.service.DailyReportService;
-
-import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/daily")
@@ -33,6 +34,9 @@ public class DailyReportController {
 	
 	@Autowired
 	private MessageSource messageSource;
+	
+	@Autowired
+	private AttendanceManagementService attendanceManagementService; 
 
 	//日報の初期表示画面（今日時点のものを表示）
 	@RequestMapping("/detail")
@@ -109,6 +113,16 @@ public class DailyReportController {
 	public String back(Model model, HttpSession session) {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
+		LocalDate today = LocalDate.now();
+		LocalDate yesterday = today.minusDays(1);
+		Integer checkDailyReport = dailyReportService.checkYesterdayDailyReport(users.getUserId(),yesterday);
+		Boolean checkAttendance = attendanceManagementService.checkYesterdayAttendance(users.getUserId(),yesterday);
+		if(checkDailyReport == 0) {
+			model.addAttribute("CheckDailyReport", "日報未提出");
+		}
+		if(checkAttendance == false) {
+			model.addAttribute("CheckAttendance", "勤怠未提出");
+		}
 		return "menu/processMenu";
 	}
 	
