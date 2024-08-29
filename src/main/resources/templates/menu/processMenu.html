@@ -12,7 +12,7 @@
 </head>
 <body>
 	<div class="container" th:object="${Users}">
-		<div class="row">
+		<div class="row"> 
 			<form id="mainForm" th:action="@{/logOff}" method="post" class="d-flex align-items-center justify-content-center" >
 					<div class="col-4 ">
 						ユーザー名:<span th:text="${Users.userName}"></span>
