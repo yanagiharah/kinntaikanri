@@ -34,9 +34,11 @@ public class MenuController {
 		Boolean checkAttendance = attendanceManagementService.checkYesterdayAttendance(users.getUserId(),yesterday);
 		if(checkDailyReport == 0) {
 			model.addAttribute("CheckDailyReport", "日報未提出");
+			model.addAttribute("userRole", users.getRole());
 		}
 		if(checkAttendance == false) {
 			model.addAttribute("CheckAttendance", "勤怠未提出");
+			model.addAttribute("userRole", users.getRole());
 		}
 		return "menu/processMenu";
 	}

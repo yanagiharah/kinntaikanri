@@ -26,10 +26,10 @@
 						<input type="submit" id="logOff" value="ログオフ" name="logOff" class="buttonSize">
 					</div>
 			</form>
-			<div th:if="${CheckAttendance}" class="alert alert-warning" role="alert">
+			<div th:if="(${userRole == 'レギュラー'}) and (${CheckAttendance})" class="alert alert-warning" role="alert">
 				<p th:text="${CheckAttendance}"></p>
 			</div>
-			<div th:if="${CheckDailyReport}" class="alert alert-warning" role="alert">
+			<div th:if="(${userRole == 'レギュラー'}) and (${CheckAttendance})" class="alert alert-warning" role="alert">
 				<p th:text="${CheckDailyReport}"></p>
 			</div>
 			<div class="d-flex align-items-center justify-content-center " style="padding:300px;">		
