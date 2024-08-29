@@ -30,7 +30,7 @@ public class AttendanceManagementService {
 	  this.attendanceSearchMapper = attendanceSearchMapper;
   }
   
-  	//昨日の勤怠登録状況を取得
+  	//昨日の勤怠登録状況を取得 
 	public Boolean checkYesterdayAttendance(Integer userId, LocalDate yesterday) {
 		Attendance yesterdayAttendanceEndtime = attendanceSearchMapper.selectYesterdayCheck(userId, yesterday);
 		Boolean checkAttendance;
