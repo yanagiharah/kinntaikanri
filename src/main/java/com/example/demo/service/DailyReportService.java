@@ -41,6 +41,9 @@ public class DailyReportService {
 
 	//日報更新
 	public void updateDailyReportDetail(DailyReportForm dailyReportForm) {
+		if(dailyReportForm.getStatus() == null) {
+			dailyReportMapper.insertDailyReport(dailyReportForm);
+		}
 
 		//日報フォームの中にある日報詳細リストを取り出す。それを元にDBを更新
 		for (DailyReportDetailForm dailyReportDetailForm : dailyReportForm.getDailyReportDetailForm()) {
@@ -54,9 +57,7 @@ public class DailyReportService {
 				
 				dailyReportDetailMapper.insertDailyReportDetail(dailyReportDetailForm);
 				
-				if(dailyReportForm.getStatus() == null) {
-					dailyReportMapper.insertDailyReport(dailyReportForm);
-				}
+				
 				
 			//UPDATE処理
 			} else if (dailyReportDetailForm.getDailyReportDetailId() != null &&
