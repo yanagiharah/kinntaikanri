@@ -22,5 +22,5 @@ public interface AttendanceSearchMapper {
 	int deleteByAttendanceOfMonth(@Param("userId")Integer userId, @Param("targetDate")Date targetDate, @Param("endDate")Date endDate);
 	
 	//昨日の勤怠存在確認 
-	public Attendance selectYesterdayCheck(Integer userId, LocalDate yesterday);
+	public Integer selectYesterdayCheck(Integer userId, LocalDate yesterday);
 }

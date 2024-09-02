@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import java.time.LocalDate;
 
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.example.demo.model.Users;
 import com.example.demo.service.AttendanceManagementService;
 import com.example.demo.service.DailyReportService;
-
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/menu")
@@ -31,12 +31,12 @@ public class MenuController {
 		LocalDate today = LocalDate.now();
 		LocalDate yesterday = today.minusDays(1);
 		Integer checkDailyReport = dailyReportService.checkYesterdayDailyReport(users.getUserId(),yesterday);
-		Boolean checkAttendance = attendanceManagementService.checkYesterdayAttendance(users.getUserId(),yesterday);
+		Integer checkAttendance = attendanceManagementService.checkYesterdayAttendance(users.getUserId(),yesterday);
 		if(checkDailyReport == 0) {
 			model.addAttribute("CheckDailyReport", "日報未提出");
 			model.addAttribute("userRole", users.getRole());
 		}
-		if(checkAttendance == false) {
+		if(checkAttendance == 0) {
 			model.addAttribute("CheckAttendance", "勤怠未提出");
 			model.addAttribute("userRole", users.getRole());
 		}

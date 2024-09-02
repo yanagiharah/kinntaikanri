@@ -13,9 +13,21 @@
 </select>
 
 <!--昨日の勤怠が出ているかを確認する-->
-<select id="selectYesterdayCheck"
-	resultType="com.example.demo.model.Attendance">
-	SELECT end_time FROM attendance WHERE user_id = #{userId} AND attendance_date = #{yesterday};
+<select id="selectYesterdayCheck">
+	SELECT EXISTS (
+    SELECT 1
+    FROM attendance 
+    WHERE
+        (user_id = #{userId}
+        AND attendance_date = #{yesterday}
+        AND status IN (0, 3, 6, 7, 8, 10)
+        AND end_time IS NOT NULL 
+		AND start_time IS NOT NULL)
+		or
+		(user_id = #{userId}
+        AND attendance_date = #{yesterday}
+        AND status IN (1, 2, 4, 5, 9, 11))
+		);
 </select>
 
 

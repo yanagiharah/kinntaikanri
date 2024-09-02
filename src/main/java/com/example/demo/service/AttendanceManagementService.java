@@ -31,14 +31,9 @@ public class AttendanceManagementService {
   }
   
   	//昨日の勤怠登録状況を取得
-	public Boolean checkYesterdayAttendance(Integer userId, LocalDate yesterday) {
-		Attendance yesterdayAttendanceEndtime = attendanceSearchMapper.selectYesterdayCheck(userId, yesterday);
-		Boolean checkAttendance;
-		if (yesterdayAttendanceEndtime == null) {
-			checkAttendance = false;
-		}else {
-			checkAttendance = true;
-		}
+	public Integer checkYesterdayAttendance(Integer userId, LocalDate yesterday) {
+		Integer checkAttendance = attendanceSearchMapper.selectYesterdayCheck(userId, yesterday);
+		
 		return checkAttendance;
 	}
   

@@ -290,11 +290,11 @@ public class AttendanceManagementController {
 				LocalDate today = LocalDate.now();
 				LocalDate yesterday = today.minusDays(1);
 				Integer checkDailyReport = dailyReportService.checkYesterdayDailyReport(users.getUserId(),yesterday);
-				Boolean checkAttendance = attendanceManagementService.checkYesterdayAttendance(users.getUserId(),yesterday);
+				Integer checkAttendance = attendanceManagementService.checkYesterdayAttendance(users.getUserId(),yesterday);
 				if(checkDailyReport == 0) {
 					model.addAttribute("CheckDailyReport", "日報未提出");
 				}
-				if(checkAttendance == false) {
+				if(checkAttendance == 0) {
 					model.addAttribute("CheckAttendance", "勤怠未提出");
 				}
 			return "menu/processMenu";
