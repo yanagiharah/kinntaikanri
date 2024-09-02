@@ -12,9 +12,11 @@
 	and daily_report_date = #{dailyReportDate}
 </select>
 
-<!--昨日の日報が出ているかを確認する-->
-<select id="selectYesterdayCheck">
-	SELECT EXISTS (SELECT * FROM daily_report WHERE user_id = #{userId} AND daily_report_date = #{yesterday});
+<!--昨日の日報が出ているかを確認する -->
+<select id="selectYesterdayCheck" resultType="int">
+	SELECT EXISTS (SELECT 1 FROM daily_report WHERE
+	user_id = #{userId} 
+	AND daily_report_date = #{yesterday});
 </select>
 
 <!-- 日報追加 -->

@@ -1,16 +1,13 @@
 package com.example.demo.model;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.annotation.SessionScope;
 
 import lombok.Data;
 @Component
-@SessionScope
 @Data
-public class Users implements Serializable {
+public class Users {
 	
 	private Integer userId;
 	
