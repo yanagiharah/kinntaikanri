@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
+import com.example.demo.inter.MessageOutput;
 import com.example.demo.mapper.AttendanceSearchMapper;
 import com.example.demo.model.Attendance;
 import com.example.demo.model.AttendanceFormList;
@@ -23,11 +24,12 @@ import com.example.demo.model.AttendanceFormList;
 @Service
 public class AttendanceManagementService {
 
-  
   private final AttendanceSearchMapper attendanceSearchMapper;
+  private final MessageOutput messageOutput; 
   
-  public AttendanceManagementService(AttendanceSearchMapper attendanceSearchMapper){
+  public AttendanceManagementService(AttendanceSearchMapper attendanceSearchMapper,MessageOutput messageOutput){
 	  this.attendanceSearchMapper = attendanceSearchMapper;
+	  this.messageOutput =messageOutput;
   }
   
   	//昨日の勤怠登録状況を取得
@@ -213,16 +215,19 @@ public class AttendanceManagementService {
 	public void errorCheck(AttendanceFormList attendanceFormList, BindingResult result) {
 	    for (int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
 	        
-	    	// 備考欄
-	    	if (attendanceFormList.getAttendanceList().get(i).getAttendanceRemarks().length() > 20) {
-	    		    FieldError attendanceRemarks = new FieldError("attendanceFormList", "attendanceList[" + i + "].attendanceRemarks", "20文字以内で入力してください。");
-	    		    result.addError(attendanceRemarks);
-	    		}
+			// 備考欄
+			if (attendanceFormList.getAttendanceList().get(i).getAttendanceRemarks().length() > 20) {
+				FieldError attendanceRemarks = new FieldError("attendanceFormList",
+						"attendanceList[" + i + "].attendanceRemarks", messageOutput.message("RemarksOver"));
+				result.addError(attendanceRemarks);
+			}
 
-	        if (attendanceFormList.getAttendanceList().get(i).getAttendanceRemarks() != "" && attendanceFormList.getAttendanceList().get(i).getAttendanceRemarks().matches("^[a-zA-Z0-9!-/:-@\\[-`{-~]*$")) {
-	        	    FieldError attendanceRemarks = new FieldError("attendanceFormList", "attendanceList[" + i + "].attendanceRemarks", "全角で入力してください。");
-	        	    result.addError(attendanceRemarks);
-	        	}	        
+			if (attendanceFormList.getAttendanceList().get(i).getAttendanceRemarks() != "" && attendanceFormList
+					.getAttendanceList().get(i).getAttendanceRemarks().matches("^[a-zA-Z0-9!-/:-@\\[-`{-~]*$")) {
+				FieldError attendanceRemarks = new FieldError("attendanceFormList",
+						"attendanceList[" + i + "].attendanceRemarks", messageOutput.message("RemarkeZennkaku"));
+				result.addError(attendanceRemarks);
+			}   
 
 	        // 出勤時間と退勤時間の整合性
 	        String startTime = attendanceFormList.getAttendanceList().get(i).getStartTime();
@@ -236,16 +241,10 @@ public class AttendanceManagementService {
 	            		break;
 	            	}
 	                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-	                LocalTime startInputTime = LocalTime.parse(startTime, formatter);
-	                LocalTime firstTime = LocalTime.of(0, 0);
-	                LocalTime lastTime = LocalTime.of(23, 59);
-
-	                if (!startInputTime.equals(firstTime) && (startInputTime.isBefore(firstTime) || startInputTime.isAfter(lastTime))) {
-	                    FieldError startEndTime = new FieldError("attendanceFormList", "attendanceList[" + i + "].startTime", "時刻が不正です。00:00～23:59の間で入力してください。");
-	                    result.addError(startEndTime);
-	                }
+	                LocalTime.parse(startTime, formatter);
+	    
 	            } catch (DateTimeParseException e) {
-	                FieldError timeFormatError = new FieldError("attendanceFormList", "attendanceList[" + i + "].startTime", "時刻の形式が不正です。HH:mm形式で入力してください。");
+	                FieldError timeFormatError = new FieldError("attendanceFormList", "attendanceList[" + i + "].startTime", messageOutput.message("timeFormat"));
 	                result.addError(timeFormatError);
 	            }
 	        }
@@ -262,19 +261,19 @@ public class AttendanceManagementService {
 	                LocalTime lastTime = LocalTime.of(23, 59);
 
 	                if (!endInputTime.equals(firstTime) && (endInputTime.isBefore(firstTime) || endInputTime.isAfter(lastTime))) {
-	                    FieldError startEndTime = new FieldError("attendanceFormList", "attendanceList[" + i + "].endTime", "時刻が不正です。00:00～23:59の間で入力してください。");
+	                    FieldError startEndTime = new FieldError("attendanceFormList", "attendanceList[" + i + "].endTime", messageOutput.message("timeRange"));
 	                    result.addError(startEndTime);
 	                }
 
 	                if (startTime != null) {
 	                    LocalTime startInputTime = LocalTime.parse(startTime, formatter);
 	                    if (endInputTime.isBefore(startInputTime)) {
-	                        FieldError startEndTime = new FieldError("attendanceFormList", "attendanceList[" + i + "].endTime", "出勤時間より退勤時間が早くなっています。");
+	                        FieldError startEndTime = new FieldError("attendanceFormList", "attendanceList[" + i + "].endTime", messageOutput.message("consistency"));
 	                        result.addError(startEndTime);
 	                    }
 	                }
 	            } catch (DateTimeParseException e) {
-	                FieldError timeFormatError = new FieldError("attendanceFormList", "attendanceList[" + i + "].endTime", "時刻の形式が不正です。HH:mm形式で入力してください。");
+	                FieldError timeFormatError = new FieldError("attendanceFormList", "attendanceList[" + i + "].endTime", messageOutput.message("timeFormat"));
 	                result.addError(timeFormatError);
 	            }
 	        }
