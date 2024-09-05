@@ -15,11 +15,11 @@
 <!-- テーブル内のdepartment_nameに重複が無いかを確認ののちに登録 -->
 <insert id="insertDepartment">
 	INSERT INTO department (department_name, is_active)
-	SELECT #{departmentName}, 1
+	SELECT #{newDepartmentName}, 1
 	WHERE NOT EXISTS (
 	SELECT 1
 	FROM department
-	WHERE department_name = #{departmentName}
+	WHERE department_name = #{newDepartmentName}
 );
 </insert>
 
