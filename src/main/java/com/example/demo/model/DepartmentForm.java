@@ -12,5 +12,9 @@ public class DepartmentForm {
 	
 	private List<Department> department;
 	
+	private String oldDepartmentName;
+	
+	private String newDepartmentName;
+	
 
 }

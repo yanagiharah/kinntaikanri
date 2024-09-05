@@ -23,6 +23,10 @@
 );
 </insert>
 
+<!-- 日報更新 -->
+<update id ="updateDepartmentName">
+	
+</update>
 
 <!-- 日付指定範囲削除 -->
 <!--<delete id="deleteByAttendanceOfMonth">-->
