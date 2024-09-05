@@ -12,8 +12,8 @@ public interface DepartmentMapper {
 	//日付指定範囲取得
 	List<Department> selectDepartment();
 	
-	//登録
-//	void insert(Attendance attendance);
+	//テーブル内のdepartment_nameに重複が無いかを確認ののちに登録(reternしている数字は、insertで挿入された行数をあらわす。0だと同名データが既に存在しinsertされなかった、1だと同名データが無くinsertが実行された。)
+	Integer insertDepartment(Department department);
 	
 	//日付指定範囲削除
 //	int deleteByAttendanceOfMonth(@Param("userId")Integer userId, @Param("targetDate")Date targetDate, @Param("endDate")Date endDate);
