@@ -39,4 +39,8 @@ public class DepartmentService {
 			}
 		}
 		
+		public void departmentActiveUpdate(DepartmentForm departmentForm) {
+				departmentMapper.updateDepartmentActive(departmentForm);
+		}
+		
 }

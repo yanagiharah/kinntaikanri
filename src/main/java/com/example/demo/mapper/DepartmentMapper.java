@@ -19,6 +19,9 @@ public interface DepartmentMapper {
 	//部署名更新
 	void updateDepartmentName(DepartmentForm departmentForm);
 	
+	//部署無効化更新
+	void updateDepartmentActive(DepartmentForm departmentForm);
+	
 	//日付指定範囲削除
 //	int deleteByAttendanceOfMonth(@Param("userId")Integer userId, @Param("targetDate")Date targetDate, @Param("endDate")Date endDate);
 }

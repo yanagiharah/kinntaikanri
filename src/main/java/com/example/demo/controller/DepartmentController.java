@@ -5,7 +5,6 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -48,7 +47,7 @@ public class DepartmentController {
 	
 	//登録ボタン押下
 	@RequestMapping(value = "/action", params = "action=insert", method = RequestMethod.POST)
-	public String departmentCreate(@ModelAttribute DepartmentForm departmentForm, BindingResult result, Model model) {
+	public String departmentCreate(@ModelAttribute DepartmentForm departmentForm, Model model) {
 		Integer overlappingDepartmentCheck = departmentService.departmentCheckInsert(departmentForm);
 		modelService.departmentInsertModel(overlappingDepartmentCheck, model);
 		return "redirect:/department";
@@ -56,9 +55,17 @@ public class DepartmentController {
 	
 	//変更ボタン押下
 	@RequestMapping(value = "/action", params = "action=updateName", method = RequestMethod.POST)
-	public String departmenNameUpdate(DepartmentForm departmentForm, BindingResult result, Model model) {
+	public String departmenNameUpdate(DepartmentForm departmentForm, Model model) {
 		Boolean departmentNameEqualCheck = departmentService.departmentNameUpdate(departmentForm);
 		modelService.departmentNameUpdateModel(departmentNameEqualCheck, model);
+		return "redirect:/department";
+	}
+	
+	//削除ボタン押下
+	@RequestMapping(value = "/action", params = "action=updateActive", method = RequestMethod.POST)
+	public String departmentActiveUpdate(DepartmentForm departmentForm, Model model) {
+		departmentService.departmentActiveUpdate(departmentForm);
+		modelService.departmentActiveUpdateModel(model);
 		return "redirect:/department";
 	}
 	
