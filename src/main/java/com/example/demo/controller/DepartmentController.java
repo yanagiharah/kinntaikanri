@@ -54,7 +54,13 @@ public class DepartmentController {
 		return "redirect:/department";
 	}
 	
-	//
+	//変更ボタン押下
+	@RequestMapping(value = "/action", params = "action=updateName", method = RequestMethod.POST)
+	public String departmenNameUpdate(DepartmentForm departmentForm, BindingResult result, Model model) {
+		Boolean departmentNameEqualCheck = departmentService.departmentNameUpdate(departmentForm);
+		modelService.departmentNameUpdateModel(departmentNameEqualCheck, model);
+		return "redirect:/department";
+	}
 	
 	
 	

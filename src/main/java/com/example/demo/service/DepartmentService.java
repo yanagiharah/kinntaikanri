@@ -29,4 +29,14 @@ public class DepartmentService {
 			return overlappingDepartmentCheck;
 		}
 		
+		//新名前と旧名前を比較後に名前変更
+		public Boolean departmentNameUpdate(DepartmentForm departmentForm) {
+			if(departmentForm.getNewDepartmentName() != departmentForm.getOldDepartmentName()) {
+				departmentMapper.updateDepartmentName(departmentForm);
+				return true;
+			}else {
+				return false;
+			}
+		}
+		
 }
