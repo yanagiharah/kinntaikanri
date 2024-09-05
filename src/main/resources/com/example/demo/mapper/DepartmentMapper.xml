@@ -25,7 +25,7 @@
 
 <!-- 日報更新 -->
 <update id ="updateDepartmentName">
-	
+	UPDATE department SET department_name = #{newDepartmentName} WHERE department_name = #{oldDepartmentName};
 </update>
 
 <!-- 日付指定範囲削除 -->

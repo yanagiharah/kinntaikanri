@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.example.demo.inter.MessageOutput;
-import com.example.demo.model.Department;
 import com.example.demo.model.DepartmentForm;
 import com.example.demo.model.Users;
 import com.example.demo.service.DepartmentService;
@@ -43,16 +42,16 @@ public class DepartmentController {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
 		departmentForm.setDepartment(departmentService.departmentSearchListUp());
-		model.addAttribute("mdepartmentForm", departmentForm);
-		return "XXXXXXXXXXXXXXXXXX";
+		model.addAttribute("departmentForm", departmentForm);
+		return "department/department";
 	}
 	
 	//登録ボタン押下
-	@RequestMapping(value = "/XXXXXXXXXXX", params = "insert", method = RequestMethod.POST)
-	public String departmentCreate(@ModelAttribute DepartmentForm departmentForm, Department department, BindingResult result, Model model) {
-		Integer overlappingDepartmentCheck = departmentService.departmentCheckInsert(department);
+	@RequestMapping(value = "/action", params = "action=insert", method = RequestMethod.POST)
+	public String departmentCreate(@ModelAttribute DepartmentForm departmentForm, BindingResult result, Model model) {
+		Integer overlappingDepartmentCheck = departmentService.departmentCheckInsert(departmentForm);
 		modelService.departmentInsertModel(overlappingDepartmentCheck, model);
-		return "XXXXXXXXXXXXXXXXXX";
+		return "redirect:/department";
 	}
 	
 	//

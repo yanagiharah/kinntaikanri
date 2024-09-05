@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.mapper.DepartmentMapper;
 import com.example.demo.model.Department;
+import com.example.demo.model.DepartmentForm;
 
 @Service
 public class DepartmentService {
@@ -23,8 +24,8 @@ public class DepartmentService {
 		
 		
 		//登録
-		public Integer departmentCheckInsert(Department department) {
-			Integer overlappingDepartmentCheck = departmentMapper.insertDepartment(department);
+		public Integer departmentCheckInsert(DepartmentForm departmentForm) {
+			Integer overlappingDepartmentCheck = departmentMapper.insertDepartment(departmentForm);
 			return overlappingDepartmentCheck;
 		}
 		
