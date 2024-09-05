@@ -29,7 +29,7 @@
 </update>
 
 <!-- 部署無効化更新 -->
-<update id ="updateDepartmentName">
+<update id ="updateDepartmentActive">
 	UPDATE department SET is_active = 0 WHERE department_name = #{oldDepartmentName};
 </update>
 
