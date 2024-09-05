@@ -4,7 +4,7 @@
 
 
 
-<!-- ユーザー管理画面ログイン時の部署取得 -->
+<!-- 部署取得 -->
 <select id="selectDepartment"
 	resultType="com.example.demo.model.Department">
 	SELECT *
@@ -23,9 +23,14 @@
 );
 </insert>
 
-<!-- 日報更新 -->
+<!-- 部署名更新 -->
 <update id ="updateDepartmentName">
 	UPDATE department SET department_name = #{newDepartmentName} WHERE department_name = #{oldDepartmentName};
+</update>
+
+<!-- 部署無効化更新 -->
+<update id ="updateDepartmentName">
+	UPDATE department SET is_active = 0 WHERE department_name = #{oldDepartmentName};
 </update>
 
 <!-- 日付指定範囲削除 -->
