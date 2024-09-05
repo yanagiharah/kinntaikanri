@@ -3,6 +3,8 @@ package com.example.demo.controller;
 import java.text.SimpleDateFormat;
 import java.util.Random;
 
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,32 +17,34 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.demo.inter.MessageOutput;
 import com.example.demo.model.ManagementForm;
 import com.example.demo.model.Users;
+import com.example.demo.service.DepartmentService;
 import com.example.demo.service.UserManagementService;
-
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/user")
 public class UserManagementController {
 
 	private final UserManagementService userManagementService;
+	
+	private final DepartmentService departmentService;
 
 	private final MessageOutput messageOutput;
 
 	private final ManagementForm managementForm;
 
 	UserManagementController(UserManagementService userManagementService, MessageSource messageSource,
-			ManagementForm managementForm, MessageOutput messageOutput) {
+			ManagementForm managementForm, MessageOutput messageOutput, DepartmentService departmentService) {
 		this.userManagementService = userManagementService;
 		this.managementForm = managementForm;
 		this.messageOutput = messageOutput;
+		this.departmentService = departmentService;
 	}
 
 	@RequestMapping("/")
 	public String user(HttpSession session, Model model) {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
-		managementForm.setDepartment(userManagementService.departmentSearchListUp());
+		managementForm.setDepartment(departmentService.departmentSearchListUp());
 		model.addAttribute("managementForm", managementForm);
 		return "User/manegement";
 	}
@@ -72,7 +76,7 @@ public class UserManagementController {
 			managementForm.setPassword(users.getPassword());
 			managementForm.setRole(users.getRole());
 			managementForm.setDepartmentId(users.getDepartmentId());
-			managementForm.setDepartment(userManagementService.departmentSearchListUp());
+			managementForm.setDepartment(departmentService.departmentSearchListUp());
 			String str = new SimpleDateFormat("yyyy-MM-dd").format(users.getStartDate());
 			managementForm.setStartDate(str);
 			model.addAttribute("managementForm", managementForm);
@@ -86,7 +90,7 @@ public class UserManagementController {
 		//dbに存在した場合再度RandomNumberの生成forぶんで繰り返す、dbに存在しない数字がでるまで
 		managementForm2.setUserId(randomNumber);
 		managementForm2.setUserName(userName);
-		managementForm2.setDepartment(userManagementService.departmentSearchListUp());
+		managementForm2.setDepartment(departmentService.departmentSearchListUp());
 		model.addAttribute("managementForm", managementForm2);
 
 		return "User/manegement";
@@ -99,7 +103,7 @@ public class UserManagementController {
 		userManagementService.errorCheck(managementForm, result);
 
 		if (result.hasErrors()) {
-			managementForm.setDepartment(userManagementService.departmentSearchListUp());
+			managementForm.setDepartment(departmentService.departmentSearchListUp());
 			return "User/manegement";
 		}
 
@@ -122,7 +126,7 @@ public class UserManagementController {
 				model.addAttribute("check", messageOutput.message("insert", managementForm.getUserName()));
 			}
 		}
-		managementForm.setDepartment(userManagementService.departmentSearchListUp());
+		managementForm.setDepartment(departmentService.departmentSearchListUp());
 		return "User/manegement";
 	}
 

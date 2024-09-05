@@ -234,12 +234,9 @@ public class AttendanceManagementService {
 	        String endTime = attendanceFormList.getAttendanceList().get(i).getEndTime();
 	        
 	        
-	        if (startTime != null) {
+	        if (startTime != "") {
 	            try {
 	            	
-	            	if(startTime == "") {
-	            		break;
-	            	}
 	                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 	                LocalTime.parse(startTime, formatter);
 	    
@@ -249,21 +246,11 @@ public class AttendanceManagementService {
 	            }
 	        }
 
-	        if (endTime != null) {
+	        if (endTime != "") {
 	            try {
 	            	
-	            	if(endTime == "") {
-	            		break;
-	            	}
 	                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 	                LocalTime endInputTime = LocalTime.parse(endTime, formatter);
-	                LocalTime firstTime = LocalTime.of(0, 0);
-	                LocalTime lastTime = LocalTime.of(23, 59);
-
-	                if (!endInputTime.equals(firstTime) && (endInputTime.isBefore(firstTime) || endInputTime.isAfter(lastTime))) {
-	                    FieldError startEndTime = new FieldError("attendanceFormList", "attendanceList[" + i + "].endTime", messageOutput.message("timeRange"));
-	                    result.addError(startEndTime);
-	                }
 
 	                if (startTime != null) {
 	                    LocalTime startInputTime = LocalTime.parse(startTime, formatter);

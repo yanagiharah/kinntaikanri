@@ -1,16 +1,13 @@
 package com.example.demo.service;
 
 import java.util.Date;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
-import com.example.demo.mapper.DepartmentMapper;
 import com.example.demo.mapper.UsersMapper;
-import com.example.demo.model.Department;
 import com.example.demo.model.ManagementForm;
 import com.example.demo.model.Users;
 
@@ -18,14 +15,7 @@ import com.example.demo.model.Users;
 public class UserManagementService {
 	@Autowired
 	  public UsersMapper userSearchMapper;
-	@Autowired
-	  public DepartmentMapper departmentMapper;
 	
-	//ユーザー管理画面起動時の部署プルダウンに適用させる為に部署を取得
-	public List<Department> departmentSearchListUp(){
-		List<Department> department = departmentMapper.selectDepartment();
-		return department;
-	}
 
 	//ユーザー管理画面 検索処理
 	public Users selectByAccount(String userName, Integer userId) {
