@@ -67,7 +67,7 @@ public class MenuController {
 		return "redirect:/user/";
 	}
 	
-	//部署登録画面に遷移
+	//部署登録画面に遷移 
 	@RequestMapping("/department")
 	public String department(HttpSession session, Model model) {
 		Users users = (Users) session.getAttribute("Users");
