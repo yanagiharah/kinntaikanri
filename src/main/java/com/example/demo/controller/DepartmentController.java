@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.inter.MessageOutput;
 import com.example.demo.model.DepartmentForm;
@@ -40,36 +41,48 @@ public class DepartmentController {
 	public String department(HttpSession session, Model model) {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
-		departmentForm.setDepartment(departmentService.departmentSearchListUp());
+		
+		//有効部署一覧取得
+		departmentForm.setActiveDepartment(departmentService.departmentSearchListUp());
+		
+		//無効（削除済み）部署一覧取得。（削除済みの部署一覧を表示したくなったら有効にして下さい。）
+//		departmentForm.setDepartment(departmentService.deleteDepartmentSearchListUp());
+		
 		model.addAttribute("departmentForm", departmentForm);
 		return "department/department";
 	}
 	
 	//登録ボタン押下
-	@RequestMapping(value = "/action", params = "action=insert", method = RequestMethod.POST)
-	public String departmentCreate(@ModelAttribute DepartmentForm departmentForm, Model model) {
+	@RequestMapping(value = "/action", params = "registration", method = RequestMethod.POST)
+	public String departmentCreate(@ModelAttribute DepartmentForm departmentForm, RedirectAttributes redirectAttributes) {
 		Integer overlappingDepartmentCheck = departmentService.departmentCheckInsert(departmentForm);
-		modelService.departmentInsertModel(overlappingDepartmentCheck, model);
-		return "redirect:/department";
+		modelService.departmentInsertModel(overlappingDepartmentCheck, redirectAttributes);
+		return "redirect:/department/";
 	}
 	
 	//変更ボタン押下
-	@RequestMapping(value = "/action", params = "action=updateName", method = RequestMethod.POST)
-	public String departmenNameUpdate(DepartmentForm departmentForm, Model model) {
+	@RequestMapping(value = "/action", params = "change", method = RequestMethod.POST)
+	public String departmenNameUpdate(DepartmentForm departmentForm, RedirectAttributes redirectAttributes) {
 		Boolean departmentNameEqualCheck = departmentService.departmentNameUpdate(departmentForm);
-		modelService.departmentNameUpdateModel(departmentNameEqualCheck, model);
-		return "redirect:/department";
+		modelService.departmentNameUpdateModel(departmentNameEqualCheck, redirectAttributes);
+		return "redirect:/department/";
 	}
 	
 	//削除ボタン押下
-	@RequestMapping(value = "/action", params = "action=updateActive", method = RequestMethod.POST)
-	public String departmentActiveUpdate(DepartmentForm departmentForm, Model model) {
-		departmentService.departmentActiveUpdate(departmentForm);
-		modelService.departmentActiveUpdateModel(model);
-		return "redirect:/department";
+	@RequestMapping(value = "/action", params = "delete", method = RequestMethod.POST)
+	public String departmentDeactiveUpdate(DepartmentForm departmentForm, RedirectAttributes redirectAttributes) {
+		departmentService.departmentDeactiveUpdate(departmentForm);
+		modelService.departmentDeactiveUpdateModel(redirectAttributes);
+		return "redirect:/department/";
 	}
 	
-	
+	//復元ボタン押下。(復元ボタン実装後に有効化してください。)
+//	@RequestMapping(value = "/action", params = "restoration", method = RequestMethod.POST)
+//	public String departmentActiveUpdate(DepartmentForm departmentForm, RedirectAttributes redirectAttributes) {
+//		departmentService.departmentActiveUpdate(departmentForm);
+//		modelService.departmentActiveUpdateModel(redirectAttributes);
+//		return "redirect:/department/";
+//	}
 	
 	
 	

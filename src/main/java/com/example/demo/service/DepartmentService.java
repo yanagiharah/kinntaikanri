@@ -16,9 +16,15 @@ public class DepartmentService {
 	  public DepartmentMapper departmentMapper;
 	
 	
-		//ユーザー管理画面起動時の部署プルダウンに適用させる為に部署を取得
+		//ユーザー管理画面起動時の部署プルダウンに適用させる為、部署管理画面に部署を表示させる為に取得
 		public List<Department> departmentSearchListUp() {
 			List<Department> department = departmentMapper.selectDepartment();
+			return department;
+		}
+		
+		//部署管理画面の削除済み部署欄に表示させる為に取得
+		public List<Department> deleteDepartmentSearchListUp() {
+			List<Department> department = departmentMapper.selectDeleteDepartment();
 			return department;
 		}
 		
@@ -39,8 +45,14 @@ public class DepartmentService {
 			}
 		}
 		
-		public void departmentActiveUpdate(DepartmentForm departmentForm) {
-				departmentMapper.updateDepartmentActive(departmentForm);
+		//部署無効化（削除）更新
+		public void departmentDeactiveUpdate(DepartmentForm departmentForm) {
+				departmentMapper.updateDepartmentDeactive(departmentForm);
 		}
+		
+		//無効（削除済み）部署を有効化更新。(復元ボタン実装後に有効化してください。)
+//		public void departmentActiveUpdate(DepartmentForm departmentForm) {
+//			departmentMapper.updateDepartmentActive(departmentForm);
+//		}
 		
 }
