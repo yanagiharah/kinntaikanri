@@ -92,7 +92,7 @@ public class UserManagementService {
 			FieldError role = new FieldError("managementForm", "role", "権限は必須です");
 			 result.addError(role);
 		}
-		if(managementForm.getDepartmentId() == 1) {
+		if(managementForm.getDepartmentId() == 0) {
 			FieldError department = new FieldError("managementForm", "department", "所属部署は必須です");
 			 result.addError(department);
 		}

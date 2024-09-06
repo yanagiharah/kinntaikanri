@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.demo.inter.MessageOutput;
 import com.example.demo.model.DepartmentForm;
 import com.example.demo.model.Users;
 import com.example.demo.service.DepartmentService;
@@ -23,16 +22,13 @@ public class DepartmentController {
 	
 	private final DepartmentService departmentService;
 
-	private final MessageOutput messageOutput;
-
 	private final DepartmentForm departmentForm;
 	
 	private final ModelService modelService;
 
 	DepartmentController(MessageSource messageSource,
-			DepartmentForm departmentForm, MessageOutput messageOutput, DepartmentService departmentService, ModelService modelService) {
+			DepartmentForm departmentForm, DepartmentService departmentService, ModelService modelService) {
 		this.departmentForm = departmentForm;
-		this.messageOutput = messageOutput;
 		this.departmentService = departmentService;
 		this.modelService = modelService;
 	}

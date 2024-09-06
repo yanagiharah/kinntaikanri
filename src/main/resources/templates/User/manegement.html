@@ -58,7 +58,7 @@
                             <div>
                                 所属部署
                                 <select id="department" name="departmentId">
-                                    <option value="" selected>選択してください</option>
+                                    <option value="0" selected>選択してください</option>
                                     <option th:each="department : ${managementForm.department}"
                                             th:value="${department.departmentId}"
                                             th:text="${department.departmentName}"
