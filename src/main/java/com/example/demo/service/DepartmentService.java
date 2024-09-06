@@ -35,6 +35,7 @@ public class DepartmentService {
 			if(!departmentForm.getNewDepartmentName().equals("")) {
 				overlappingDepartmentCheck = departmentMapper.insertDepartment(departmentForm);
 			}else {
+				//2は新部署名が空文字の時
 				overlappingDepartmentCheck = 2;
 			}
 			return overlappingDepartmentCheck;
