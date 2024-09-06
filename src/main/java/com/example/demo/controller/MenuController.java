@@ -72,6 +72,6 @@ public class MenuController {
 	public String department(HttpSession session, Model model) {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
-		return "redirect:/department/";
+		return "redirect:/department/"; 
 	}
 }
