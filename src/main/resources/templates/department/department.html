@@ -11,14 +11,25 @@
 	</head>
 	<body>
 		<div class="container mt-3">
+			<div class="alert alert-success text-center" th:if="${departmentMessage}">
+				<p th:text="${departmentMessage}"></p>
+			</div>
 			<form th:action="@{/department/action}" method="post">
 				<div class="row">
 					<div class="col-md-6">
 						<div class="form-group">
-							<label for="departmentSelect">登録済の部署</label>
-							<select class="form-control" id="departmentSelect" name="oldDepartmentName">
+							<label for="activeDepartmentSelect" class="mb-2">登録済の部署</label>
+							<select class="form-control mb-5" id="activeDepartmentSelect" name="oldDepartmentName">
 								<option value="" selected></option>
 								<option th:each="department : ${departmentForm.activeDepartment}"
+										th:value="${department.departmentName}"
+										th:text="${department.departmentName}">
+								</option>
+							</select>
+							<label for="deactiveDepartmentSelect" class="mb-2">削除済の部署</label>
+							<select class="form-control" id="deactiveDepartmentSelect" name="oldDepartmentName">
+								<option value="" selected></option>
+								<option th:each="department : ${departmentForm.deactiveDepartment}"
 										th:value="${department.departmentName}"
 										th:text="${department.departmentName}">
 								</option>
@@ -41,6 +52,9 @@
 								</div>
 								<div>
 									<input type="submit" name="delete" value="削除" class="btn btn-danger mb-2"></input>
+								</div>
+								<div>
+									<input type="submit" name="restore" value="復元" class="btn btn-success mb-2"></input>
 								</div>
 							</div>
 						</div>
