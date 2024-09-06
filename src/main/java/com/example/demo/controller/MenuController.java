@@ -2,8 +2,6 @@ package com.example.demo.controller;
 
 import java.time.LocalDate;
 
-import jakarta.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.example.demo.model.Users;
 import com.example.demo.service.AttendanceManagementService;
 import com.example.demo.service.DailyReportService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/menu")
@@ -67,11 +67,11 @@ public class MenuController {
 		return "redirect:/user/";
 	}
 	
-	//部署登録画面に遷移
+	//部署登録画面に遷移 
 	@RequestMapping("/department")
 	public String department(HttpSession session, Model model) {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
-		return "department";
+		return "redirect:/department/"; 
 	}
 }
