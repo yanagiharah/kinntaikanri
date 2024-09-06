@@ -11,12 +11,12 @@
 	FROM department WHERE is_active = 1;
 </select>
 
-<!-- 無効（削除済み）部署取得。(復元ボタン実装後に有効化してください。) -->
-<!--<select id="selectDeleteDepartment"-->
-<!--	resultType="com.example.demo.model.Department">-->
-<!--	SELECT *-->
-<!--	FROM department WHERE is_active = 0;-->
-<!--</select>-->
+<!-- 無効（削除済み）部署取得。 -->
+<select id="selectDeleteDepartment"
+	resultType="com.example.demo.model.Department">
+	SELECT *
+	FROM department WHERE is_active = 0;
+</select>
 
 <!-- テーブル内のdepartment_nameに重複が無いかを確認ののちに登録 -->
 <insert id="insertDepartment">
@@ -30,8 +30,15 @@
 </insert>
 
 <!-- 部署名更新 -->
-<update id ="updateDepartmentName">
-	UPDATE department SET department_name = #{newDepartmentName} WHERE department_name = #{oldDepartmentName};
+<update id="updateDepartmentName">
+	UPDATE department
+	SET department_name = #{newDepartmentName}
+	WHERE department_name = #{oldDepartmentName}
+	AND NOT EXISTS (
+	SELECT 1
+	FROM (SELECT department_name FROM department) AS temp
+	WHERE department_name = #{newDepartmentName}
+	);
 </update>
 
 <!-- 部署無効化（削除）更新 -->
@@ -39,10 +46,10 @@
 	UPDATE department SET is_active = 0 WHERE department_name = #{oldDepartmentName};
 </update>
 
-<!-- 無効（削除済み）部署を有効化更新。(復元ボタン実装後に有効化してください。) -->
-<!--<update id ="updateDepartmentActive">-->
-<!--	UPDATE department SET is_active = 1 WHERE department_name = #{oldDepartmentName};-->
-<!--</update>-->
+<!-- 無効（削除済み）部署を有効化更新。 -->
+<update id ="updateDepartmentActive">
+	UPDATE department SET is_active = 1 WHERE department_name = #{oldDepartmentName};
+</update>
 
 
 

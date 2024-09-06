@@ -45,8 +45,8 @@ public class DepartmentController {
 		//有効部署一覧取得
 		departmentForm.setActiveDepartment(departmentService.departmentSearchListUp());
 		
-		//無効（削除済み）部署一覧取得。（削除済みの部署一覧を表示したくなったら有効にして下さい。）
-//		departmentForm.setDepartment(departmentService.deleteDepartmentSearchListUp());
+		//無効（削除済み）部署一覧取得。
+		departmentForm.setDeactiveDepartment(departmentService.deleteDepartmentSearchListUp());
 		
 		model.addAttribute("departmentForm", departmentForm);
 		return "department/department";
@@ -63,7 +63,7 @@ public class DepartmentController {
 	//変更ボタン押下
 	@RequestMapping(value = "/action", params = "change", method = RequestMethod.POST)
 	public String departmenNameUpdate(DepartmentForm departmentForm, RedirectAttributes redirectAttributes) {
-		Boolean departmentNameEqualCheck = departmentService.departmentNameUpdate(departmentForm);
+		Integer departmentNameEqualCheck = departmentService.departmentNameUpdate(departmentForm);
 		modelService.departmentNameUpdateModel(departmentNameEqualCheck, redirectAttributes);
 		return "redirect:/department/";
 	}
@@ -76,13 +76,13 @@ public class DepartmentController {
 		return "redirect:/department/";
 	}
 	
-	//復元ボタン押下。(復元ボタン実装後に有効化してください。)
-//	@RequestMapping(value = "/action", params = "restoration", method = RequestMethod.POST)
-//	public String departmentActiveUpdate(DepartmentForm departmentForm, RedirectAttributes redirectAttributes) {
-//		departmentService.departmentActiveUpdate(departmentForm);
-//		modelService.departmentActiveUpdateModel(redirectAttributes);
-//		return "redirect:/department/";
-//	}
+	//復元ボタン押下。
+	@RequestMapping(value = "/action", params = "restoration", method = RequestMethod.POST)
+	public String departmentActiveUpdate(DepartmentForm departmentForm, RedirectAttributes redirectAttributes) {
+		departmentService.departmentActiveUpdate(departmentForm);
+		modelService.departmentActiveUpdateModel(redirectAttributes);
+		return "redirect:/department/";
+	}
 	
 	
 	

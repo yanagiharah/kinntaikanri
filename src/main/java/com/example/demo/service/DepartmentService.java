@@ -36,13 +36,16 @@ public class DepartmentService {
 		}
 		
 		//新名前と旧名前を比較後に名前変更
-		public Boolean departmentNameUpdate(DepartmentForm departmentForm) {
-			if(departmentForm.getNewDepartmentName() != departmentForm.getOldDepartmentName()) {
-				departmentMapper.updateDepartmentName(departmentForm);
-				return true;
+		public Integer departmentNameUpdate(DepartmentForm departmentForm) {
+			Integer overlappingDepartmentCheck = null;
+			if(!departmentForm.getNewDepartmentName().equals(departmentForm.getOldDepartmentName())) {
+				//0or1が返される。0はテーブルのデータに新部署名が存在したので変更していない。1はテーブルのデータに新部署名が存在しなかったので変更した。
+				overlappingDepartmentCheck = departmentMapper.updateDepartmentName(departmentForm);
 			}else {
-				return false;
+				//2は旧部署名と新部署名が全く一緒の時
+				overlappingDepartmentCheck = 2;
 			}
+			return overlappingDepartmentCheck;
 		}
 		
 		//部署無効化（削除）更新
@@ -50,9 +53,9 @@ public class DepartmentService {
 				departmentMapper.updateDepartmentDeactive(departmentForm);
 		}
 		
-		//無効（削除済み）部署を有効化更新。(復元ボタン実装後に有効化してください。)
-//		public void departmentActiveUpdate(DepartmentForm departmentForm) {
-//			departmentMapper.updateDepartmentActive(departmentForm);
-//		}
+		//無効（削除済み）部署を有効化更新。
+		public void departmentActiveUpdate(DepartmentForm departmentForm) {
+			departmentMapper.updateDepartmentActive(departmentForm);
+		}
 		
 }
