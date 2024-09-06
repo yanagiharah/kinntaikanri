@@ -10,7 +10,9 @@ import lombok.Data;
 @Component
 public class DepartmentForm {
 	
-	private List<Department> department;
+	private List<Department> activeDepartment;
+	
+	private List<Department> deactiveDepartment;
 	
 	private String oldDepartmentName;
 	

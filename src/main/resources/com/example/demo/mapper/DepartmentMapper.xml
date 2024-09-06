@@ -4,13 +4,19 @@
 
 
 
-<!-- 部署取得 -->
+<!-- 有効部署取得 -->
 <select id="selectDepartment"
 	resultType="com.example.demo.model.Department">
 	SELECT *
-	FROM department;
+	FROM department WHERE is_active = 1;
 </select>
 
+<!-- 無効（削除済み）部署取得。(復元ボタン実装後に有効化してください。) -->
+<!--<select id="selectDeleteDepartment"-->
+<!--	resultType="com.example.demo.model.Department">-->
+<!--	SELECT *-->
+<!--	FROM department WHERE is_active = 0;-->
+<!--</select>-->
 
 <!-- テーブル内のdepartment_nameに重複が無いかを確認ののちに登録 -->
 <insert id="insertDepartment">
@@ -28,16 +34,16 @@
 	UPDATE department SET department_name = #{newDepartmentName} WHERE department_name = #{oldDepartmentName};
 </update>
 
-<!-- 部署無効化更新 -->
-<update id ="updateDepartmentActive">
+<!-- 部署無効化（削除）更新 -->
+<update id ="updateDepartmentDeactive">
 	UPDATE department SET is_active = 0 WHERE department_name = #{oldDepartmentName};
 </update>
 
-<!-- 日付指定範囲削除 -->
-<!--<delete id="deleteByAttendanceOfMonth">-->
-<!--	delete from attendance-->
-<!--	WHERE attendance.user_id = #{userId} AND attendance_date BETWEEN #{targetDate} AND #{endDate};-->
-<!--</delete>-->
+<!-- 無効（削除済み）部署を有効化更新。(復元ボタン実装後に有効化してください。) -->
+<!--<update id ="updateDepartmentActive">-->
+<!--	UPDATE department SET is_active = 1 WHERE department_name = #{oldDepartmentName};-->
+<!--</update>-->
+
 
 
 </mapper>
