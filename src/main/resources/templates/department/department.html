@@ -14,6 +14,9 @@
 			<div class="alert alert-success text-center" th:if="${departmentMessage}">
 				<p th:text="${departmentMessage}"></p>
 			</div>
+			<div class="alert alert-danger text-center" th:if="${departmentErrorMessage}">
+				<p th:text="${departmentErrorMessage}"></p>
+			</div>
 			<form th:action="@{/department/action}" method="post">
 				<div class="row">
 					<div class="col-md-6">

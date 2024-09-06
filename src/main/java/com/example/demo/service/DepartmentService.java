@@ -31,7 +31,12 @@ public class DepartmentService {
 		
 		//登録
 		public Integer departmentCheckInsert(DepartmentForm departmentForm) {
-			Integer overlappingDepartmentCheck = departmentMapper.insertDepartment(departmentForm);
+			Integer overlappingDepartmentCheck = null;
+			if(!departmentForm.getNewDepartmentName().equals("")) {
+				overlappingDepartmentCheck = departmentMapper.insertDepartment(departmentForm);
+			}else {
+				overlappingDepartmentCheck = 2;
+			}
 			return overlappingDepartmentCheck;
 		}
 		

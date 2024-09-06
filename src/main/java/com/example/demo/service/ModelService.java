@@ -11,8 +11,10 @@ public class ModelService {
 	public Model departmentInsertModel(Integer overlappingDepartmentCheck, RedirectAttributes redirectAttributes) {
 		if(overlappingDepartmentCheck == 1) {
 			redirectAttributes.addFlashAttribute("departmentMessage","部署の登録が完了しました。");
+		}else if(overlappingDepartmentCheck == 0){
+			redirectAttributes.addFlashAttribute("departmentErrorMessage","その部署は既に登録されています。");
 		}else {
-			redirectAttributes.addFlashAttribute("departmentMessage","その部署は既に登録されています。");
+			redirectAttributes.addFlashAttribute("departmentErrorMessage","新部署名が入力されていません。");
 		}
 		return redirectAttributes;
 	}
@@ -22,9 +24,9 @@ public class ModelService {
 		if(departmentNameEqualCheck == 1) {
 			redirectAttributes.addFlashAttribute("departmentMessage","部署名が変更されました。");
 		}else if(departmentNameEqualCheck == 0){
-			redirectAttributes.addFlashAttribute("departmentMessage","変更希望の部署名は既に存在しています。");
+			redirectAttributes.addFlashAttribute("departmentErrorMessage","変更希望の部署名は既に存在しています。");
 		}else {
-			redirectAttributes.addFlashAttribute("departmentMessage","同じ部署名が入力されています。");
+			redirectAttributes.addFlashAttribute("departmentErrorMessage","同じ部署名が入力されています。");
 		}
 		return redirectAttributes;
 	}
