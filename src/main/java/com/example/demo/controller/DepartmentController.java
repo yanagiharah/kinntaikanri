@@ -1,7 +1,5 @@
 package com.example.demo.controller;
 
-import jakarta.servlet.http.HttpSession;
-
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +13,8 @@ import com.example.demo.model.DepartmentForm;
 import com.example.demo.model.Users;
 import com.example.demo.service.DepartmentService;
 import com.example.demo.service.ModelService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/department")
@@ -77,7 +77,7 @@ public class DepartmentController {
 	}
 	
 	//復元ボタン押下。
-	@RequestMapping(value = "/action", params = "restoration", method = RequestMethod.POST)
+	@RequestMapping(value = "/action", params = "restore", method = RequestMethod.POST)
 	public String departmentActiveUpdate(DepartmentForm departmentForm, RedirectAttributes redirectAttributes) {
 		departmentService.departmentActiveUpdate(departmentForm);
 		modelService.departmentActiveUpdateModel(redirectAttributes);

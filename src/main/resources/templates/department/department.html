@@ -27,7 +27,7 @@
 								</option>
 							</select>
 							<label for="deactiveDepartmentSelect" class="mb-2">削除済の部署</label>
-							<select class="form-control" id="deactiveDepartmentSelect" name="oldDepartmentName">
+							<select class="form-control" id="deactiveDepartmentSelect" name="deletedDepartmentName">
 								<option value="" selected></option>
 								<option th:each="department : ${departmentForm.deactiveDepartment}"
 										th:value="${department.departmentName}"
