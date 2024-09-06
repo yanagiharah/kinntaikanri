@@ -18,5 +18,5 @@ public class DepartmentForm {
 	
 	private String newDepartmentName;
 	
-	private String prideletedDepartmentName;
+	private String deletedDepartmentName;
 }

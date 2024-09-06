@@ -48,7 +48,7 @@
 
 <!-- 無効（削除済み）部署を有効化更新。 -->
 <update id ="updateDepartmentActive">
-	UPDATE department SET is_active = 1 WHERE department_name = #{oldDepartmentName};
+	UPDATE department SET is_active = 1 WHERE department_name = #{deletedDepartmentName};
 </update>
 
 
