@@ -1,13 +1,11 @@
 package com.example.demo.controller;
 
 import java.time.DateTimeException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,21 +20,21 @@ import com.example.demo.model.AttendanceFormList;
 import com.example.demo.model.MonthlyAttendanceReq;
 import com.example.demo.model.Users;
 import com.example.demo.service.AttendanceManagementService;
-import com.example.demo.service.DailyReportService;
+import com.example.demo.service.CommonActivityService;
 import com.example.demo.service.MonthlyAttendanceReqService;
 
 @Controller
 @RequestMapping("/attendance")
 public class AttendanceManagementController {
-	@Autowired
-	private DailyReportService dailyReportService;
 
 	private final AttendanceManagementService attendanceManagementService;
 	private final MonthlyAttendanceReqService monthlyAttendanceReqService;
+	private final CommonActivityService commonActivityService;
 	
-	public AttendanceManagementController(AttendanceManagementService attendanceManagementService,MonthlyAttendanceReqService monthlyAttendanceReqService){
+	public AttendanceManagementController(AttendanceManagementService attendanceManagementService,MonthlyAttendanceReqService monthlyAttendanceReqService, CommonActivityService commonActivityService){
 		this.attendanceManagementService = attendanceManagementService;
 		this.monthlyAttendanceReqService = monthlyAttendanceReqService;
+		this.commonActivityService = commonActivityService;
 	}
 
 	@RequestMapping("/index")
@@ -284,19 +282,7 @@ public class AttendanceManagementController {
 	//戻るボタン
 		@RequestMapping(value = "/management", params = "back", method = RequestMethod.POST)
 		public String back(Model model, HttpSession session) {
-			Users users = (Users) session.getAttribute("Users");
-			 model.addAttribute("Users", users);
-			 model.addAttribute("Users", users);
-				LocalDate today = LocalDate.now();
-				LocalDate yesterday = today.minusDays(1);
-				Integer checkDailyReport = dailyReportService.checkYesterdayDailyReport(users.getUserId(),yesterday);
-				Integer checkAttendance = attendanceManagementService.checkYesterdayAttendance(users.getUserId(),yesterday);
-				if(checkDailyReport == 0) {
-					model.addAttribute("CheckDailyReport", "日報未提出");
-				}
-				if(checkAttendance == 0) {
-					model.addAttribute("CheckAttendance", "勤怠未提出");
-				}
+			commonActivityService.backMenu(model, session);
 			return "menu/processMenu";
 		}
 	

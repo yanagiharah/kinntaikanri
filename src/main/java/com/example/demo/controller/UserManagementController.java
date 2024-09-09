@@ -5,7 +5,6 @@ import java.util.Random;
 
 import jakarta.servlet.http.HttpSession;
 
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,6 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.demo.inter.MessageOutput;
 import com.example.demo.model.ManagementForm;
 import com.example.demo.model.Users;
+import com.example.demo.service.CommonActivityService;
 import com.example.demo.service.DepartmentService;
 import com.example.demo.service.UserManagementService;
 
@@ -31,13 +31,17 @@ public class UserManagementController {
 	private final MessageOutput messageOutput;
 
 	private final ManagementForm managementForm;
+	
+	private final CommonActivityService commonActivityService;
 
-	UserManagementController(UserManagementService userManagementService, MessageSource messageSource,
-			ManagementForm managementForm, MessageOutput messageOutput, DepartmentService departmentService) {
+	UserManagementController(UserManagementService userManagementService,
+			ManagementForm managementForm, MessageOutput messageOutput, DepartmentService departmentService,
+			CommonActivityService commonActivityService) {
 		this.userManagementService = userManagementService;
 		this.managementForm = managementForm;
 		this.messageOutput = messageOutput;
 		this.departmentService = departmentService;
+		this.commonActivityService = commonActivityService;
 	}
 
 	@RequestMapping("/")
@@ -133,8 +137,7 @@ public class UserManagementController {
 	//戻るボタン
 	@RequestMapping(value = "/management", params = "back", method = RequestMethod.POST)
 	public String back(Model model, HttpSession session) {
-		Users users = (Users) session.getAttribute("Users");
-		model.addAttribute("Users", users);
+		commonActivityService.backMenu(model, session);
 		return "menu/processMenu";
 	}
 
