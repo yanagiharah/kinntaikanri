@@ -13,8 +13,6 @@ public class ModelService {
 			redirectAttributes.addFlashAttribute("departmentMessage","部署の登録が完了しました。");
 		}else if(overlappingDepartmentCheck == 0){
 			redirectAttributes.addFlashAttribute("departmentErrorMessage","その部署は既に登録されています。");
-		}else {
-			redirectAttributes.addFlashAttribute("departmentErrorMessage","新部署名が入力されていません。");
 		}
 		return redirectAttributes;
 	}

@@ -9,7 +9,6 @@ import java.util.Locale;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,21 +21,24 @@ import org.springframework.web.servlet.ModelAndView;
 import com.example.demo.model.DailyReportDetailForm;
 import com.example.demo.model.DailyReportForm;
 import com.example.demo.model.Users;
-import com.example.demo.service.AttendanceManagementService;
+import com.example.demo.service.CommonActivityService;
 import com.example.demo.service.DailyReportService;
 
 @Controller
 @RequestMapping("/daily")
 public class DailyReportController {
+	
+	private final DailyReportService dailyReportService;
+	
+	private final MessageSource messageSource;
+	
+	private final CommonActivityService commonActivityService;
 
-	@Autowired
-	private DailyReportService dailyReportService;
-	
-	@Autowired
-	private MessageSource messageSource;
-	
-	@Autowired
-	private AttendanceManagementService attendanceManagementService; 
+	public DailyReportController(DailyReportService dailyReportService, MessageSource messageSource, CommonActivityService commonActivityService) {
+		this.dailyReportService = dailyReportService;
+		this.messageSource = messageSource;
+		this.commonActivityService = commonActivityService;
+	}
 
 	//日報の初期表示画面（今日時点のものを表示）
 	@RequestMapping("/detail")
@@ -112,18 +114,7 @@ public class DailyReportController {
 	//戻るボタン
 	@RequestMapping(value = "/detailUpdate", params = "back", method = RequestMethod.POST)
 	public String back(Model model, HttpSession session) {
-		Users users = (Users) session.getAttribute("Users");
-		model.addAttribute("Users", users);
-		LocalDate today = LocalDate.now();
-		LocalDate yesterday = today.minusDays(1);
-		Integer checkDailyReport = dailyReportService.checkYesterdayDailyReport(users.getUserId(),yesterday);
-		Integer checkAttendance = attendanceManagementService.checkYesterdayAttendance(users.getUserId(),yesterday);
-		if(checkDailyReport == 0) {
-			model.addAttribute("CheckDailyReport", "日報未提出");
-		}
-		if(checkAttendance == 0) {
-			model.addAttribute("CheckAttendance", "勤怠未提出");
-		}
+		commonActivityService.backMenu(model, session);
 		return "menu/processMenu";
 	}
 	

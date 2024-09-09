@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,10 +12,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.model.DepartmentForm;
 import com.example.demo.model.Users;
+import com.example.demo.service.CommonActivityService;
 import com.example.demo.service.DepartmentService;
 import com.example.demo.service.ModelService;
-
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/department")
@@ -25,12 +26,15 @@ public class DepartmentController {
 	private final DepartmentForm departmentForm;
 	
 	private final ModelService modelService;
+	
+	private final CommonActivityService commonActivityService;
 
 	DepartmentController(MessageSource messageSource,
-			DepartmentForm departmentForm, DepartmentService departmentService, ModelService modelService) {
+			DepartmentForm departmentForm, DepartmentService departmentService, ModelService modelService, CommonActivityService commonActivityService) {
 		this.departmentForm = departmentForm;
 		this.departmentService = departmentService;
 		this.modelService = modelService;
+		this.commonActivityService = commonActivityService;
 	}
 
 	@RequestMapping("/")
@@ -80,6 +84,12 @@ public class DepartmentController {
 		return "redirect:/department/";
 	}
 	
+	//戻るボタン押下
+	@RequestMapping(value = "/action", params = "back", method = RequestMethod.POST)
+	public String back(Model model, HttpSession session) {
+		commonActivityService.backMenu(model, session);
+		return "menu/processMenu";
+	}
 	
 	
 	
