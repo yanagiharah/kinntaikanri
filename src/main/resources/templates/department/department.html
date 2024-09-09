@@ -46,19 +46,24 @@
 								   name="newDepartmentName" placeholder="部署名を入力">
 							<div class="d-grid gap-2">
 								<div>
-									<input type="submit" name="back" value="戻る" class="btn btn-secondary mb-2">
+									<input type="submit" name="back" value="戻る"
+									id="backa" class="btn btn-secondary mb-2">
 								</div>									
 								<div>
-									<input type="submit" name="registration" value="登録" class="btn btn-primary mb-2">
+									<input type="submit" name="registration" value="登録"
+									id="registration" class="btn btn-primary mb-2">
 								</div>
 								<div>
-									<input type="submit" name="change" value="変更" class="btn btn-warning mb-2">
+									<input type="submit" name="change" value="変更"
+									id="change" class="btn btn-warning mb-2">
 								</div>
 								<div>
-									<input type="submit" name="delete" value="削除" class="btn btn-danger mb-2">
+									<input type="submit" name="delete" value="削除"
+									id="delete" class="btn btn-danger mb-2">
 								</div>
 								<div>
-									<input type="submit" name="restore" value="復元" class="btn btn-success mb-2">
+									<input type="submit" name="restore" value="復元"
+									id="restore" class="btn btn-success mb-2">
 								</div>
 							</div>
 						</div>
@@ -66,5 +71,6 @@
 				</div>
 			</form>
 		</div>
+		<script th:src="@{/js/department.js}" defer></script>
 	</body>
 </html>
