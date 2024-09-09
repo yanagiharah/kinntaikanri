@@ -27,6 +27,6 @@ public interface UsersMapper {
 	void delete(ManagementForm managementForm);
 	
 	//ログイン時のアカウント存在チェック
-	Users loginCheck(@Param("userId")Integer userId, @Param("password")String password);
+	Users loginCheck(@Param("userId")Integer userId);
 
 }

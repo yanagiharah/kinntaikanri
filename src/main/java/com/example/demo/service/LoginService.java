@@ -11,8 +11,8 @@ public class LoginService {
 	@Autowired
 	  private UsersMapper usersMapper;
 	
-	public Users loginCheck(Integer userId ,String password) {
-		Users users = usersMapper.loginCheck(userId, password);
+	public Users loginCheck(Integer userId) {
+		Users users = usersMapper.loginCheck(userId);
 		return users;
 		
 	}

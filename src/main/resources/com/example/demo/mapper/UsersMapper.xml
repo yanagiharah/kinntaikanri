@@ -9,7 +9,7 @@
 	resultType="com.example.demo.model.Users">
 	SELECT *
 	FROM users
-	WHERE user_id = #{userId} AND password = #{password}  
+	WHERE user_id = #{userId}
 </select>
  
  
