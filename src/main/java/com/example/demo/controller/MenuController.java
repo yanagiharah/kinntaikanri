@@ -1,15 +1,11 @@
 package com.example.demo.controller;
 
-import java.time.LocalDate;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.demo.model.Users;
-import com.example.demo.service.AttendanceManagementService;
-import com.example.demo.service.DailyReportService;
+import com.example.demo.service.CommonActivityService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -17,29 +13,15 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/menu")
 public class MenuController {
 
-	@Autowired
-	private DailyReportService dailyReportService;
-	
-	@Autowired
-	private AttendanceManagementService attendanceManagementService; 
-	
-	//ログイン成功後アカウント情報をmodelに詰めてメニュー画面へ遷移
+	private final CommonActivityService commonActivityService;
+
+	MenuController(CommonActivityService commonActivityService) {
+		this.commonActivityService = commonActivityService;
+	}
+
 	@RequestMapping("")
 	public String authorityDetermining(HttpSession session, Model model) {
-		Users users = (Users) session.getAttribute("Users");
-		model.addAttribute("Users", users);
-		LocalDate today = LocalDate.now();
-		LocalDate yesterday = today.minusDays(1);
-		Integer checkDailyReport = dailyReportService.checkYesterdayDailyReport(users.getUserId(),yesterday);
-		Integer checkAttendance = attendanceManagementService.checkYesterdayAttendance(users.getUserId(),yesterday);
-		if(checkDailyReport == 0) {
-			model.addAttribute("CheckDailyReport", "日報未提出");
-			model.addAttribute("userRole", users.getRole());
-		}
-		if(checkAttendance == 0) {
-			model.addAttribute("CheckAttendance", "勤怠未提出");
-			model.addAttribute("userRole", users.getRole());
-		}
+		commonActivityService.backMenu(model, session);
 		return "menu/processMenu";
 	}
 
@@ -66,12 +48,25 @@ public class MenuController {
 		model.addAttribute("Users", users);
 		return "redirect:/user/";
 	}
-	
+
 	//部署登録画面に遷移 
 	@RequestMapping("/department")
 	public String department(HttpSession session, Model model) {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
-		return "redirect:/department/"; 
+		return "redirect:/department/";
 	}
 }
+
+////ログイン成功後アカウント情報をmodelに詰めてメニュー画面へ遷移@AuthenticationPrincipal Users users,
+//@RequestMapping("in")
+//public String authorityDetermining(HttpSession session, Model model,Authentication authenticatio) {
+//	CustomUsersDetails customUserDetails = (CustomUsersDetails) authenticatio.getPrincipal();
+//    Users users = customUserDetails.getUsers();
+//    Date today = new Date();
+//    if (users == null || users.getStartDate().compareTo(today) == 1) {
+//    	return "Login/index";
+//	}
+//    model.addAttribute("Users", users);
+//	return "menu/processMenu";
+//}
