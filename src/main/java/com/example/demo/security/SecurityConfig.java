@@ -14,6 +14,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import com.example.demo.exception.SessionTimeOut;
 
 import lombok.RequiredArgsConstructor;
 
@@ -42,16 +45,27 @@ public class SecurityConfig {
                 .successHandler(customAuthenticationSuccess())  
                 .usernameParameter("userId")
                 .passwordParameter("password")
+                
             )
             .logout(logout -> logout
-                .logoutSuccessUrl("/login?logout").permitAll()
+            		 .logoutRequestMatcher(new AntPathRequestMatcher("/logOff"))
+            	        // ログアウト成功時のURL（ログイン画面に遷移）
+            	        .logoutSuccessUrl("/login")
+            	        // Cookieの値を削除する
+            	        .deleteCookies("JSESSIONID")
+            	        // セッションを無効化する
+            	        .invalidateHttpSession(true).permitAll()
             )
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/css/**","/dateOut").permitAll()
                // .requestMatchers("/menu/**").hasRole("ADMIN")
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                 .anyRequest().authenticated()
-            );
+            )
+            .sessionManagement(session -> session
+		            .maximumSessions(1)
+		            .expiredSessionStrategy(new SessionTimeOut())
+		        );
         return http.build();
     }
 
