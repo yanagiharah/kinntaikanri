@@ -4,9 +4,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.example.demo.inter.MessageOutput;
 import com.example.demo.model.Users;
-import com.example.demo.service.LoginService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,15 +14,6 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/")
 public class LoginController {
-
-	//private  final LoginService loginService;
-	private final MessageOutput messageOutput;
-
-	LoginController(LoginService loginService, MessageOutput messageOutput) {
-		//this.loginService =loginService;
-		this.messageOutput = messageOutput;
-	}
-
 	/**
 	 * ログイン処理
 	 * @param model
@@ -35,16 +24,7 @@ public class LoginController {
 			HttpServletRequest request, HttpServletResponse response) {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
-		//			 model.addAttribute("loginForm", new LoginForm()); 
-		//			 sessionOut (request, response);
 		return "Login/index";
-	}
-
-	@RequestMapping("/logOff")
-	public String logout(HttpServletRequest request, HttpServletResponse response) {
-		// セッションを無効にする
-		sessionOut(request, response);
-		return "redirect:/";
 	}
 
 	public void sessionOut(HttpServletRequest request, HttpServletResponse response) {
@@ -52,7 +32,14 @@ public class LoginController {
 		if (session != null) {
 			session.invalidate();
 		}
-	}
+	}	
+}
+//	@RequestMapping("/logOff")
+//	public String logout(HttpServletRequest request, HttpServletResponse response) {
+//		// セッションを無効にする
+//		sessionOut(request, response);
+//		return "redirect:/";
+//	}
 
 	//		@GetMapping("")
 	//		public String login(@ModelAttribute LoginForm loginForm,Model model,HttpSession session,HttpServletRequest request, HttpServletResponse response) {
@@ -103,4 +90,4 @@ public class LoginController {
 	//			return "redirect:/menu";
 	//		}
 
-}
+
