@@ -2,19 +2,25 @@ package com.example.demo.service;
 
 import java.util.Date;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
+import com.example.demo.inter.MessageOutput;
 import com.example.demo.mapper.UsersMapper;
 import com.example.demo.model.ManagementForm;
 import com.example.demo.model.Users;
 
 @Service
 public class UserManagementService {
-	@Autowired
-	  public UsersMapper userSearchMapper;
+	
+	public final UsersMapper userSearchMapper;
+	public final MessageOutput messageOutput;
+	
+	UserManagementService(UsersMapper userSearchMapper, MessageOutput messageOutput){
+		this.userSearchMapper = userSearchMapper;
+		this.messageOutput = messageOutput;
+	}
 	
 
 	//ユーザー管理画面 検索処理
@@ -67,43 +73,43 @@ public class UserManagementService {
 	public void errorCheck(ManagementForm managementForm,BindingResult result) {
 		
 		if (managementForm.getUserName() == null ||managementForm.getUserName() == "") {
-			  FieldError userName = new FieldError(managementForm.getUserName(), "userName", "ユーザー名は必須です");
+			  FieldError userName = new FieldError(managementForm.getUserName(), "userName", messageOutput.message("requiredUserName"));
 			  result.addError(userName);
 		}
 		
 		if (!managementForm.getUserName().matches("^[^ -~｡-ﾟ]+$")) {
-			FieldError userName = new FieldError(managementForm.getUserName(), "userName", "ユーザー名は全角で入力してください");
+			FieldError userName = new FieldError(managementForm.getUserName(), "userName", messageOutput.message("requiredZennkaku"));
 			result.addError(userName);
 		}
 		
 		if(managementForm.getPassword() == null || managementForm.getPassword() == "" ) {
-			 FieldError password = new FieldError("managementForm", "password", "パスワード必須です");
+			 FieldError password = new FieldError("managementForm", "password", messageOutput.message("requiredPassword"));
 			  result.addError(password);
 		}
 		if(managementForm.getPassword().length() >= 16 ) {
-			 FieldError password = new FieldError("managementForm", "password", "16未満で入力してください");
+			 FieldError password = new FieldError("managementForm", "password", messageOutput.message("CharacterLimit"));
 			  result.addError(password);
 		}
 		if(managementForm.getPassword().matches(".*[^ -~｡-ﾟ]+.*")) {
-			 FieldError password = new FieldError("managementForm", "password", "半角文字で入力してください");
+			 FieldError password = new FieldError("managementForm", "password", messageOutput.message("requiredHannkaku"));
 			 result.addError(password);
 		}
 		if(managementForm.getRole() == null||managementForm.getRole() == "") {
-			FieldError role = new FieldError("managementForm", "role", "権限は必須です");
+			FieldError role = new FieldError("managementForm", "role", messageOutput.message("requiredRole"));
 			 result.addError(role);
 		}
 		if(managementForm.getDepartmentId() == 0) {
-			FieldError department = new FieldError("managementForm", "department", "所属部署は必須です");
+			FieldError department = new FieldError("managementForm", "department", messageOutput.message("requiredDepartment"));
 			 result.addError(department);
 		}
 		if(managementForm.getUserId() == null||managementForm.getUserId() == 0) {
-			FieldError userId = new FieldError("managementForm", "userId", "ユーザーIDは必須です");
+			FieldError userId = new FieldError("managementForm", "userId", messageOutput.message("requiredUserId"));
 			 result.addError(userId);
 		}
 		if (!"9999/99/99".equals(managementForm.getStartDate().trim())) {
 			if(!managementForm.getStartDate().matches("^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$")|| managementForm.getStartDate() == null||managementForm.getStartDate() == ""||managementForm.getStartDate().length() != 10) {
-				FieldError startDate = new FieldError("managementForm", "startDate", "利用開始日はyyyy-mm-ddで必ず半角で入力してください");
-				FieldError startDate2 = new FieldError("managementForm", "startDate", "休職やアカウントの一時停止を行いたい場合は9999/99/99で入力してください");
+				FieldError startDate = new FieldError("managementForm", "startDate", messageOutput.message("startDateCheck"));
+				FieldError startDate2 = new FieldError("managementForm", "startDate", messageOutput.message("acountStopCheck"));
 				result.addError(startDate);
 				result.addError(startDate2);
 			}

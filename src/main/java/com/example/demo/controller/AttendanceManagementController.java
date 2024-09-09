@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.demo.inter.MessageOutput;
 import com.example.demo.model.Attendance;
 import com.example.demo.model.AttendanceFormList;
 import com.example.demo.model.MonthlyAttendanceReq;
@@ -30,11 +31,14 @@ public class AttendanceManagementController {
 	private final AttendanceManagementService attendanceManagementService;
 	private final MonthlyAttendanceReqService monthlyAttendanceReqService;
 	private final CommonActivityService commonActivityService;
+	private final MessageOutput messageOutput;
 	
-	public AttendanceManagementController(AttendanceManagementService attendanceManagementService,MonthlyAttendanceReqService monthlyAttendanceReqService, CommonActivityService commonActivityService){
+	
+	public AttendanceManagementController(AttendanceManagementService attendanceManagementService,MonthlyAttendanceReqService monthlyAttendanceReqService, CommonActivityService commonActivityService, MessageOutput messageOutput){
 		this.attendanceManagementService = attendanceManagementService;
 		this.monthlyAttendanceReqService = monthlyAttendanceReqService;
 		this.commonActivityService = commonActivityService;
+		this.messageOutput = messageOutput;
 	}
 
 	@RequestMapping("/index")
@@ -67,7 +71,7 @@ public class AttendanceManagementController {
 					
 					if(years < 1800 || years > 3000) {
 						users.setStatus(null);
-						model.addAttribute("check", "表示年は1800～3000の間で入力してください。");
+						model.addAttribute("check", messageOutput.message("yearsRangeOut"));
 						return "attendance/registration";
 					}
 					
@@ -96,18 +100,18 @@ public class AttendanceManagementController {
 						
 					} else {
 						users.setStatus(null);
-						model.addAttribute("check", "年月の入力が不正です。");
+						model.addAttribute("check", messageOutput.message("yearsMonthInaccurate"));
 						return "attendance/registration";
 					}
 				}	
 			}
 		}catch (NumberFormatException e) {
 			users.setStatus(null);
-			model.addAttribute("check", "半角数字で年月共に入力してください。");
+			model.addAttribute("check", messageOutput.message("hannkakuCheck"));
 			return "attendance/registration";
 		}catch(DateTimeException e) {
 			users.setStatus(null);
-			model.addAttribute("check", "年月の入力が不正です。");
+			model.addAttribute("check", messageOutput.message("yearsMonthInaccurate"));
 			return "attendance/registration";
 		}
 		
@@ -153,12 +157,12 @@ public class AttendanceManagementController {
 	    	}
 	    }
 		if(j != 0) {
-			model.addAttribute("attendanceError","勤務状況と出勤時間、または勤務状況と出勤時間と退勤時間を入力してください。");
+			model.addAttribute("attendanceError", messageOutput.message("itemInaccurate"));
 			return "attendance/registration";
 		} else if(j == 0 && l == 0) {
-			model.addAttribute("attendanceComplete","勤怠の入力を行ってください。");
+			model.addAttribute("attendanceComplete", messageOutput.message("notEntered"));
 		} else {
-			model.addAttribute("attendanceComplete","勤怠の登録が完了しました。");
+			model.addAttribute("attendanceComplete", messageOutput.message("attendanceSuccess"));
 		}
 		
 		for(int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {  
@@ -202,7 +206,7 @@ public class AttendanceManagementController {
 			  
 		  } else {
 			  //承認申請が承認待ち、もしくは承認された際の処理。statusは1 or 2
-			  model.addAttribute("double","既に申請されています。");
+			  model.addAttribute("double",messageOutput.message("requestApplied"));
 		  }
 		
 		MonthlyAttendanceReq statusCheck = monthlyAttendanceReqService.statusCheck(attendanceFormList.getAttendanceList().get(0).getAttendanceDate(), users.getUserId());
@@ -252,10 +256,10 @@ public class AttendanceManagementController {
 	//マネージャー承認ボタン
 	@RequestMapping(value = "/management", params = "approval", method = RequestMethod.POST)
 	public String approval(AttendanceFormList attendanceFormList, Model model, HttpSession session, RedirectAttributes redirectAttributes) {
-		Users users = (Users) session.getAttribute("Users");
-		model.addAttribute("Users", users);
+//		Users users = (Users) session.getAttribute("Users");
+//		model.addAttribute("Users", users);
 		if(attendanceFormList.getAttendanceList() == null) {
-			redirectAttributes.addFlashAttribute("madahayai","先にユーザーを選択してください。");
+			redirectAttributes.addFlashAttribute("madahayai", messageOutput.message("choiceUsers"));
 		} else {
 			String inputDate = attendanceFormList.getAttendanceList().get(0).getAttendanceDateS();
 			String conversion = inputDate.replace("/","-");
@@ -267,10 +271,10 @@ public class AttendanceManagementController {
 	//マネージャー却下ボタン押下
 	@RequestMapping(value = "/management", params = "rejected", method = RequestMethod.POST)
 	public String Rejected(AttendanceFormList attendanceFormList, Model model, HttpSession session, RedirectAttributes redirectAttributes) {
-		Users users = (Users) session.getAttribute("Users");
-		model.addAttribute("Users", users);
+//		Users users = (Users) session.getAttribute("Users");
+//		model.addAttribute("Users", users);
 		if(attendanceFormList.getAttendanceList() == null) {
-			redirectAttributes.addFlashAttribute("madahayai","先にユーザーを選択してください。");
+			redirectAttributes.addFlashAttribute("madahayai", messageOutput.message("choiceUsers"));
 		} else {
 			String inputDate = attendanceFormList.getAttendanceList().get(0).getAttendanceDateS();
 			String conversion = inputDate.replace("/","-");
