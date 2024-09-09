@@ -26,14 +26,14 @@
 						<input type="submit" id="logOff" value="ログオフ" name="logOff" class="buttonSize">
 					</div>
 			</form>
-			<div th:if="(${userRole == 'Regular'}) and (${CheckAttendance})" class="alert alert-warning" role="alert">
+			<div th:if="${CheckAttendance}" class="alert alert-warning" role="alert">
 				<p th:text="${CheckAttendance}"></p>
 			</div>
-			<div th:if="(${userRole == 'Regular'}) and (${CheckDailyReport})" class="alert alert-warning" role="alert">
+			<div th:if="${CheckDailyReport}" class="alert alert-warning" role="alert">
 				<p th:text="${CheckDailyReport}"></p>
 			</div>
 			<div class="d-flex align-items-center justify-content-center " style="padding:300px;">		
-					<!--レギュラー＆ユニットマネージャー用-->
+<!--					レギュラー＆ユニットマネージャー用-->
 					<div th:if="${Users.role=='Regular'||Users.role=='UnitManager'}">
 						<p>
 							<form th:action="@{/menu/index}" method="get">
@@ -48,16 +48,16 @@
 						</form>
 					</div>
 	
-					<!--管理者用-->
+<!--					管理者用-->
 					<div th:if="${Users.role=='Admin'}">
-						<!--ユーザー情報登録-->
+<!--						ユーザー情報登録-->
 						<form th:action="@{/menu/usermanagement}" method="get">
 							<input type="submit" value="ユーザー情報登録" class="menuButtonSize"
 								style="background-color: rgb(131, 118, 137);">
 						</form>
 					</div>
 	
-					<!--マネージャー用-->
+<!--					マネージャー用-->
 					<div th:if="${Users.role=='Manager'}">
 						<p>
 							<form th:action="@{/menu/index}" method="get">
