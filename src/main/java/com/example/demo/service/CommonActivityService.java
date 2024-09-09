@@ -2,13 +2,13 @@ package com.example.demo.service;
 
 import java.time.LocalDate;
 
-import jakarta.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import com.example.demo.model.Users;
+
+import jakarta.servlet.http.HttpSession;
 
 @Service
 public class CommonActivityService {
@@ -48,7 +48,4 @@ public class CommonActivityService {
 		}
 		return model;
 	}
-	
-	
-		
 }
