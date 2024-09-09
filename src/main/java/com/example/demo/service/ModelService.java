@@ -4,15 +4,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.demo.inter.MessageOutput;
+
 @Service
 public class ModelService {
+	
+	private final MessageOutput messageOutput;
+	
+	ModelService(MessageOutput messageOutput){
+		this.messageOutput = messageOutput;
+	}
 	
 	//同じ名前の部署が無ければ新規登録
 	public Model departmentInsertModel(Integer overlappingDepartmentCheck, RedirectAttributes redirectAttributes) {
 		if(overlappingDepartmentCheck == 1) {
-			redirectAttributes.addFlashAttribute("departmentMessage","部署の登録が完了しました。");
+			redirectAttributes.addFlashAttribute("departmentMessage", messageOutput.message("registrationSuccess"));
 		}else if(overlappingDepartmentCheck == 0){
-			redirectAttributes.addFlashAttribute("departmentErrorMessage","その部署は既に登録されています。");
+			redirectAttributes.addFlashAttribute("departmentErrorMessage", messageOutput.message("registrationOverlapping"));
 		}
 		return redirectAttributes;
 	}
@@ -20,24 +28,24 @@ public class ModelService {
 	//新部署名と旧部署名が同じでなければ部署名変更
 	public Model departmentNameUpdateModel(Integer departmentNameEqualCheck, RedirectAttributes redirectAttributes) {
 		if(departmentNameEqualCheck == 1) {
-			redirectAttributes.addFlashAttribute("departmentMessage","部署名が変更されました。");
+			redirectAttributes.addFlashAttribute("departmentMessage", messageOutput.message("updateNameSuccess"));
 		}else if(departmentNameEqualCheck == 0){
-			redirectAttributes.addFlashAttribute("departmentErrorMessage","変更希望の部署名は既に存在しています。");
+			redirectAttributes.addFlashAttribute("departmentErrorMessage", messageOutput.message("updateNameOverlapping"));
 		}else {
-			redirectAttributes.addFlashAttribute("departmentErrorMessage","同じ部署名が入力されています。");
+			redirectAttributes.addFlashAttribute("departmentErrorMessage", messageOutput.message("updateNameSimilar"));
 		}
 		return redirectAttributes;
 	}
 	
 	//部署を無効化したかの判断分岐
 	public Model departmentDeactiveUpdateModel(RedirectAttributes redirectAttributes) {
-		redirectAttributes.addFlashAttribute("departmentMessage", "部署を削除しました。");
+		redirectAttributes.addFlashAttribute("departmentMessage", messageOutput.message("deactiveSuccess"));
 		return redirectAttributes;
 	}
 	
 	//部署を有効化したかの判断分岐。(復元ボタン実装後に有効化してください。)
 	public Model departmentActiveUpdateModel(RedirectAttributes redirectAttributes) {
-		redirectAttributes.addFlashAttribute("departmentMessage", "部署を復元しました。");
+		redirectAttributes.addFlashAttribute("departmentMessage", messageOutput.message("activeSuccess"));
 		return redirectAttributes;
 	}
 }
