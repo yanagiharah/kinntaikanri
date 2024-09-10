@@ -134,36 +134,6 @@ public class AttendanceManagementController {
 			return "attendance/registration";
 		}
 		
-		int j = 0;//不正入力のカウント
-//		int k = 0;//未入力のカウント
-		int l = 0;//正常入力のカウント
-		for (int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
-			
-	    	if(attendanceFormList.getAttendanceList().get(i).getStatus() == 12 && attendanceFormList.getAttendanceList().get(i).getStartTime() == "" && attendanceFormList.getAttendanceList().get(i).getEndTime() == "") {
-	    		
-	    	} else if(
-	    			
-	    			(attendanceFormList.getAttendanceList().get(i).getStatus() != 12 && attendanceFormList.getAttendanceList().get(i).getStartTime() != "") 
-	    			|| (attendanceFormList.getAttendanceList().get(i).getStatus() == 1
-	    					|| attendanceFormList.getAttendanceList().get(i).getStatus() == 2
-	    					|| attendanceFormList.getAttendanceList().get(i).getStatus() == 4 ||
-	    					attendanceFormList.getAttendanceList().get(i).getStatus() == 5 ||
-	    					attendanceFormList.getAttendanceList().get(i).getStatus() == 9
-	    					|| attendanceFormList.getAttendanceList().get(i).getStatus() == 11
-	    							&& (attendanceFormList.getAttendanceList().get(i).getStartTime() != "" || attendanceFormList.getAttendanceList().get(i).getEndTime() != ""))) {
-	    		++l;
-	    	} else {
-	    		++j;
-	    	}
-	    }
-		if(j != 0) {
-			model.addAttribute("attendanceError", messageOutput.message("itemInaccurate"));
-			return "attendance/registration";
-		} else if(j == 0 && l == 0) {
-			model.addAttribute("attendanceComplete", messageOutput.message("notEntered"));
-		} else {
-			model.addAttribute("attendanceComplete", messageOutput.message("attendanceSuccess"));
-		}
 		
 		for(int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {  
 			String inputDate = attendanceFormList.getAttendanceList().get(i).getAttendanceDateS();
@@ -172,10 +142,11 @@ public class AttendanceManagementController {
 			attendanceFormList.getAttendanceList().get(i).setUserId(users.getUserId());
 		  }
 		
-		attendanceManagementService.attendanceDelete(attendanceFormList);		
-		attendanceManagementService.attendanceCreate(attendanceFormList);
+		attendanceManagementService.attendanceUpsert(attendanceFormList);
+//		attendanceManagementService.attendanceDelete(attendanceFormList);		
+//		attendanceManagementService.attendanceCreate(attendanceFormList);
 		
-		
+		model.addAttribute("attendanceMessage",messageOutput.message("attendanceSuccess"));
 		return "attendance/registration";
 	}
 	
@@ -199,14 +170,14 @@ public class AttendanceManagementController {
 			  //中身がnull、すなわち同一ユーザーかつ同一月の月次勤怠申請がテーブルにない時の処理。statusはnull
 			  monthlyAttendanceReqService.monthlyAttendanceReqCreate(monthlyAttendanceReq, attendanceFormList);
 			  
-			  //承認申請が却下された際の処理。statusは3
+			  //承認申請が却下されていた際の処理。statusは3
 		  }else if(monthlyAttendanceDoubleCheck != null && monthlyAttendanceDoubleCheck.getStatus() == 3){
 			  monthlyAttendanceReq.setTargetYearMonth(attendanceFormList.getAttendanceList().get(0).getAttendanceDate());
 			  monthlyAttendanceReqService.updateMonthlyAttendanceReq(monthlyAttendanceReq);
 			  
 		  } else {
-			  //承認申請が承認待ち、もしくは承認された際の処理。statusは1 or 2
-			  model.addAttribute("double",messageOutput.message("requestApplied"));
+			  //承認申請が承認待ち、もしくは承認されていた際の処理。statusは1 or 2。←（承認申請ボタンが非活性になっているため不要と判断してコメントアウトしました。削除する際はmessages.propertiesのrequestAppliedも消してください。2024/09/10柳原）
+//			  model.addAttribute("double",messageOutput.message("requestApplied"));
 		  }
 		
 		MonthlyAttendanceReq statusCheck = monthlyAttendanceReqService.statusCheck(attendanceFormList.getAttendanceList().get(0).getAttendanceDate(), users.getUserId());

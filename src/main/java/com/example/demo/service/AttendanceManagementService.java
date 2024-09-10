@@ -149,27 +149,27 @@ public class AttendanceManagementService {
   
   
 	//勤怠テーブルのデータを物理削除
-	public void attendanceDelete(AttendanceFormList attendanceFormList) {
-		attendanceSearchMapper.deleteByAttendanceOfMonth(attendanceFormList.getAttendanceList().get(0).getUserId(),
-				attendanceFormList.getAttendanceList().get(0).getAttendanceDate(),
-				attendanceFormList.getAttendanceList().get(attendanceFormList.getAttendanceList().size() - 1).getAttendanceDate());
-	}
+//	public void attendanceDelete(AttendanceFormList attendanceFormList) {
+//		attendanceSearchMapper.deleteByAttendanceOfMonth(attendanceFormList.getAttendanceList().get(0).getUserId(),
+//				attendanceFormList.getAttendanceList().get(0).getAttendanceDate(),
+//				attendanceFormList.getAttendanceList().get(attendanceFormList.getAttendanceList().size() - 1).getAttendanceDate());
+//	}
   
 	//勤怠テーブルに登録処理
-	public void attendanceCreate(AttendanceFormList attendanceFormList) {
-		// List<Attendance> attendanceList = new ArrayList<Attendance>();
+	public void attendanceUpsert(AttendanceFormList attendanceFormList) {
+		
 		List<Integer> workDay = Arrays.asList(0, 3, 6, 7, 8, 10);
 		attendanceFormList.getAttendanceList().stream()
 				.filter(attendance -> workDay.contains(attendance.getStatus()))
 				.filter(attendance -> !attendance.getStartTime().isEmpty())
-				.forEach(attendance -> attendanceSearchMapper.insert(attendance));
+				.forEach(attendance -> attendanceSearchMapper.upsert(attendance));
 
-		List<Integer> holiday = Arrays.asList(1, 2, 4, 5, 9, 11);
+		List<Integer> holiday = Arrays.asList(1, 2, 4, 5, 9, 11, 12);
 		attendanceFormList.getAttendanceList().stream()
 				.filter(attendance -> holiday.contains(attendance.getStatus()))
 				.filter(attendance -> attendance.getStartTime().isEmpty())
 				.filter(attendance -> attendance.getEndTime().isEmpty())
-				.forEach(attendance -> attendanceSearchMapper.insert(attendance));
+				.forEach(attendance -> attendanceSearchMapper.upsert(attendance));
 	}
   
   
@@ -252,7 +252,7 @@ public class AttendanceManagementService {
 	                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 	                LocalTime endInputTime = LocalTime.parse(endTime, formatter);
 
-	                if (startTime != null) {
+	                if (startTime != "") {
 	                    LocalTime startInputTime = LocalTime.parse(startTime, formatter);
 	                    if (endInputTime.isBefore(startInputTime)) {
 	                        FieldError startEndTime = new FieldError("attendanceFormList", "attendanceList[" + i + "].endTime", messageOutput.message("consistency"));
@@ -265,6 +265,34 @@ public class AttendanceManagementService {
 	            }
 	        }
 	    }
+	    
+	    
+		int j = 0;//不正入力のカウント
+//		int k = 0;//未入力のカウント
+//		int l = 0;//正常入力のカウント
+		for (int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
+			
+	    	if(attendanceFormList.getAttendanceList().get(i).getStatus() == 12 && attendanceFormList.getAttendanceList().get(i).getStartTime() == "" && attendanceFormList.getAttendanceList().get(i).getEndTime() == "") {
+	    		
+	    	} else if(
+	    			
+	    			(attendanceFormList.getAttendanceList().get(i).getStatus() != 12 && attendanceFormList.getAttendanceList().get(i).getStartTime() != "") 
+	    			|| (attendanceFormList.getAttendanceList().get(i).getStatus() == 1
+	    					|| attendanceFormList.getAttendanceList().get(i).getStatus() == 2
+	    					|| attendanceFormList.getAttendanceList().get(i).getStatus() == 4 ||
+	    					attendanceFormList.getAttendanceList().get(i).getStatus() == 5 ||
+	    					attendanceFormList.getAttendanceList().get(i).getStatus() == 9
+	    					|| attendanceFormList.getAttendanceList().get(i).getStatus() == 11
+	    							&& (attendanceFormList.getAttendanceList().get(i).getStartTime() != "" || attendanceFormList.getAttendanceList().get(i).getEndTime() != ""))) {
+//	    		++l;
+	    	} else {
+	    		++j;
+	    	}
+	    }
+		if(j != 0) {
+			FieldError itemInaccurate = new FieldError("attendanceFormList", "itemInaccurate", messageOutput.message("itemInaccurate"));
+            result.addError(itemInaccurate);
+		}
 	}
 }
 
