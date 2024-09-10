@@ -56,11 +56,20 @@ public class AttendanceManagementController {
 	
 	//表示ボタンの処理
 	@RequestMapping(value = "/management", params = "search", method = RequestMethod.POST)
-	public String attendanceSearch(Integer userId, String stringYears, String stringMonth, Model model,
+	public String attendanceSearch(Integer userId, String stringYearsMonth, Model model,
 			RedirectAttributes redirectAttributes, HttpSession session) {
 		
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
+		
+		String stringYears = null;
+		String stringMonth = null;
+		if(!stringYearsMonth.isEmpty()) {
+		// 年を抽出
+        stringYears = stringYearsMonth.substring(0, 4);
+        // 月を抽出
+        stringMonth = stringYearsMonth.substring(5, 7);
+		}
 		
 		try {
 			Integer years = Integer.parseInt(stringYears);
