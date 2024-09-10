@@ -84,15 +84,6 @@
 							</span>
 						</div>
 						<input type="submit" id="back" value="戻る" name="back"class="buttonSize">
-						<div class="text-danger" th:if="${double} != null">
-							<span th:text="${double}" style="color: red;"></span>
-						</div>
-						<div class="text-danger" th:if="${attendanceComplete} != null">
-							<span th:text="${attendanceComplete}" style="color: red;"></span>
-						</div>
-						<div class="text-danger" th:if="${attendanceError} != null">
-							<span th:text="${attendanceError}" style="color: red;"></span>
-						</div>
 					</div>
 				</div>
 				
@@ -131,6 +122,12 @@
 				<div th:if="${attendanceFormList} != null">
 					<div class="row m-2">
 						<div class="col-12 ml-3" >
+							<div class="text-danger" th:if="${attendanceMessage} != null">
+								<span th:text="${attendanceMessage}" style="color: red;"></span>
+							</div>
+							<div class="text-danger">
+								<span th:if="${#fields.hasErrors('itemInaccurate')}" th:errors="*{itemInaccurate}"></span>
+							</div>
 							<table class="table table-bordered border border-dark">
 								<thead>
 									<tr>

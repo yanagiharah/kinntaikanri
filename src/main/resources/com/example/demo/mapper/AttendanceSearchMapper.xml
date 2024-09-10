@@ -30,27 +30,65 @@
 		);
 </select>
 
-
-<!-- 登録 -->
-<insert id="insert">
-	insert into attendance(user_id,status,attendance_date,start_time,end_time,attendance_remarks)
-	values(
-	#{userId},
-	#{status},
-	#{attendanceDate},
-	<if test="startTime != null and startTime != ''">#{startTime}</if>
-    <if test="startTime == null or startTime == ''">NULL</if>,
-    <if test="endTime != null and endTime != ''">#{endTime}</if>
-    <if test="endTime == null or endTime == ''">NULL</if>,
-	#{attendanceRemarks})
+<!--insertする際にunique制約に引っかかるとupdateに変更-->
+<insert id="upsert">
+	INSERT INTO attendance (user_id, status, attendance_date, start_time, end_time, attendance_remarks)
+    VALUES (
+        #{userId}, 
+        #{status}, 
+        #{attendanceDate}, 
+        <choose>
+            <when test="startTime != null and startTime != ''">
+                #{startTime}
+            </when>
+            <otherwise>
+                NULL
+            </otherwise>
+        </choose>,
+        <choose>
+            <when test="endTime != null and endTime != ''">
+                #{endTime}
+            </when>
+            <otherwise>
+                NULL
+            </otherwise>
+        </choose>,
+        #{attendanceRemarks}
+    )
+    ON DUPLICATE KEY UPDATE 
+        user_id = #{userId},
+        status = #{status},
+        attendance_date = #{attendanceDate},
+        start_time = 
+        <choose>
+            <when test="startTime != null and startTime != ''">
+                #{startTime}
+            </when>
+            <otherwise>
+                NULL
+            </otherwise>
+        </choose>,
+        end_time = 
+        <choose>
+            <when test="endTime != null and endTime != ''">
+                #{endTime}
+            </when>
+            <otherwise>
+                NULL
+            </otherwise>
+        </choose>,
+        attendance_remarks = #{attendanceRemarks};
 </insert>
 
 
+
+
+
 <!-- 日付指定範囲削除 -->
-<delete id="deleteByAttendanceOfMonth">
-	delete from attendance
-	WHERE attendance.user_id = #{userId} AND attendance_date BETWEEN #{targetDate} AND #{endDate};
-</delete>
+<!--<delete id="deleteByAttendanceOfMonth">-->
+<!--	delete from attendance-->
+<!--	WHERE attendance.user_id = #{userId} AND attendance_date BETWEEN #{targetDate} AND #{endDate};-->
+<!--</delete>-->
 
 
 </mapper>
