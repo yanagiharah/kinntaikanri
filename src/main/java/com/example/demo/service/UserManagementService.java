@@ -1,33 +1,40 @@
 package com.example.demo.service;
 
-import java.util.Date;
-
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 
+import com.example.demo.Factory.UserManagementFactory;
 import com.example.demo.inter.MessageOutput;
 import com.example.demo.mapper.UsersMapper;
 import com.example.demo.model.ManagementForm;
 import com.example.demo.model.Users;
+import com.example.demo.validation.UserManagementValidation;
 
 @Service
 public class UserManagementService {
 	
-	public final UsersMapper userSearchMapper;
-	public final MessageOutput messageOutput;
+	private final UsersMapper userSearchMapper;
+	private final MessageOutput messageOutput;
+	private final DepartmentService departmentService;
+	private final UserManagementFactory usersFactory;
+	private final UserManagementValidation userManagementValidation;
 	
-	UserManagementService(UsersMapper userSearchMapper, MessageOutput messageOutput){
+	UserManagementService(UsersMapper userSearchMapper, MessageOutput messageOutput,DepartmentService departmentService,UserManagementFactory usersFactory,UserManagementValidation userManagementValidation){
 		this.userSearchMapper = userSearchMapper;
 		this.messageOutput = messageOutput;
+		this.departmentService = departmentService;
+		this.usersFactory = usersFactory;
+		this.userManagementValidation = userManagementValidation;
 	}
 	
-
-	//ユーザー管理画面 検索処理
+	/**
+	 * ユーザーデータ存在メソッド
+	 * @param 
+	 * @return users
+	 */
 	public Users selectByAccount(String userName, Integer userId) {
-		
 		Users users = new Users();
-		
 		if(userName != null) {
 			users = userSearchMapper.selectByAccount(userName, userId);
 		} else {
@@ -35,84 +42,72 @@ public class UserManagementService {
 		}
 		return users;
 	}
-
-	//ユーザー管理画面 新規登録処理
-	public void userCreate(ManagementForm managementForm) {
-		String strDate = managementForm.getStartDate();
-		Date sqlDate = java.sql.Date.valueOf(strDate);
-		Users users = new Users();
-		users.setUserId(managementForm.getUserId());
-		users.setUserName(managementForm.getUserName());
-		users.setPassword(managementForm.getPassword());
-		users.setRole(managementForm.getRole());
-		users.setDepartmentId(managementForm.getDepartmentId());
-		users.setStartDate(sqlDate);
-		userSearchMapper.insert(users);
+	/**
+	 * ユーザー名に基づいてアカウント情報を選択し、対応する {@link ManagementForm} オブジェクトを返します。
+	 * 
+	 * <p>このメソッドは、入力されたユーザー名を使用してデータベースから {@link Users} 情報を検索します。
+	 * ユーザーが見つかった場合は、そのユーザー情報を基にした {@link ManagementForm} オブジェクトを作成します。
+	 * 見つからなかった場合は、新しいアカウントを作成し、それを {@link ManagementForm} に格納します。</p>
+	 * 
+	 * @param managementForm フォームから渡されたユーザー情報
+	 * @return ユーザー情報が格納された {@link ManagementForm} オブジェクト
+	 */
+	public ManagementForm useAccountChoice(ManagementForm managementForm) {
+		ManagementForm account;
+		Users users = selectByAccount(managementForm.getUserName(), null);
+		if (users != null) {
+			account = usersFactory.dbAccount(users,departmentService.departmentSearchListUp());
+		}else {
+			account = usersFactory.newAccontCreate(managementForm.getUserName(),departmentService.departmentSearchListUp());
+		}
+		return account;
 	}
-
-	//ユーザー管理画面 更新処理
-	public void userUpdate(ManagementForm managementForm) {
-		String strDate = managementForm.getStartDate();
-		Date sqlDate = java.sql.Date.valueOf(strDate);
-		Users users = new Users();
-		users.setUserId(managementForm.getUserId());
-		users.setUserName(managementForm.getUserName());
-		users.setPassword(managementForm.getPassword());
-		users.setRole(managementForm.getRole());
-		users.setDepartmentId(managementForm.getDepartmentId());
-		users.setStartDate(sqlDate);
-		userSearchMapper.update(users);
-	}
-	
-	//ユーザー管理画面 削除処理
-	public void userDelete(ManagementForm managementForm) {
-		userSearchMapper.delete(managementForm);
-	}
-	
-	//ユーザー管理画面 登録内容エラーチェック
-	public void errorCheck(ManagementForm managementForm,BindingResult result) {
-		
-		if (managementForm.getUserName() == null ||managementForm.getUserName() == "") {
-			  FieldError userName = new FieldError(managementForm.getUserName(), "userName", messageOutput.message("requiredUserName"));
-			  result.addError(userName);
-		}
-		
-		if (!managementForm.getUserName().matches("^[^ -~｡-ﾟ]+$")) {
-			FieldError userName = new FieldError(managementForm.getUserName(), "userName", messageOutput.message("requiredZennkaku"));
-			result.addError(userName);
-		}
-		
-		if(managementForm.getPassword() == null || managementForm.getPassword() == "" ) {
-			 FieldError password = new FieldError("managementForm", "password", messageOutput.message("requiredPassword"));
-			  result.addError(password);
-		}
-		if(managementForm.getPassword().length() >= 16 ) {
-			 FieldError password = new FieldError("managementForm", "password", messageOutput.message("CharacterLimit"));
-			  result.addError(password);
-		}
-		if(managementForm.getPassword().matches(".*[^ -~｡-ﾟ]+.*")) {
-			 FieldError password = new FieldError("managementForm", "password", messageOutput.message("requiredHannkaku"));
-			 result.addError(password);
-		}
-		if(managementForm.getRole() == null||managementForm.getRole() == "") {
-			FieldError role = new FieldError("managementForm", "role", messageOutput.message("requiredRole"));
-			 result.addError(role);
-		}
-		if(managementForm.getDepartmentId() == 0) {
-			FieldError department = new FieldError("managementForm", "department", messageOutput.message("requiredDepartment"));
-			 result.addError(department);
-		}
-		if(managementForm.getUserId() == null||managementForm.getUserId() == 0) {
-			FieldError userId = new FieldError("managementForm", "userId", messageOutput.message("requiredUserId"));
-			 result.addError(userId);
-		}
-		if (!"9999/99/99".equals(managementForm.getStartDate().trim())) {
-			if(!managementForm.getStartDate().matches("^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$")|| managementForm.getStartDate() == null||managementForm.getStartDate() == ""||managementForm.getStartDate().length() != 10) {
-				FieldError startDate = new FieldError("managementForm", "startDate", messageOutput.message("startDateCheck"));
-				FieldError startDate2 = new FieldError("managementForm", "startDate", messageOutput.message("acountStopCheck"));
-				result.addError(startDate);
-				result.addError(startDate2);
+	/**
+	 * データベースのユーザー情報を選択し、ユーザーが存在しない場合は新しく作成します。
+	 * ユーザーが存在する場合、開始日が特定の値の場合に日付を更新し、メッセージを設定します。
+	 *
+	 * <p>このメソッドは、指定されたユーザーIDを使ってデータベースからユーザー情報を取得します。
+	 * ユーザーが存在しない場合は新しくユーザーを作成します。ユーザーが存在する場合、開始日が特定の
+	 * フォーマット（"9999/99/99"）であれば、その開始日を "9999-12-31" に変更し、ユーザー情報を
+	 * 更新します。メッセージをモデルに追加して、処理結果を伝えます。</p>
+	 *
+	 * @param managementForm 処理対象の {@link ManagementForm} オブジェクト
+	 * @param model 処理結果を格納するための {@link Model} オブジェクト
+	 * @return 処理結果を含む {@link Model} オブジェクト
+	 */
+	public Model dbActionchoice(ManagementForm managementForm, Model model) {
+			if ("9999/99/99".equals(managementForm.getStartDate().trim())) {
+				managementForm.setStartDate("9999-12-31");
+				userSearchMapper.userCreate(usersFactory.usersCreate(managementForm));
+			} else {
+				userSearchMapper.userCreate(usersFactory.usersCreate(managementForm));
 			}
-		}
+		return model.addAttribute("check", messageOutput.message("update", managementForm.getUserName()));
+	}
+	/**
+	 * ユーザー名の検索時に入力チェックを行い、エラーがある場合は
+	 * {@link BindingResult} にエラー情報を追加します。
+	 *
+	 * <p>このメソッドは、ユーザー名が空である、長すぎる、または全角でない場合に
+	 * エラーメッセージを設定し、エラーを管理します。</p>
+	 *
+	 * @param userName チェック対象のユーザー名
+	 * @param result エラー情報を格納するための {@link BindingResult} オブジェクト
+	 */
+	public void errorCheck(String userName,BindingResult result) {
+		userManagementValidation.errorCheck(userName,result);
+	}
+	/**
+	 * アカウントの登録時に入力チェックを行い、エラーがある場合は
+	 * {@link BindingResult} にエラー情報を追加します。
+	 *
+	 * <p>このメソッドは、formに入力された内容に対して
+	 * エラーメッセージを設定し、エラーを管理します。</p>
+	 *
+	 * @param managementForm チェック対象のアカウント内容
+	 * @param result エラー情報を格納するための {@link BindingResult} オブジェクト
+	 */
+	public void errorCheck(ManagementForm managementForm,BindingResult result) {
+		userManagementValidation.errorCheck(managementForm,result);
 	}
 }
