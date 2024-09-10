@@ -31,10 +31,24 @@
 </select>
 
 
-<!-- 登録 -->
-<insert id="insert">
-	insert into users (user_id,password, user_name, role, department_id, start_date) 
-	values(#{userId},#{password}, #{userName}, #{role}, #{departmentId}, #{startDate});
+<!-- 更新処理 -->
+<insert id="userCreate">
+	insert into users (user_id, password, user_name, role,
+	department_id, start_date)
+	values(
+	#{userId},
+	#{password},
+	#{userName},
+	#{role},
+	#{departmentId},
+	#{startDate}
+	)
+	ON DUPLICATE KEY
+	UPDATE 
+	password = #{password}, 
+	role = #{role},
+	department_id =#{departmentId}, 
+	start_date = #{startDate};
 </insert>
 
 
