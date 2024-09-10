@@ -23,30 +23,31 @@ document.addEventListener("DOMContentLoaded", function() {
 		 
 		 //登録ボタン
 		 registrationButton.disabled = !(
-			oldDepartmentValue === "" &&
-			newDepartmentValue !== "" &&
-			deletedDepartmentValue === ""
+			oldDepartmentValue === ""
+			&& newDepartmentValue !== ""
+			&& deletedDepartmentValue === ""
 		 );
 
 		 //変更ボタン
 		 changeButton.disabled = !(
-			oldDepartmentValue !== "" &&
-			newDepartmentValue !== "" &&
-			deletedDepartmentValue === "" &&
-			oldDepartmentValue !== newDepartmentValue
+			oldDepartmentValue !== ""
+			&& newDepartmentValue !== ""
+			&& deletedDepartmentValue === ""
+			&& oldDepartmentValue !== newDepartmentValue
 		 );
 		 
 		 //削除ボタン
 		 deleteButton.disabled = !(
-			oldDepartmentValue !== "" &&
-			newDepartmentValue === "" &&
-			deletedDepartmentValue === ""
+			oldDepartmentValue !== ""
+			&& newDepartmentValue === ""
+			&& deletedDepartmentValue === ""
 		 );
 
 		 //復元ボタン
-		 restoreButton.disabled = !(oldDepartmentValue === "" &&
-		 	newDepartmentValue === "" &&
-		 	deletedDepartmentValue !== ""
+		 restoreButton.disabled = !(
+			oldDepartmentValue === ""
+			&& newDepartmentValue === ""
+			&& deletedDepartmentValue !== ""
 		 );					   
 	 }
 	 

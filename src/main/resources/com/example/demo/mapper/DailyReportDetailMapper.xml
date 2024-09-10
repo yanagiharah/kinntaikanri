@@ -42,4 +42,59 @@
 		daily_report_detail_id = #{dailyReportDetailId}
 </delete>
 
+<insert id="upsert">
+	INSERT INTO attendance (daily_report_detail_id, user_id, daily_report_detail_date, daily_report_detail_time,content)
+    VALUES (
+			#{dailyReportDetailId},
+	        #{userId}, 
+	        #{dailyReportDetailDate}, 
+	        #{dailyReportDetailTime},
+	        #{content} 
+		<choose>
+			<when test="""startTime != null and startTime != ''">
+	                #{startTime}
+			</when>
+			<otherwise>
+	                NULL
+			</otherwise>
+		</choose>,
+		<choose>
+			<when test="endTime != null and endTime != ''">
+	                #{endTime}
+			</when>
+			<otherwise>
+	                NULL
+			</otherwise>
+		</choose>,
+	        #{attendanceRemarks}
+	    )
+    
+    ON DUPLICATE KEY UPDATE 
+	attendance_id = #{attendanceId}
+        user_id = #{userId},
+        status = #{status},
+        attendance_date = #{attendanceDate},
+        start_time = 
+	<choose>
+		<when test="startTime != null and startTime != ''">
+                #{startTime}
+		</when>
+		<otherwise>
+                NULL
+		</otherwise>
+	</choose>,
+    	    end_time = 
+	<choose>
+		<when test="endTime != null and endTime != ''">
+                #{endTime}
+		</when>
+		<otherwise>
+                NULL
+		</otherwise>
+	</choose>,
+        attendance_remarks = #{attendanceRemarks};
+</insert>
+
+
+
 </mapper>
