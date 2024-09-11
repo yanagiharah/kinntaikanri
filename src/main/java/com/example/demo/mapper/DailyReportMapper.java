@@ -10,7 +10,7 @@ import com.example.demo.model.DailyReportForm;
 @Mapper
 public interface DailyReportMapper {
 	
-	//日報取得
+	//日報取得c
 	public DailyReportForm getDailyReport(@Param("userId")Integer userId, @Param("dailyReportDate")LocalDate today);
 	
 	//日報登録
