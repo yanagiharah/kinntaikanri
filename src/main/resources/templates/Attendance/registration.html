@@ -151,7 +151,7 @@
 											</th:block>
 <!--											<td th:text="${#dates.format(attendance.attendanceDate, 'MM/dd')}"></td>-->
 <!--											<td th:text="${attendance.attendanceDateS}"></td>-->
-											<td th:text="|${#strings.substring(attendance.attendanceDateS,6,10)}|"></td>
+											<td th:text="|${#strings.substring(attendance.attendanceDateS,5,10)}|"></td>
 											<td th:text="${attendance.dayOfWeek}"></td>
 											<td>
 												<select id="status" th:field="*{attendanceList[__${start.index}__].status}" class="noneBox">
@@ -186,7 +186,7 @@
 											</th:block>
 <!--											これでかけない-->
 <!--											<td th:text="${#dates.format(attendance.attendanceDateS, 'MM/dd')}"></td>-->
-											<td th:text="|${#strings.substring(attendance.attendanceDateS,6,10)}|"></td>
+											<td th:text="|${#strings.substring(attendance.attendanceDateS,5,10)}|"></td>
 											<td th:text="${attendance.dayOfWeek}"></td>
 											<td>
 												<select id="status" th:field="*{attendanceList[__${start.index}__].status}" class="noneBox">

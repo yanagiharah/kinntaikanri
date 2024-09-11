@@ -19,5 +19,7 @@ public class AttendanceFormList {
 	
 	private String stringMonth;//月
 	
+	private String stringYearsMonth;
+	
 	private String itemInaccurate;//時刻が不正です。HH:mm形式の00:00～23:59の間で入力してください。をhtmlに出力するための変数。
 }
