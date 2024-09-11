@@ -237,13 +237,22 @@ public class DailyReportService {
 	 * @param dailyReportForm 日報フォームオブジェクト。
 	 */
 	private void deleteCheck(DailyReportForm dailyReportForm) {
-	    if (getDailyReportDetail(dailyReportForm.getUserId(), dailyReportForm.getDailyReportDate()) . isEmpty()) {
-	        dailyReportMapper.deleteDailyReport(dailyReportForm.getDailyReportId());
-	    } else {
-	        dailyReportMapper.updateDailyReport(dailyReportForm);
-	    }
+		if (getDailyReportDetail(dailyReportForm.getUserId(), dailyReportForm.getDailyReportDate()).isEmpty()) {
+			
+			dailyReportMapper.deleteDailyReport(dailyReportForm.getDailyReportId());
+		} else {
+			dailyReportMapper.updateDailyReport(dailyReportForm);
+		}
 	}
 
+//	if (getDailyReportDetail(dailyReportForm.getUserId(), dailyReportForm.getDailyReportDate()).isEmpty()) {
+//		
+//						dailyReportMapper.deleteDailyReport(dailyReportForm.getDailyReportId());
+//					} else {
+//						dailyReportMapper.updateDailyReport(dailyReportForm);
+//					}
+	
+	
 	/**
 	 * 日報詳細の処理を行います（INSERT、UPDATE、DELETE）。
 	 *
