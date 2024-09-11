@@ -42,59 +42,59 @@
 		daily_report_detail_id = #{dailyReportDetailId}
 </delete>
 
+<!-- 日報追加or更新 -->
 <insert id="upsert">
-	INSERT INTO attendance (daily_report_detail_id, user_id, daily_report_detail_date, daily_report_detail_time,content)
+	INSERT INTO daily_report_detail (
+		daily_report_detail_id,
+		user_id,
+		daily_report_detail_date,
+		daily_report_detail_time,
+		content
+	)
     VALUES (
-			#{dailyReportDetailId},
-	        #{userId}, 
-	        #{dailyReportDetailDate}, 
-	        #{dailyReportDetailTime},
-	        #{content} 
+		#{dailyReportDetailId},
+	    #{userId}, 
+	    #{dailyReportDetailDate}, 
 		<choose>
-			<when test="""startTime != null and startTime != ''">
-	                #{startTime}
+			 <when test="dailyReportDetailTime != null and dailyReportDetailTime != ''">
+				#{dailyReportDetailTime}
 			</when>
 			<otherwise>
-	                NULL
+				NULL
 			</otherwise>
 		</choose>,
 		<choose>
-			<when test="endTime != null and endTime != ''">
-	                #{endTime}
+			<when test="content != null and content != ''">
+				#{content}
 			</when>
 			<otherwise>
-	                NULL
+				NULL
 			</otherwise>
-		</choose>,
-	        #{attendanceRemarks}
-	    )
+		</choose>
+	)
     
     ON DUPLICATE KEY UPDATE 
-	attendance_id = #{attendanceId}
-        user_id = #{userId},
-        status = #{status},
-        attendance_date = #{attendanceDate},
-        start_time = 
-	<choose>
-		<when test="startTime != null and startTime != ''">
-                #{startTime}
-		</when>
-		<otherwise>
-                NULL
-		</otherwise>
-	</choose>,
-    	    end_time = 
-	<choose>
-		<when test="endTime != null and endTime != ''">
-                #{endTime}
-		</when>
-		<otherwise>
-                NULL
-		</otherwise>
-	</choose>,
-        attendance_remarks = #{attendanceRemarks};
+		daily_report_detail_id = #{dailyReportDetailId},
+		user_id = #{userId},
+		daily_report_detail_date = #{dailyReportDetailDate},
+		daily_report_detail_time = 
+	        <choose>
+	            <when test="dailyReportDetailTime != null and dailyReportDetailTime != ''">
+	                #{dailyReportDetailTime}
+	            </when>
+	            <otherwise>
+	                NULL
+	            </otherwise>
+	        </choose>,
+		content = 
+	        <choose>
+	            <when test="content != null and content != ''">
+	                #{content}
+	            </when>
+	            <otherwise>
+	                NULL
+	            </otherwise>
+			</choose>;
 </insert>
-
-
 
 </mapper>

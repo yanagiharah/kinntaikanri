@@ -45,6 +45,9 @@
 		daily_report_id = #{dailyReportId}
 </delete>
 
+
+
+
 </mapper>
 
 

@@ -17,11 +17,14 @@ public interface DailyReportDetailMapper {
 			@Param("dailyReportDetailDate") LocalDate dailyReportDetailDate);
 
 	//日報内容追加
-	public void insertDailyReportDetail(DailyReportDetailForm dailyReportDetailForm);
+	//public void insertDailyReportDetail(DailyReportDetailForm dailyReportDetailForm);
 
 	//日報更新
-	public void updateDailyReportDetail(DailyReportDetailForm dailyReportDetailFrom);
+	//public void updateDailyReportDetail(DailyReportDetailForm dailyReportDetailFrom);
 
+	//日報追加or更新
+	public void upsert(DailyReportDetailForm dailyReportDetailFrom);
+	
 	//日報削除
 	public void deleteDailyReportDetail(Integer dailyReportDetailId);
 }

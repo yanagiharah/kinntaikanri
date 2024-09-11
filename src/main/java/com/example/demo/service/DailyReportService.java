@@ -181,19 +181,33 @@ public class DailyReportService {
 	        insertIfNotData(dailyReportForm);
 
 	        // 日報詳細リストの更新処理
-	        for (DailyReportDetailForm dailyReportdetailForm : dailyReportForm.getDailyReportDetailForm()) {
-	            processDailyReportDetail(dailyReportdetailForm);
+	        for (DailyReportDetailForm dailyReportDetailForm : dailyReportForm.getDailyReportDetailForm()) {
+	            if(isCondition(dailyReportDetailForm)) {
+	            	dailyReportDetailMapper.upsert(dailyReportDetailForm);
+	            }
+	            if(isDeleteCondition(dailyReportDetailForm)) {
+	            	dailyReportDetailMapper.deleteDailyReportDetail(dailyReportDetailForm.getDailyReportDetailId());
+	            }
+	            	
 	        }
 
 	        // 最後に日報を削除または更新
 	       deleteCheck(dailyReportForm);
 
 	    } catch (DuplicateKeyException e) {
-	        // エラーハンドリング（例: ログの出力）
-	        System.err.println("Duplicate key exception occurred: " + e.getMessage());
+	        
 	    }
 	}
 
+	/**
+	 * UPSERTの条件を満たすかどうかをチェックします。
+	 */
+	private boolean isCondition(DailyReportDetailForm dailyReportdetailForm) {
+	    return dailyReportdetailForm.getDailyReportDetailTime() != null
+	    		&& !dailyReportdetailForm.getContent().isEmpty(); 
+	}
+	
+	
 	/**
 	 * 日報の存在確認を行い、無ければ INSERT します。
 	 *
@@ -205,46 +219,15 @@ public class DailyReportService {
 	    }
 	}
 
-	/**
-	 * 日報詳細の処理を行います（INSERT、UPDATE、DELETE）。
-	 *
-	 * @param detailForm 日報詳細フォームオブジェクト。
-	 */
-	private void processDailyReportDetail(DailyReportDetailForm detailForm) {
-	    if (isInsertCondition(detailForm)) {
-	        dailyReportDetailMapper.insertDailyReportDetail(detailForm);
-	    } else if (isUpdateCondition(detailForm)) {
-	        dailyReportDetailMapper.updateDailyReportDetail(detailForm);
-	    } else if (isDeleteCondition(detailForm)) {
-	        dailyReportDetailMapper.deleteDailyReportDetail(detailForm.getDailyReportDetailId());
-	    }
-	}
 
-	/**
-	 * INSERTの条件を満たすかどうかをチェックします。
-	 */
-	private boolean isInsertCondition(DailyReportDetailForm detailForm) {
-	    return detailForm.getDailyReportDetailId() == null
-	    		&& detailForm.getDailyReportDetailTime() != null
-	    		&& detailForm.getContent() != null;
-	}
-
-	/**
-	 * UPDATEの条件を満たすかどうかをチェックします。
-	 */
-	private boolean isUpdateCondition(DailyReportDetailForm detailForm) {
-	    return detailForm.getDailyReportDetailId() != null
-	    		&& !detailForm.getContent().isEmpty()
-	    		&& detailForm.getDailyReportDetailDate() != null;
-	}
 
 	/**
 	 * DELETEの条件を満たすかどうかをチェックします。
 	 */
-	private boolean isDeleteCondition(DailyReportDetailForm detailForm) {
-	    return detailForm.getDailyReportDetailId() != null &&
-	           detailForm.getContent().isEmpty() &&
-	           detailForm.getDailyReportDetailTime() == null;
+	private boolean isDeleteCondition(DailyReportDetailForm dailyReportDetailForm) {
+	    return dailyReportDetailForm.getDailyReportDetailId() != null
+	    		&& dailyReportDetailForm.getContent().isEmpty()
+	    		&& dailyReportDetailForm.getDailyReportDetailTime() == null;
 	}
 
 	/**
@@ -254,19 +237,38 @@ public class DailyReportService {
 	 * @param dailyReportForm 日報フォームオブジェクト。
 	 */
 	private void deleteCheck(DailyReportForm dailyReportForm) {
-	    if (getDailyReportDetail(dailyReportForm.getUserId(), dailyReportForm.getDailyReportDate()).isEmpty()) {
+	    if (getDailyReportDetail(dailyReportForm.getUserId(), dailyReportForm.getDailyReportDate()) . isEmpty()) {
 	        dailyReportMapper.deleteDailyReport(dailyReportForm.getDailyReportId());
 	    } else {
 	        dailyReportMapper.updateDailyReport(dailyReportForm);
 	    }
 	}
+
+	/**
+	 * 日報詳細の処理を行います（INSERT、UPDATE、DELETE）。
+	 *
+	 * @param detailForm 日報詳細フォームオブジェクト。
+	 */
+//	private void processDailyReportDetail(DailyReportDetailForm detailForm) {
+//	    if (isInsertCondition(detailForm)) {
+//	        dailyReportDetailMapper.insertDailyReportDetail(detailForm);
+//	    } else if (isUpdateCondition(detailForm)) {
+//	        dailyReportDetailMapper.updateDailyReportDetail(detailForm);
+//	    } else if (isDeleteCondition(detailForm)) {
+//	        dailyReportDetailMapper.deleteDailyReportDetail(detailForm.getDailyReportDetailId());
+//	    }
+//	}
+
 	
-	
-	
-	
-	
-	
-	
+
+	/**
+	 * UPDATEの条件を満たすかどうかをチェックします。
+	 */
+//	private boolean isUpdateCondition(DailyReportDetailForm detailForm) {
+//	    return detailForm.getDailyReportDetailId() != null
+//	    		&& !detailForm.getContent().isEmpty()
+//	    		&& detailForm.getDailyReportDetailDate() != null;
+//	}
 	
 	
 	
