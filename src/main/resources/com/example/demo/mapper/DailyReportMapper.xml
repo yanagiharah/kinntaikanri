@@ -45,6 +45,17 @@
 		daily_report_id = #{dailyReportId}
 </delete>
 
+<!--日報の詳細リストを持っているか -->
+<select id="check" resultType="int">
+	SELECT EXISTS (
+		SELECT 1 
+		FROM daily_report_detail 
+		WHERE
+			user_id = #{userId} 
+			AND 
+			daily_report_detail_date = #{calendarDate}
+	);
+</select>
 
 
 

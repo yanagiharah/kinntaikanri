@@ -188,14 +188,13 @@ public class DailyReportService {
 	            if(isDeleteCondition(dailyReportDetailForm)) {
 	            	dailyReportDetailMapper.deleteDailyReportDetail(dailyReportDetailForm.getDailyReportDetailId());
 	            }
-	            	
 	        }
-
 	        // 最後に日報を削除または更新
-	       deleteCheck(dailyReportForm);
-
-	    } catch (DuplicateKeyException e) {
+	        List<DailyReportDetailForm> a = dailyReportForm.getDailyReportDetailForm();
 	        
+	        DailyReportDetailForm b = a.get(0);
+	       deleteCheck(dailyReportForm, b);
+	    } catch (DuplicateKeyException e) {
 	    }
 	}
 
@@ -207,7 +206,6 @@ public class DailyReportService {
 	    		&& !dailyReportdetailForm.getContent().isEmpty(); 
 	}
 	
-	
 	/**
 	 * 日報の存在確認を行い、無ければ INSERT します。
 	 *
@@ -218,8 +216,6 @@ public class DailyReportService {
 	        dailyReportMapper.insertDailyReport(dailyReportForm);
 	    }
 	}
-
-
 
 	/**
 	 * DELETEの条件を満たすかどうかをチェックします。
@@ -236,15 +232,18 @@ public class DailyReportService {
 	 *
 	 * @param dailyReportForm 日報フォームオブジェクト。
 	 */
-	private void deleteCheck(DailyReportForm dailyReportForm) {
-		if (getDailyReportDetail(dailyReportForm.getUserId(), dailyReportForm.getDailyReportDate()).isEmpty()) {
-			
+	private void deleteCheck(DailyReportForm dailyReportForm, DailyReportDetailForm dailyReportDetailForm) {
+
+		if (0 == dailyReportMapper.check(dailyReportDetailForm.getUserId(), dailyReportDetailForm.getDailyReportDetailDate())){
 			dailyReportMapper.deleteDailyReport(dailyReportForm.getDailyReportId());
 		} else {
 			dailyReportMapper.updateDailyReport(dailyReportForm);
 		}
 	}
-
+//
+//	getDailyReportDetail(dailyReportForm.getUserId(), dailyReportForm.getDailyReportDate()).isEmpty()) {
+//			dailyReportMapper.deleteDailyReport(dailyReportForm.getDailyReportId());
+	
 //	if (getDailyReportDetail(dailyReportForm.getUserId(), dailyReportForm.getDailyReportDate()).isEmpty()) {
 //		
 //						dailyReportMapper.deleteDailyReport(dailyReportForm.getDailyReportId());
