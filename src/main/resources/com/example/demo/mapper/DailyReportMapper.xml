@@ -9,14 +9,20 @@
 	SELECT *
 	FROM daily_report
 	WHERE user_id = #{userId} 
-	and daily_report_date = #{dailyReportDate}
+		and 
+		daily_report_date = #{dailyReportDate}
 </select>
 
 <!--昨日の日報が出ているかを確認する -->
 <select id="selectYesterdayCheck" resultType="int">
-	SELECT EXISTS (SELECT 1 FROM daily_report WHERE
-	user_id = #{userId} 
-	AND daily_report_date = #{yesterday});
+	SELECT EXISTS (
+		SELECT 1 
+		FROM daily_report 
+		WHERE
+			user_id = #{userId} 
+			AND 
+			daily_report_date = #{yesterday}
+	);
 </select>
 
 <!-- 日報追加 -->
@@ -39,13 +45,13 @@
 <!-- 日報削除 -->
 <delete id="deleteDailyReport">
 	DELETE
-	FROM
-		daily_report
-	WHERE
-		daily_report_id = #{dailyReportId}
+		FROM
+			daily_report
+		WHERE
+			daily_report_id = #{dailyReportId}
 </delete>
 
-<!--日報の詳細リストを持っているか -->
+<!--日報の詳細リストを持っているかチェック -->
 <select id="check" resultType="int">
 	SELECT EXISTS (
 		SELECT 1 

@@ -25,7 +25,7 @@ public interface DailyReportMapper {
 	//昨日の日報存在確認
 	public Integer selectYesterdayCheck(Integer userId, LocalDate yesterday);
 	
-	//
+	//日報の詳細リストを持っているかチェック
 	public Integer check(Integer userId, LocalDate calendarDate);
 	
 }

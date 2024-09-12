@@ -9,7 +9,8 @@
 	SELECT *
 	FROM daily_report_detail
 	WHERE user_id = #{userId} 
-	AND daily_report_detail_date = #{dailyReportDetailDate}
+		AND
+		daily_report_detail_date = #{dailyReportDetailDate}
 </select>
 
 <!-- 日報内容追加 -->
@@ -72,7 +73,6 @@
 			</otherwise>
 		</choose>
 	)
-    
     ON DUPLICATE KEY UPDATE 
 		daily_report_detail_id = #{dailyReportDetailId},
 		user_id = #{userId},
