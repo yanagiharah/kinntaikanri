@@ -55,11 +55,13 @@
 					</div>
 					<div class="col-6" th:if="${Users.role} == 'Regular' or ${Users.role} == 'UnitManager'">
 						表示年月：
-						<input type="text" class="textBox" id="years" name="stringYears" th:value="${attendanceFormList != null? attendanceFormList.stringYears: ''}">
-						<label for="stringYears">年</label>
-						<input type="text" class="textBox" id="month" name="stringMonth" th:value="${attendanceFormList != null? attendanceFormList.stringMonth: ''}">
-						<label for="stringMonth">月</label>
+<!--						<input type="text" class="textBox" id="years" name="stringYears" th:value="${attendanceFormList != null? attendanceFormList.stringYears: ''}">-->
+<!--						<label for="stringYears">年</label>-->
+<!--						<input type="text" class="textBox" id="month" name="stringMonth" th:value="${attendanceFormList != null? attendanceFormList.stringMonth: ''}">-->
+<!--						<label for="stringMonth">月</label>-->
+						<input type="month" name="stringYearsMonth" id="stringYearsMonth">
 						<input type="submit" id="display" value="表示" name="search" class="buttonSize">
+						
 					</div>
 					<div class="col-6">
 						<div th:if="${Users.role} == 'Manager'">
@@ -149,7 +151,7 @@
 											</th:block>
 <!--											<td th:text="${#dates.format(attendance.attendanceDate, 'MM/dd')}"></td>-->
 <!--											<td th:text="${attendance.attendanceDateS}"></td>-->
-											<td th:text="|${#strings.substring(attendance.attendanceDateS,6,10)}|"></td>
+											<td th:text="|${#strings.substring(attendance.attendanceDateS,5,10)}|"></td>
 											<td th:text="${attendance.dayOfWeek}"></td>
 											<td>
 												<select id="status" th:field="*{attendanceList[__${start.index}__].status}" class="noneBox">
@@ -184,7 +186,7 @@
 											</th:block>
 <!--											これでかけない-->
 <!--											<td th:text="${#dates.format(attendance.attendanceDateS, 'MM/dd')}"></td>-->
-											<td th:text="|${#strings.substring(attendance.attendanceDateS,6,10)}|"></td>
+											<td th:text="|${#strings.substring(attendance.attendanceDateS,5,10)}|"></td>
 											<td th:text="${attendance.dayOfWeek}"></td>
 											<td>
 												<select id="status" th:field="*{attendanceList[__${start.index}__].status}" class="noneBox">
@@ -238,7 +240,8 @@
 		</div>
 	</div>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
- 
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script th:src="@{/js/Attendance.js}"></script>
 </body>
 </html>
 

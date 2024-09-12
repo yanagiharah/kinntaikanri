@@ -1,10 +1,5 @@
 package com.example.demo.controller;
 
-import java.text.SimpleDateFormat;
-import java.util.Random;
-
-import jakarta.servlet.http.HttpSession;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,6 +15,8 @@ import com.example.demo.service.CommonActivityService;
 import com.example.demo.service.DepartmentService;
 import com.example.demo.service.UserManagementService;
 
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 @RequestMapping("/user")
 public class UserManagementController {
@@ -28,113 +25,89 @@ public class UserManagementController {
 	
 	private final DepartmentService departmentService;
 
-	private final MessageOutput messageOutput;
-
 	private final ManagementForm managementForm;
 	
 	private final CommonActivityService commonActivityService;
+
 
 	UserManagementController(UserManagementService userManagementService,
 			ManagementForm managementForm, MessageOutput messageOutput, DepartmentService departmentService,
 			CommonActivityService commonActivityService) {
 		this.userManagementService = userManagementService;
 		this.managementForm = managementForm;
-		this.messageOutput = messageOutput;
 		this.departmentService = departmentService;
 		this.commonActivityService = commonActivityService;
 	}
-
+	
+	/**
+	 * ユーザー管理画面の初期表示を行います。
+	 * 
+	 * <p>セッションから {@link Users} 情報を取得し、それをモデルに追加します。また、部門情報を取得して
+	 * フォームに設定し、ユーザー管理画面を表示します。</p>
+	 * 
+	 * @param session 現在のセッション
+	 * @param model 画面に渡すデータを格納するためのモデル
+	 * @return ユーザー管理画面のビュー名
+	 */
 	@RequestMapping("/")
 	public String user(HttpSession session, Model model) {
-		Users users = (Users) session.getAttribute("Users");
-		model.addAttribute("Users", users);
+		commonActivityService.usersSession(model,session);
 		managementForm.setDepartment(departmentService.departmentSearchListUp());
 		model.addAttribute("managementForm", managementForm);
 		return "User/manegement";
 	}
-
+	/**
+	 * 検索ボタン押下時に呼び出され、ユーザー情報の検索を行います。
+	 * 
+	 * <p>フォームで入力されたユーザー名を基に、データベースからユーザー情報を検索します。エラーがある場合は、
+	 * 再度ユーザー管理画面を表示します。ユーザーが存在する場合はその情報を、存在しない場合は新しいユーザー情報を
+	 * モデルに追加して、ユーザー管理画面を表示します。</p>
+	 * 
+	 * @param managementForm ユーザー管理画面のフォームデータ
+	 * @param model 画面に渡すデータを格納するためのモデル
+	 * @param redirectAttributes リダイレクト時に渡すメッセージなどを格納するためのオブジェクト
+	 * @param result バリデーション結果
+	 * @return ユーザー管理画面のビュー名
+	 */
 	@RequestMapping(value = "/management", params = "search", method = RequestMethod.POST)
-	public String userSearch(String userName, Model model, RedirectAttributes redirectAttributes) {
-
-		if (userName == null || userName == "") {
-			redirectAttributes.addFlashAttribute("check", messageOutput.message("userName"));
-			return "redirect:/user/";
-		} else if (userName.length() >= 20) {
-			redirectAttributes.addFlashAttribute("check", messageOutput.message("userId"));
-			return "redirect:/user/";
-		}
-
-		//★★エラーチェック正しく動いているがDBのユーザー名全て半角なので入れなくなる
-		else if (!userName.matches("^[^ -~｡-ﾟ]+$")) {
-			redirectAttributes.addFlashAttribute("check", messageOutput.message("zennkaku"));
-			return "redirect:/user/";
-		}
-
-		//名前を引数にserviceクラスでリストの取得
-		Users users = userManagementService.selectByAccount(userName, null);
-		//リストがあった場合
-		if (users != null) {
-			ManagementForm managementForm = new ManagementForm();
-			managementForm.setUserId(users.getUserId());
-			managementForm.setUserName(users.getUserName());
-			managementForm.setPassword(users.getPassword());
-			managementForm.setRole(users.getRole());
-			managementForm.setDepartmentId(users.getDepartmentId());
-			managementForm.setDepartment(departmentService.departmentSearchListUp());
-			String str = new SimpleDateFormat("yyyy-MM-dd").format(users.getStartDate());
-			managementForm.setStartDate(str);
-			model.addAttribute("managementForm", managementForm);
-			return "User/manegement";
-		}
-
-		Random rand = new Random();
-		ManagementForm managementForm2 = new ManagementForm();
-		Integer randomNumber = rand.nextInt(2147483647);
-		//RandomNumberがdbにあるか確認する処理を行う
-		//dbに存在した場合再度RandomNumberの生成forぶんで繰り返す、dbに存在しない数字がでるまで
-		managementForm2.setUserId(randomNumber);
-		managementForm2.setUserName(userName);
-		managementForm2.setDepartment(departmentService.departmentSearchListUp());
-		model.addAttribute("managementForm", managementForm2);
-
+	public String userSearch(@ModelAttribute ManagementForm managementForm, Model model, RedirectAttributes redirectAttributes,BindingResult result) {
+		userManagementService.errorCheck(managementForm.getUserName(),result);
+		if (result.hasErrors()) {
+            return "User/manegement"; 
+        }
+		model.addAttribute("managementForm", userManagementService.useAccountChoice(managementForm));
 		return "User/manegement";
 	}
-
+	/**
+	 * 更新ボタン押下時に呼び出され、ユーザー情報の更新を行います。
+	 * 
+	 * <p>フォームのデータをバリデーションし、エラーがある場合は再度ユーザー管理画面を表示します。
+	 * エラーがなければ、データベースに新しいユーザーを作成または既存のユーザー情報を更新し、
+	 * 処理結果を画面に反映します。</p>
+	 * 
+	 * @param managementForm ユーザー管理画面のフォームデータ
+	 * @param result バリデーション結果
+	 * @param model 画面に渡すデータを格納するためのモデル
+	 * @return ユーザー管理画面のビュー名
+	 */
 	@RequestMapping(value = "/management", params = "insert", method = RequestMethod.POST)
 	public String userCreate(@ModelAttribute ManagementForm managementForm, BindingResult result, Model model) {
-
-		//serviceのエラーメソッド
 		userManagementService.errorCheck(managementForm, result);
-
 		if (result.hasErrors()) {
 			managementForm.setDepartment(departmentService.departmentSearchListUp());
 			return "User/manegement";
 		}
-
-		Users users = userManagementService.selectByAccount(null, managementForm.getUserId());
-
-		if ("9999/99/99".equals(managementForm.getStartDate().trim())) {
-			if (users != null) {
-				managementForm.setStartDate("9999-12-31");
-				userManagementService.userUpdate(managementForm);
-				model.addAttribute("check", messageOutput.message("update", managementForm.getUserName()));
-			} else {
-				model.addAttribute("check", messageOutput.message("missTake", managementForm.getUserName()));
-			}
-		} else {
-			if (users != null) {
-				userManagementService.userUpdate(managementForm);
-				model.addAttribute("check", messageOutput.message("update", managementForm.getUserName()));
-			} else {
-				userManagementService.userCreate(managementForm);
-				model.addAttribute("check", messageOutput.message("insert", managementForm.getUserName()));
-			}
-		}
+		userManagementService.dbActionchoice(managementForm,model);
 		managementForm.setDepartment(departmentService.departmentSearchListUp());
 		return "User/manegement";
 	}
-
-	//戻るボタン
+	/**
+	 * 戻るボタン押下時メニュー画面に遷移
+	 * @param managementForm ユーザー管理画面のフォームデータ
+	 * @param result バリデーション結果
+	 * @param model 画面に渡すデータを格納するためのモデル
+	 * @return メニュー画面
+	 */
 	@RequestMapping(value = "/management", params = "back", method = RequestMethod.POST)
 	public String back(Model model, HttpSession session) {
 		commonActivityService.backMenu(model, session);
