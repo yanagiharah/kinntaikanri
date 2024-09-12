@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,6 +21,7 @@ public class UserManagementService {
 	private final DepartmentService departmentService;
 	private final UserManagementFactory usersFactory;
 	private final UserManagementValidation userManagementValidation;
+	private final PasswordEncoder passwordEncoder;
 	
 	UserManagementService(UsersMapper userSearchMapper, MessageOutput messageOutput,DepartmentService departmentService,UserManagementFactory usersFactory,UserManagementValidation userManagementValidation){
 		this.userSearchMapper = userSearchMapper;
@@ -26,6 +29,7 @@ public class UserManagementService {
 		this.departmentService = departmentService;
 		this.usersFactory = usersFactory;
 		this.userManagementValidation = userManagementValidation;
+		this.passwordEncoder = new BCryptPasswordEncoder();
 	}
 	
 	/**
@@ -76,12 +80,13 @@ public class UserManagementService {
 	 * @return 処理結果を含む {@link Model} オブジェクト
 	 */
 	public Model dbActionchoice(ManagementForm managementForm, Model model) {
-			if ("9999/99/99".equals(managementForm.getStartDate().trim())) {
-				managementForm.setStartDate("9999-12-31");
-				userSearchMapper.userCreate(usersFactory.usersCreate(managementForm));
-			} else {
-				userSearchMapper.userCreate(usersFactory.usersCreate(managementForm));
-			}
+		managementForm.setPassword(passwordEncoder.encode(managementForm.getPassword()));
+		if ("9999/99/99".equals(managementForm.getStartDate().trim())) {
+			managementForm.setStartDate("9999-12-31");
+			userSearchMapper.userCreate(usersFactory.usersCreate(managementForm));
+		} else {
+			userSearchMapper.userCreate(usersFactory.usersCreate(managementForm));
+		}
 		return model.addAttribute("check", messageOutput.message("update", managementForm.getUserName()));
 	}
 	/**

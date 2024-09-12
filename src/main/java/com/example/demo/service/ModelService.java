@@ -29,10 +29,8 @@ public class ModelService {
 	public Model departmentNameUpdateModel(Integer departmentNameEqualCheck, RedirectAttributes redirectAttributes) {
 		if(departmentNameEqualCheck == 1) {
 			redirectAttributes.addFlashAttribute("departmentMessage", messageOutput.message("updateNameSuccess"));
-		}else if(departmentNameEqualCheck == 0){
-			redirectAttributes.addFlashAttribute("departmentErrorMessage", messageOutput.message("updateNameOverlapping"));
 		}else {
-			redirectAttributes.addFlashAttribute("departmentErrorMessage", messageOutput.message("updateNameSimilar"));
+			redirectAttributes.addFlashAttribute("departmentErrorMessage", messageOutput.message("updateNameOverlapping"));
 		}
 		return redirectAttributes;
 	}
