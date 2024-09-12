@@ -21,6 +21,14 @@ document.addEventListener("DOMContentLoaded", function() {
 		 const newDepartmentValue = checkNewDepartment.value.trim();
 		 const deletedDepartmentValue = checkDeletedDepartment.value.trim();
 		 
+		 // 文字数オーバーチェック
+		     if (newDepartmentValue.length > 20) {
+		         document.getElementById("error-message").innerHTML = "部署名は20文字以内で入力してください。";
+		         registrationButton.disabled = true;
+		         changeButton.disabled = true;
+		     } else {
+		         document.getElementById("error-message").innerHTML = "";
+		 
 		 //登録ボタン
 		 registrationButton.disabled = !(
 			oldDepartmentValue === "" &&
@@ -35,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function() {
 			deletedDepartmentValue === "" &&
 			oldDepartmentValue !== newDepartmentValue
 		 );
-		 
+		 }
 		 //削除ボタン
 		 deleteButton.disabled = !(
 			oldDepartmentValue !== "" &&
