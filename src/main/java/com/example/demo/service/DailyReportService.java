@@ -44,7 +44,9 @@ public class DailyReportService {
 	 * @return 空or登録済みの日報フォームオブジェクト
 	 */
 	public DailyReportForm initialSet(Users users, String date) {
+		
 	    Integer userId = users.getUserId();
+	    
 		LocalDate calendarDate = (date == null)
 				? LocalDate.now()
 				: LocalDate.parse(date);
@@ -55,6 +57,7 @@ public class DailyReportService {
 	    
 	    dailyReportForm.setDailyReportDetailForm(dailyReportDetailForm);
 	    dailyReportForm.setUserId(userId);
+	    
 	    return dailyReportForm;
     }
 	
@@ -217,7 +220,9 @@ public class DailyReportService {
 	 * @return 昨日の日報のステータス
 	 */
 	public Integer checkYesterdayDailyReport(Integer userId, LocalDate yesterday) {
+		
 		Integer checkDailyReport = dailyReportMapper.selectYesterdayCheck(userId, yesterday);
+		
 		return checkDailyReport;
 	}
 }

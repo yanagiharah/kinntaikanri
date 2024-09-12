@@ -14,7 +14,8 @@ public interface DailyReportDetailMapper {
 	//日報詳細取得
 	public List<DailyReportDetailForm> getDailyReportDetail(
 			@Param("userId") Integer userId,
-			@Param("dailyReportDetailDate") LocalDate dailyReportDetailDate);
+			@Param("dailyReportDetailDate") LocalDate dailyReportDetailDate
+	);
 
 	//日報追加or更新
 	public void upsert(DailyReportDetailForm dailyReportDetailFrom);
