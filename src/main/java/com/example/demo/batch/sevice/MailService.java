@@ -85,7 +85,6 @@ public class MailService{
 	/**
 	 * このメソッドは先月の勤怠が未提出であることをメールでお知らせするメソッドです。
 	 * 「setTo」で宛先の一覧（メールアドレスの配列）を指定しています。
-	 * 
 	 * 宛先 レギュラー権限かつ勤怠未提出者
 	 * 内容 〆切を過ぎていることを知らせる
 	 */
@@ -297,7 +296,6 @@ public class MailService{
 		
 		return unitmanagerMailList.toArray(new String[0]);
 	}
-	
 	
 	/**
 	 * このメソッドはエラーが発生したことメールするメソッドです
