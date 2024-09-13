@@ -38,7 +38,5 @@ public class Attendance {
 	private Date endDate;
 	
 	
-	
-	
 //	private Date status;
 }

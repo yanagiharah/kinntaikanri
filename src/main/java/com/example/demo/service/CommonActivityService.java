@@ -25,9 +25,10 @@ public class CommonActivityService {
 		this.attendanceManagementService = attendanceManagementService;
 		this.messageOutput = messageOutput;
 	}
-	
+
+
 	//Usersセッションに詰める
-	public Model usersSession(Model model, HttpSession session) {
+	public Model usersModelSession(Model model, HttpSession session) {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
 		return model;
@@ -35,7 +36,8 @@ public class CommonActivityService {
 	
 	//メニュー画面に戻る挙動(アカウント情報をmodelに詰めてメニュー画面へ遷移)
 	public Model backMenu(Model model, HttpSession session) {
-		Users users = (Users) session.getAttribute("Users");
+		 usersModelSession(model,session);
+		 Users users = (Users) model.getAttribute("Users");
 		model.addAttribute("Users", users);
 		if ("Regular".equals(users.getRole()) || "UnitManager".equals(users.getRole())) {
 			LocalDate today = LocalDate.now();
