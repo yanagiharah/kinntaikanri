@@ -3,6 +3,7 @@ package com.example.demo.inter;
 import java.util.Locale;
 
 import org.springframework.context.MessageSource;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,4 +26,12 @@ public class MessageOutput {
 		String message= messageSource.getMessage(messageName, new String[] { userName },Locale.getDefault());
 		return message;
 	}
+	
+	// メール専用メッセージ文の生成
+    public String mailMessage(String messageName) {
+        ResourceBundleMessageSource mailMessageSource = new ResourceBundleMessageSource();
+        mailMessageSource.setBasename("mail-messages");
+        mailMessageSource.setDefaultEncoding("UTF-8");
+        return mailMessageSource.getMessage(messageName, null, Locale.getDefault());
+    }
 }

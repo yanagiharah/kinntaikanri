@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace = "com.example.demo.mapper.CatchForgotMapper">
+
+<!-- 勤怠未提出者の名前一覧を取得 -->
+<select id = "getForgotAttendanceName"
+		 resultType = "string">
+
+	SELECT user_name
+	FROM users
+	WHERE role != 'Admin'
+	AND user_id NOT IN (
+    	SELECT user_id
+    	FROM monthly_attendance_req
+    	WHERE target_year_month = #{firstDayOfLastMonth}
+    );
+</select>
+
+<!-- 勤怠未提出者のメールアドレス一覧を取得 -->
+<select id = "getForgotAttendanceMail"
+		 resultType = "string">
+
+	SELECT mail
+	FROM users
+	WHERE role != 'Admin'
+	AND user_id NOT IN (
+    	SELECT user_id
+    	FROM monthly_attendance_req
+    	WHERE target_year_month = #{firstDayOfLastMonth}
+    );
+</select>
+
+<!-- ユニットマネージャーのメールアドレス一覧を取得 -->
+<select id = "getUnitManagerMail"
+		 resultType = "string">
+		 
+	SELECT mail
+	FROM users
+	WHERE role = 'UnitManager'
+	
+</select>
+
+<!-- マネージャーのメールアドレス一覧を取得 -->
+<select id = "getManagerMail"
+		 resultType = "string">
+		 
+	SELECT mail
+	FROM users
+	WHERE role = 'Manager'
+	
+</select>
+
+</mapper>
