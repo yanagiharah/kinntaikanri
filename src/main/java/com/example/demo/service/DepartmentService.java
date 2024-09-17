@@ -18,40 +18,28 @@ public class DepartmentService {
 	
 		//ユーザー管理画面起動時の部署プルダウンに適用させる為、部署管理画面に部署を表示させる為に取得
 		public List<Department> departmentSearchListUp() {
-			List<Department> department = departmentMapper.selectDepartment();
-			return department;
+			return departmentMapper.selectDepartment();
 		}
 		
 		//部署管理画面の削除済み部署欄に表示させる為に取得
 		public List<Department> deleteDepartmentSearchListUp() {
-			List<Department> department = departmentMapper.selectDeleteDepartment();
-			return department;
+			return departmentMapper.selectDeleteDepartment();
 		}
-		
 		
 		//登録
 		public Integer departmentCheckInsert(DepartmentForm departmentForm) {
-			Integer overlappingDepartmentCheck = null;
-				overlappingDepartmentCheck = departmentMapper.insertDepartment(departmentForm);
-			return overlappingDepartmentCheck;
+			return departmentMapper.insertDepartment(departmentForm);
 		}
 		
-		//新名前と旧名前を比較後に名前変更
+		//旧名前を新名前に変更
 		public Integer departmentNameUpdate(DepartmentForm departmentForm) {
-			Integer overlappingDepartmentCheck = null;
-			if(!departmentForm.getNewDepartmentName().equals(departmentForm.getOldDepartmentName())) {
-				//0or1が返される。0はテーブルのデータに新部署名が存在したので変更していない。1はテーブルのデータに新部署名が存在しなかったので変更した。
-				overlappingDepartmentCheck = departmentMapper.updateDepartmentName(departmentForm);
-			}else {
-				//2は旧部署名と新部署名が全く一緒の時
-				overlappingDepartmentCheck = 2;
-			}
-			return overlappingDepartmentCheck;
+			//0or1が返される。0はテーブルのデータに新部署名が存在したので変更していない。1はテーブルのデータに新部署名が存在しなかったので変更した。
+			return departmentMapper.updateDepartmentName(departmentForm);
 		}
 		
 		//部署無効化（削除）更新
 		public void departmentDeactiveUpdate(DepartmentForm departmentForm) {
-				departmentMapper.updateDepartmentDeactive(departmentForm);
+			departmentMapper.updateDepartmentDeactive(departmentForm);
 		}
 		
 		//無効（削除済み）部署を有効化更新。

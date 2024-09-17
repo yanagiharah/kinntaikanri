@@ -32,6 +32,9 @@
 			<div th:if="${CheckDailyReport}" class="alert alert-warning" role="alert">
 				<p th:text="${CheckDailyReport}"></p>
 			</div>
+			<div th:if="${monthlyAttendanceStatusIsThree}" class="alert alert-warning" role="alert">
+				<p th:text="${monthlyAttendanceStatusIsThree}"></p>
+			</div>
 			<div class="d-flex align-items-center justify-content-center " style="padding:300px;">		
 <!--					レギュラー＆ユニットマネージャー用-->
 					<div th:if="${Users.role=='Regular'||Users.role=='UnitManager'}">
