@@ -120,7 +120,6 @@ public class AttendanceManagementService {
 }
 
 
-
 //勤怠テーブルのデータを物理削除
 //public void attendanceDelete(AttendanceFormList attendanceFormList) {
 //	attendanceSearchMapper.deleteByAttendanceOfMonth(attendanceFormList.getAttendanceList().get(0).getUserId(),
