@@ -119,7 +119,7 @@ public class AttendanceManagementService {
 	}
 }
 
-
+//サンプル変更
 
 //勤怠テーブルのデータを物理削除
 //public void attendanceDelete(AttendanceFormList attendanceFormList) {
