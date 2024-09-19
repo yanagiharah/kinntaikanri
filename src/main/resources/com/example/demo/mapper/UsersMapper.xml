@@ -41,6 +41,13 @@
 	);
 </select>
 
+<!-- システム障害発生時にAdminのリストを取得 -->
+<select id="selectAdmin" resultType="com.example.demo.model.Users">
+	SELECT * 
+	FROM users 
+    WHERE role = 'Admin'
+</select>
+
 
 <!-- 更新処理 -->
 <insert id="userCreate">

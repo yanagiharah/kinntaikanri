@@ -74,5 +74,20 @@ public class EmailService {
 				.map(Users::getUserName)
 				.collect(Collectors.joining(", "));
 	}
+	
+	// エラーログを送信するメソッド
+	public void sendErrorLogToUsers(List<Users> usersList, String errorLog) {
+		String subject = messageSource.getMessage("AdminSubject", null, Locale.getDefault());
+	    for (Users user : usersList) {
+	        if (user.getAddress() != null && !user.getAddress().isEmpty()) {
+	            try {
+	                sendEmail(user.getAddress(), subject, errorLog);
+	            } catch (Exception e) {
+	                // エラーログを記録し、次のユーザーに進む
+	                e.printStackTrace();
+	            }
+	        }
+	    }
+	}
 
 }

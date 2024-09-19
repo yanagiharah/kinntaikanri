@@ -35,5 +35,10 @@ public interface UsersMapper {
 	 * 月次勤怠の未提出者を取得
 	 */
 	List<Users> selectMonthlyAttendanceNotSubmittedUsers(Date lastMonth);
+	
+	/**
+	 * 月次勤怠の未提出者を取得
+	 */
+	List<Users> selectAdmin();
 
 }

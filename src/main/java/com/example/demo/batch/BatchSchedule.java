@@ -13,12 +13,12 @@ public class BatchSchedule {
         this.emailService = emailService;
     }
     
-    @Scheduled(cron = "0 0 9 3 * ?")
+    @Scheduled(cron = "0 0 6 3 * ?")
     public void sendEmailOn3rd() {
         emailService.monthlyAttendanceNotApplied();
     }
 
-    @Scheduled(cron = "0 0 9 5 * ?")
+    @Scheduled(cron = "0 0 6 5 * ?")
     public void sendEmailOn5th() {
         emailService.monthlyAttendanceNotApplied();
     }
