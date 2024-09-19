@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -7,17 +9,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.example.demo.model.Users;
 import com.example.demo.service.CommonActivityService;
 
-import jakarta.servlet.http.HttpSession;
-
 @Controller
 @RequestMapping("/menu")
 public class MenuController {
 
 	private final CommonActivityService commonActivityService;
-
+	
 	MenuController(CommonActivityService commonActivityService) {
 		this.commonActivityService = commonActivityService;
-	}
+		}
 
 	@RequestMapping("")
 	public String authorityDetermining(HttpSession session, Model model) {

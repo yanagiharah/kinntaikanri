@@ -26,6 +26,10 @@
 	SELECT * FROM monthly_attendance_req WHERE target_year_month = DATE_FORMAT(#{targetYearMonth}, '%Y-%m-%d') AND user_id = #{userId};
 </select>
 
+<!-- 指定された月の月次勤怠status状況確認 -->
+<select id ="selectMonthlyAttendanceReq">
+	SELECT EXISTS (SELECT 1 FROM monthly_attendance_req WHERE status=1 and target_year_month = DATE_FORMAT(#{targetYearMonth}, '%Y-%m-%d'));
+</select>
 
 <!-- 月次勤怠申請の承認申請時にデータを追加 -->
 <insert id="insertMonthlyAttendanceReq">
