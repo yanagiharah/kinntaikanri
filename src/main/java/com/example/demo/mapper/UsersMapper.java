@@ -1,5 +1,8 @@
 package com.example.demo.mapper;
 
+import java.util.Date;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -27,5 +30,10 @@ public interface UsersMapper {
 	 * ログイン時のアカウント存在チェック
 	 */
 	Users loginCheck(@Param("userId")Integer userId);
+	
+	/**
+	 * 月次勤怠の未提出者を取得
+	 */
+	List<Users> selectMonthlyAttendanceNotSubmittedUsers(Date lastMonth);
 
 }
