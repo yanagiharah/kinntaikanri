@@ -59,12 +59,8 @@ public class CommonActivityService {
 				model.addAttribute("CheckAttendance", messageOutput.message("checkAttendance"));
 			}
 			
-			// 現在の日付を取得
-			LocalDate now = LocalDate.now();
-			// 先月の1日を取得
-			LocalDate firstDayOfLastMonth = now.minusMonths(1).withDayOfMonth(1);
-			// Date型に変換
-			Date firstDayOfLastMonthDate = Date.from(firstDayOfLastMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
+			//先月の一日をDate型で取得
+			Date firstDayOfLastMonthDate = oneDayLastMonth();
 			//先月のmonthlyAttendanceReqを変数に詰める
 			MonthlyAttendanceReq monthlyAttendanceReq = monthlyAttendanceReqMapper.selectTargetYearMonthStatus(firstDayOfLastMonthDate, users.getUserId());
 			//先月のmonthlyAttendanceReqが存在し、かつ月次勤怠承認状況をあらわすstatusが３（却下）のとき、処理メニュー画面にメッセージを表示させる。
@@ -73,5 +69,15 @@ public class CommonActivityService {
 			}
 		}
 		return model;
+	}
+	
+	public Date oneDayLastMonth() {
+		// 現在の日付を取得
+		LocalDate now = LocalDate.now();
+		// 先月の1日を取得
+		LocalDate firstDayOfLastMonth = now.minusMonths(1).withDayOfMonth(1);
+		// Date型に変換
+		Date firstDayOfLastMonthDate = Date.from(firstDayOfLastMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
+		return firstDayOfLastMonthDate;
 	}
 }

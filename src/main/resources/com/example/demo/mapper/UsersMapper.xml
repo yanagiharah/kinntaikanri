@@ -30,6 +30,17 @@
     WHERE user_id = #{userId}
 </select>
 
+<!-- 月次勤怠の未提出者アドレスと名前を取得 -->
+<select id="selectMonthlyAttendanceNotSubmittedUsers" resultType="com.example.demo.model.Users">
+	SELECT DISTINCT *
+	FROM users
+	WHERE user_id NOT IN (
+	SELECT user_id
+	FROM monthly_attendance_req
+	WHERE target_year_month = #{lastMonth}
+	);
+</select>
+
 
 <!-- 更新処理 -->
 <insert id="userCreate">

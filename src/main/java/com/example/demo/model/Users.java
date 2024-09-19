@@ -24,6 +24,10 @@ public class Users implements Serializable{
 	
 	private Date startDate;
 	
+	private String address;
+	
+	private String tel;
+	
 	private Integer  status;//承認状況
 	
 
