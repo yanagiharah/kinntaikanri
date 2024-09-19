@@ -26,11 +26,15 @@ public class CommonActivityService {
 	
 	private final MonthlyAttendanceReqMapper monthlyAttendanceReqMapper;
 	
-	CommonActivityService(DailyReportService dailyReportService,AttendanceManagementService attendanceManagementService,MessageOutput messageOutput, MonthlyAttendanceReqMapper monthlyAttendanceReqMapper){
+	private final ModelService modelService;
+	
+	CommonActivityService(DailyReportService dailyReportService,AttendanceManagementService attendanceManagementService,MessageOutput messageOutput, 
+			MonthlyAttendanceReqMapper monthlyAttendanceReqMapper,ModelService modelService){
 		this.dailyReportService = dailyReportService;
 		this.attendanceManagementService = attendanceManagementService;
 		this.messageOutput = messageOutput;
 		this.monthlyAttendanceReqMapper = monthlyAttendanceReqMapper;
+		this.modelService=modelService;
 	}
 
 
@@ -67,6 +71,13 @@ public class CommonActivityService {
 			if(monthlyAttendanceReq != null && monthlyAttendanceReq.getStatus() == 3) {
 				model.addAttribute("monthlyAttendanceStatusIsThree",messageOutput.message("monthlyAttendanceStatusIsThree"));
 			}
+		}
+		
+		if ("Manager".equals(users.getRole())) {
+			Date lastMonth = oneDayLastMonth();
+			// データベースから月次出席情報を取得
+			Integer attendanceReq = monthlyAttendanceReqMapper.selectMonthlyAttendanceReq(lastMonth);
+			modelService.monthlyAttendanceIsSentInsertModel(attendanceReq, model);
 		}
 		return model;
 	}

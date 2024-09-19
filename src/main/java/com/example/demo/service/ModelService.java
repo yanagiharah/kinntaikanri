@@ -46,4 +46,11 @@ public class ModelService {
 		redirectAttributes.addFlashAttribute("departmentMessage", messageOutput.message("activeSuccess"));
 		return redirectAttributes;
 	}
+	//先月の月次勤怠があればモデルに詰めてマネージャーの処理メニュー画面に表示
+	public Model monthlyAttendanceIsSentInsertModel(Integer attendanceReq, Model model) {
+		if (attendanceReq == 1) {
+			model.addAttribute("monthlyAttendanceStatusIsSent", messageOutput.message("monthlyAttendanceStatusIsSent"));
+        }
+		return model;
+	}
 }
