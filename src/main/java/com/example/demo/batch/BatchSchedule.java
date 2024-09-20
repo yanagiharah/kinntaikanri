@@ -22,5 +22,10 @@ public class BatchSchedule {
     public void sendEmailOn5th() {
         emailService.monthlyAttendanceNotApplied();
     }
+    
+    @Scheduled(cron = "0 0 17 1-5 * ?", zone = "Asia/Tokyo")
+    public void sendEmailMonthlyAttendanceReq() {
+    	emailService.monthlyAttendanceReq();
+    }
 
 }

@@ -48,6 +48,13 @@
     WHERE role = 'Admin'
 </select>
 
+<!-- 月次勤怠の提出があった場合（1～5日の間のみ）にManagerのリストを取得 -->
+<select id="selectManager" resultType="com.example.demo.model.Users">
+	SELECT * 
+	FROM users 
+    WHERE role = 'Manager'
+</select>
+
 
 <!-- 更新処理 -->
 <insert id="userCreate">
