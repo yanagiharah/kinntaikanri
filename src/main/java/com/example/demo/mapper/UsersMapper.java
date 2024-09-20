@@ -37,8 +37,13 @@ public interface UsersMapper {
 	List<Users> selectMonthlyAttendanceNotSubmittedUsers(Date lastMonth);
 	
 	/**
-	 * 月次勤怠の未提出者を取得
+	 * システム障害発生時にAdminのリストを取得
 	 */
 	List<Users> selectAdmin();
+	
+	/**
+	 * 月次勤怠の提出があった場合（1～5日の間のみ）にManagerのリストを取得
+	 */
+	List<Users> selectManager();
 
 }

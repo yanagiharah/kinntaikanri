@@ -12,6 +12,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.mapper.MonthlyAttendanceReqMapper;
 import com.example.demo.mapper.UsersMapper;
 import com.example.demo.model.Users;
 
@@ -21,12 +22,15 @@ public class EmailService {
     private final UsersMapper usersMapper;
     private final MessageSource messageSource;
     private final CommonActivityService commonActivityService;
+    private final MonthlyAttendanceReqMapper monthlyAttendanceReqMapper;
+    
 
-    public EmailService(JavaMailSender mailSender, UsersMapper usersMapper, MessageSource messageSource, CommonActivityService commonActivityService) {
+    public EmailService(JavaMailSender mailSender, UsersMapper usersMapper, MessageSource messageSource, CommonActivityService commonActivityService, MonthlyAttendanceReqMapper monthlyAttendanceReqMapper) {
         this.mailSender = mailSender;
         this.usersMapper = usersMapper;
         this.messageSource = messageSource;
         this.commonActivityService = commonActivityService;
+        this.monthlyAttendanceReqMapper = monthlyAttendanceReqMapper;
     }
     
     public void sendEmail(String to, String subject, String text) {
@@ -89,5 +93,22 @@ public class EmailService {
 	        }
 	    }
 	}
+	
+	public void monthlyAttendanceReq() {
+		//先月の1日を取ってくるメソッド
+		Date firstDayOfLastMonthDate = commonActivityService.oneDayLastMonth();
+		// 先月の月次勤怠に承認待ちがあるかを確認（0 or 1）
+        Integer approvalStatus = monthlyAttendanceReqMapper.selectMonthlyAttendanceReq(firstDayOfLastMonthDate); 
+        if (approvalStatus != null && approvalStatus == 1) {
+        	// ここでUsersのManagerリストを取得
+            List<Users> usersList = usersMapper.selectManager(); 
+            for (Users user : usersList) {
+            	//messages.propertiesから件名と本文を取ってくる
+            	String subject = messageSource.getMessage("ManagerSubject", null, Locale.getDefault());
+            	String text = messageSource.getMessage("ManagerText", null, Locale.getDefault());
+                sendEmail(user.getAddress(), subject, text);
+            }
+        }
+    }
 
 }
