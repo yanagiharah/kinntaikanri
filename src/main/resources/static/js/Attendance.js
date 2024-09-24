@@ -29,3 +29,25 @@ function setYearsMonth() {
         inputElement.value = yearsMonth;
     }
 }
+
+function confirmSubmission(event) {
+	var userRoleElement=event.target;
+	var userRole=userRoleElement ? userRoleElement.getAttribute('role') : null;
+	var id = userRoleElement ? userRoleElement.getAttribute('id') : null;
+	var message="";
+	
+	if (userRole == 'Regular' || userRole =='UnitManager') {
+	            message = "データを送信しますか？";
+	        } else if (userRole == 'Manager' && id=='reject') {
+	            message = "本当に却下しますか？";
+	        } else if (userRole == 'Manager' && id=='approve'){
+	            message = "承認しますか？";
+			} else{
+				//処理なし
+	        }
+	
+    var confirmation = confirm(message);
+    if (!confirmation) {
+        event.preventDefault(); // データ送信をキャンセル
+    }
+ }

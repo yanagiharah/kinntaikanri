@@ -66,10 +66,10 @@ public class AttendanceManagementService {
 		return attendanceFormList;
 	}
 
-	//更新用のAttendanceFormの生成メソッド
-	public AttendanceFormList updateAttendanceFormCreate(AttendanceFormList attendanceFormList, Integer usreId) {
+	//更新用のAttendanceFormの生成メソッド     ・9/24、70,73行目usreIdをuserIdに修正
+	public AttendanceFormList updateAttendanceFormCreate(AttendanceFormList attendanceFormList, Integer userId) {
 		AttendanceFormList updateAttendanceFormEntity = attendanceFactory
-				.updateAttendanceFormCreate(attendanceFormList, usreId);
+				.updateAttendanceFormCreate(attendanceFormList, userId);
 		return updateAttendanceFormEntity;
 	}
 
@@ -80,6 +80,7 @@ public class AttendanceManagementService {
 		attendanceFormList.getAttendanceList().stream()
 				.filter(attendance -> workDay.contains(attendance.getStatus()))
 				.filter(attendance -> !attendance.getStartTime().isEmpty())
+				.filter(attendance -> !attendance.getEndTime().isEmpty())   //holiday側にあってworkDay側になかったので追加。処理次第でないほうがいいかも
 				.forEach(attendance -> attendanceSearchMapper.upsert(attendance));
 
 		List<Integer> holiday = Arrays.asList(1, 2, 4, 5, 9, 11, 12);
@@ -92,26 +93,33 @@ public class AttendanceManagementService {
   
 	//勤怠登録画面で承認申請ボタンを有効にするかを決める
 	public void requestActivityCheck(AttendanceFormList attendanceFormList) {
-		for (int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
-			
-			//条件1 ステータスに記入があり、出勤退勤がnullじゃない場合
-			if (attendanceFormList.getAttendanceList().get(i).getStatus() != 12
-					&& attendanceFormList.getAttendanceList().get(i).getStartTime() != null
-					&& attendanceFormList.getAttendanceList().get(i).getEndTime() != null) {
-				attendanceFormList.setRequestActivityCheck(true);
-			} else {
-				attendanceFormList.setRequestActivityCheck(false);
-				break;
-			}
-			
-			//条件2 ステータスに記入があり、出勤のみ記入がある場合
-			if (attendanceFormList.getAttendanceList().get(i).getStatus() != 12
-					&& attendanceFormList.getAttendanceList().get(i).getStartTime() != ""
-					&& attendanceFormList.getAttendanceList().get(i).getEndTime() == "") {
-				attendanceFormList.setRequestActivityCheck(false);
-				break;
-			}
-		}
+	    List<Integer> workDay = Arrays.asList(0, 3, 6, 7, 8, 10);
+	    List<Integer> holiday = Arrays.asList(1, 2, 4, 5, 9, 11, 12);
+
+	    for (int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
+	        Attendance attendance = attendanceFormList.getAttendanceList().get(i);
+	        String startTime = attendance.getStartTime();
+	        String endTime = attendance.getEndTime();
+	        Integer status = attendance.getStatus();
+
+	        // 条件1 ステータスがworkDayに含まれており、出勤退勤がnullまたは空文字でない場合
+	        if (workDay.contains(status)
+	                && startTime != null && !startTime.isEmpty()
+	                && endTime != null && !endTime.isEmpty()) {
+	            attendanceFormList.setRequestActivityCheck(true);
+	        } 
+	        // 条件2 ステータスがholidayに含まれており、出勤退勤がnullまたは空文字の場合
+	        else if (holiday.contains(status)
+	                && (startTime == null || startTime.isEmpty())
+	                && (endTime == null || endTime.isEmpty())) {
+	            attendanceFormList.setRequestActivityCheck(true);
+	        } 
+	        // それ以外の場合
+	        else {
+	            attendanceFormList.setRequestActivityCheck(false);
+	            break;
+	        }
+	    }
 	}
 	//勤怠登録のエラーチェック
 	public void errorCheck(AttendanceFormList attendanceFormList, BindingResult result) {
