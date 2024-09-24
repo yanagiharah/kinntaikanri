@@ -29,13 +29,13 @@ public class AttendanceFactory {
 		return attendanceFormList;
 	}
 	
-	//更新用のAttendanceFormの生成メソッド
-	public AttendanceFormList  updateAttendanceFormCreate(AttendanceFormList attendanceFormList ,Integer usreId){
+	//更新用のAttendanceFormの生成メソッド・9/24、33,38行目usreIdをuserIdに修正
+	public AttendanceFormList  updateAttendanceFormCreate(AttendanceFormList attendanceFormList ,Integer userId){
 		for(int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {  
 			String inputDate = attendanceFormList.getAttendanceList().get(i).getAttendanceDateS();
 			String conversion = inputDate.replace("/","-");
 			attendanceFormList.getAttendanceList().get(i).setAttendanceDate(java.sql.Date.valueOf(conversion));
-			attendanceFormList.getAttendanceList().get(i).setUserId(usreId);
+			attendanceFormList.getAttendanceList().get(i).setUserId(userId);
 		  }
 		return attendanceFormList;
 	}
