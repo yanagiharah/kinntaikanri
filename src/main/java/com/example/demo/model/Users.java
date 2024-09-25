@@ -20,15 +20,29 @@ public class Users implements Serializable{
 	
 	private String role;
 	
+	//部署ID
 	private Integer departmentId;
 	
+	//利用開始可能日
 	private Date startDate;
 	
+	//メールアドレス
 	private String address;
 	
+	//電話番号
 	private String tel;
 	
-	private Integer  status;//承認状況
+	//承認状況
+	private Integer  status;
+	
+	//トークン
+	private String resetToken;
+	
+	//トークンの有効期限
+	private Date tokenExpiryDate;
+	
+	//トークンの有効期限がOKかどうか
+	private Boolean tokenExpirationDateCheck;
 	
 
 }

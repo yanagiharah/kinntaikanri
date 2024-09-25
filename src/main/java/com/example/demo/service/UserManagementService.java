@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import java.util.Date;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,20 +18,22 @@ import com.example.demo.validation.UserManagementValidation;
 @Service
 public class UserManagementService {
 	
-	private final UsersMapper userSearchMapper;
+	private final UsersMapper usersMapper;
 	private final MessageOutput messageOutput;
 	private final DepartmentService departmentService;
 	private final UserManagementFactory usersFactory;
 	private final UserManagementValidation userManagementValidation;
 	private final PasswordEncoder passwordEncoder;
+	private final ModelService modelService;
 	
-	UserManagementService(UsersMapper userSearchMapper, MessageOutput messageOutput,DepartmentService departmentService,UserManagementFactory usersFactory,UserManagementValidation userManagementValidation){
-		this.userSearchMapper = userSearchMapper;
+	UserManagementService(UsersMapper usersMapper, MessageOutput messageOutput,DepartmentService departmentService,UserManagementFactory usersFactory,UserManagementValidation userManagementValidation, ModelService modelService){
+		this.usersMapper = usersMapper;
 		this.messageOutput = messageOutput;
 		this.departmentService = departmentService;
 		this.usersFactory = usersFactory;
 		this.userManagementValidation = userManagementValidation;
 		this.passwordEncoder = new BCryptPasswordEncoder();
+		this.modelService = modelService;
 	}
 	
 	/**
@@ -40,9 +44,9 @@ public class UserManagementService {
 	public Users selectByAccount(String userName, Integer userId) {
 		Users users = new Users();
 		if(userName != null) {
-			users = userSearchMapper.selectByAccount(userName, userId);
+			users = usersMapper.selectByAccount(userName, userId);
 		} else {
-			users = userSearchMapper.selectByAccountBy(userId);
+			users = usersMapper.selectByAccountBy(userId);
 		}
 		return users;
 	}
@@ -83,9 +87,9 @@ public class UserManagementService {
 		managementForm.setPassword(passwordEncoder.encode(managementForm.getPassword()));
 		if ("9999/99/99".equals(managementForm.getStartDate().trim())) {
 			managementForm.setStartDate("9999-12-31");
-			userSearchMapper.userCreate(usersFactory.usersCreate(managementForm));
+			usersMapper.userCreate(usersFactory.usersCreate(managementForm));
 		} else {
-			userSearchMapper.userCreate(usersFactory.usersCreate(managementForm));
+			usersMapper.userCreate(usersFactory.usersCreate(managementForm));
 		}
 		return model.addAttribute("check", messageOutput.message("update", managementForm.getUserName()));
 	}
@@ -114,5 +118,45 @@ public class UserManagementService {
 	 */
 	public void errorCheck(ManagementForm managementForm,BindingResult result) {
 		userManagementValidation.errorCheck(managementForm,result);
+	}
+	
+	//パスワードを忘れた時にユーザーIDとメールアドレスでユーザーを探す
+	public Integer selectUserIdAddressCheck(Integer userId, String address) {
+		Integer userIdAddressCheck = usersMapper.selectUserIdAddressCheck(userId, address);
+		return userIdAddressCheck;
+	}
+	
+	//パスワードを忘れてユーザーIDとメールアドレスでユーザーが見つかった際にトークンと有効期限を発行しデータベースに登録
+	public String tokenUpdate(Integer userId) {
+		Users users = usersFactory.newToken(userId);
+		usersMapper.tokenUpdate(users);
+		String token = users.getResetToken();
+		return token;
+	}
+	
+	//パスワードを忘れてパスワードを変更
+	public void passwordChange(String password, Users user) {
+		
+		user.setPassword(password);
+		usersMapper.userCreate(user);
+
+	}
+	
+	//パスワードを忘れてパスワードを変更する際に、トータルに一致するユーザーの取得
+	public Users selectUserToken(String token) {
+		Users user = usersMapper.selectToken(token);
+		return user;
+	}
+	
+	//パスワードを忘れてパスワードを変更する際に、トークンの有効期限確認
+	public Users tokenExpirationDateCheck(Users user) {
+		if (user == null || user.getTokenExpiryDate().before(new Date())) {
+			// トークンが無効または期限切れ
+			user.setTokenExpirationDateCheck(false);
+			return user;
+		}else {
+			user.setTokenExpirationDateCheck(true);
+			return user;
+		}
 	}
 }

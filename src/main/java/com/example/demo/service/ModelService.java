@@ -53,4 +53,21 @@ public class ModelService {
         }
 		return model;
 	}
+	//パスワードを忘れた際にユーザーIDとメールアドレスを入力してボタン押下した際の表示
+	public Model emailSent(Model model) {
+		model.addAttribute("emailSent", messageOutput.message("emailSent"));
+		return model;
+	}
+	
+	//パスワードを忘れて変更する際にトークンの有効期限切れ表示
+	public Model tokenTimeOut(Model model) {
+		model.addAttribute("tokenTimeOut", messageOutput.message("tokenTimeOut"));
+		return model;
+	}
+	
+	//パスワードを忘れて変更する際に無事終了した表示
+	public Model passwordChangeSuccess(Model model) {
+		model.addAttribute("passwordChangeSuccess", messageOutput.message("passwordChangeSuccess"));
+		return model;
+	}
 }

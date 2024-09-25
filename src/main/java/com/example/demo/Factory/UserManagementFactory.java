@@ -13,6 +13,11 @@ import com.example.demo.model.Users;
 
 @Component
 public class UserManagementFactory {
+	private final TokenFactory tokenFactory;
+	
+	public UserManagementFactory(TokenFactory tokenFactory){
+		this.tokenFactory = tokenFactory;
+	}
 	
 	/**
 	 * {@link ManagementForm} のデータを使用して、新しい {@link Users} オブジェクトを作成します。
@@ -79,5 +84,14 @@ public class UserManagementFactory {
 		newAccont.setUserName(userName);
 		newAccont.setDepartment(department);
 		return newAccont;
+	}
+	
+	//パスワードを忘れてユーザーIDとメールアドレスでユーザーが見つかった際に、データベース更新の為Usersにデータを詰める
+	public Users newToken(Integer userId) {
+		Users users = new Users();
+		users.setUserId(userId);
+		users.setResetToken(tokenFactory.generateResetToken());
+		users.setTokenExpiryDate(tokenFactory.calculateExpiryDate(60)); // 有効期限を設定（60分）
+		return users;
 	}
 }
