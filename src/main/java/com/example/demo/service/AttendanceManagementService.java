@@ -80,10 +80,9 @@ public class AttendanceManagementService {
 		attendanceFormList.getAttendanceList().stream()
 				.filter(attendance -> workDay.contains(attendance.getStatus()))
 				.filter(attendance -> !attendance.getStartTime().isEmpty())
-				.filter(attendance -> !attendance.getEndTime().isEmpty())   //holiday側にあってworkDay側になかったので追加。処理次第でないほうがいいかも
 				.forEach(attendance -> attendanceSearchMapper.upsert(attendance));
 
-		List<Integer> holiday = Arrays.asList(1, 2, 4, 5, 9, 11, 12);
+		List<Integer> holiday = Arrays.asList(1, 2, 4, 5, 9, 11);
 		attendanceFormList.getAttendanceList().stream()
 				.filter(attendance -> holiday.contains(attendance.getStatus()))
 				.filter(attendance -> attendance.getStartTime().isEmpty())
@@ -94,7 +93,7 @@ public class AttendanceManagementService {
 	//勤怠登録画面で承認申請ボタンを有効にするかを決める
 	public void requestActivityCheck(AttendanceFormList attendanceFormList) {
 	    List<Integer> workDay = Arrays.asList(0, 3, 6, 7, 8, 10);
-	    List<Integer> holiday = Arrays.asList(1, 2, 4, 5, 9, 11, 12);
+	    List<Integer> holiday = Arrays.asList(1, 2, 4, 5, 9, 11);
 
 	    for (int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
 	        Attendance attendance = attendanceFormList.getAttendanceList().get(i);

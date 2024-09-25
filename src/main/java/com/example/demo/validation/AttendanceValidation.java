@@ -15,13 +15,19 @@ import com.example.demo.model.AttendanceFormList;
 
 @Component
 public class AttendanceValidation {
-	
-	 private final MessageOutput messageOutput; 
-	  
-	  public AttendanceValidation(MessageOutput messageOutput){
-		  this.messageOutput =messageOutput;
-	  }
-	
+
+	private final MessageOutput messageOutput;
+
+	public AttendanceValidation(MessageOutput messageOutput) {
+		this.messageOutput = messageOutput;
+	}
+//エラーの重複を止めるメソッド
+	private void addErrorIfNotPresent(BindingResult result, FieldError error) {
+		if (!result.getFieldErrors(error.getField()).contains(error)) {
+			result.addError(error);
+		}
+	}
+
 	public void errorCheck(AttendanceFormList attendanceFormList, BindingResult result) {
 		for (int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
 			String remarks = attendanceFormList.getAttendanceList().get(i).getAttendanceRemarks();
@@ -43,41 +49,56 @@ public class AttendanceValidation {
 				result.addError(attendanceRemarks);
 			}
 
-			if (!startTime.isEmpty()) {
+			//条件の指定を細かく指定
+			if (!startTime.isEmpty() || !endTime.isEmpty()) {
 				try {
 					if (holiday.contains(status)) {
 						FieldError itemInaccurate = new FieldError("attendanceFormList", "itemInaccurate",
 								messageOutput.message("itemInaccurate"));
-						result.addError(itemInaccurate);
+						addErrorIfNotPresent(result, itemInaccurate);
 					}
-					LocalTime.parse(startTime, formatter);
-				} catch (DateTimeParseException e) {
-					FieldError timeFormatError = new FieldError("attendanceFormList",
-							"attendanceList[" + i + "].startTime", messageOutput.message("timeFormat"));
-					result.addError(timeFormatError);
-				}
-			}
-
-			if (!endTime.isEmpty()) {
-				try {
-					if (holiday.contains(status)) {
-						FieldError itemInaccurate = new FieldError("attendanceFormList", "itemInaccurate",
-								messageOutput.message("itemInaccurate"));
-						result.addError(itemInaccurate);
-					}
-					LocalTime endInputTime = LocalTime.parse(endTime, formatter);
+//比較用にstartInputTimeとendInputTimeを初期化して設定
+					LocalTime startInputTime = null;
 					if (!startTime.isEmpty()) {
-						LocalTime startInputTime = LocalTime.parse(startTime, formatter);
-						if (endInputTime.isBefore(startInputTime)) {
-							FieldError startEndTime = new FieldError("attendanceFormList",
-									"attendanceList[" + i + "].endTime", messageOutput.message("consistency"));
-							result.addError(startEndTime);
+						startInputTime = LocalTime.parse(startTime, formatter);
+					}
+
+					LocalTime endInputTime = null;
+					if (!endTime.isEmpty()) {
+						endInputTime = LocalTime.parse(endTime, formatter);
+					}
+//ここで時間の整合性を一元化
+					if (startInputTime != null && endInputTime != null && endInputTime.isBefore(startInputTime)) {
+						FieldError startEndTime = new FieldError("attendanceFormList",
+								"attendanceList[" + i + "].endTime", messageOutput.message("consistency"));
+						result.addError(startEndTime);
+					}
+//開始時間のみ未入力に対しエラー
+					if (startTime.isEmpty() && !endTime.isEmpty()) {
+						FieldError itemInaccurate = new FieldError("attendanceFormList",
+								"itemInaccurate", messageOutput.message("itemInaccurate"));
+						addErrorIfNotPresent(result, itemInaccurate);
+					}
+//例外処理・それぞれでtimeFormatを確認
+				} catch (DateTimeParseException e) {
+					if (!startTime.isEmpty()) {
+						try {
+							LocalTime.parse(startTime, formatter); // エラーを確認するために再度パースを試みる
+						} catch (DateTimeParseException ex) {
+							FieldError timeFormatError = new FieldError("attendanceFormList",
+									"attendanceList[" + i + "].startTime", messageOutput.message("timeFormat"));
+							result.addError(timeFormatError);
 						}
 					}
-				} catch (DateTimeParseException e) {
-					FieldError timeFormatError = new FieldError("attendanceFormList",
-							"attendanceList[" + i + "].endTime", messageOutput.message("timeFormat"));
-					result.addError(timeFormatError);
+					if (!endTime.isEmpty()) {
+						try {
+							LocalTime.parse(endTime, formatter); // エラーを確認するために再度パースを試みる
+						} catch (DateTimeParseException ex) {
+						FieldError timeFormatError = new FieldError("attendanceFormList",
+								"attendanceList[" + i + "].endTime", messageOutput.message("timeFormat"));
+						result.addError(timeFormatError);
+						}
+					}
 				}
 			}
 		}
