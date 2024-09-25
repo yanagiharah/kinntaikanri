@@ -57,7 +57,7 @@ public class SecurityConfig {
             	        .invalidateHttpSession(true).permitAll()
             )
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/css/**","/dateOut").permitAll()
+                .requestMatchers("/forgotpassword/**", "/css/**", "/dateOut").permitAll()
                // .requestMatchers("/menu/**").hasRole("ADMIN")
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                 .anyRequest().authenticated()

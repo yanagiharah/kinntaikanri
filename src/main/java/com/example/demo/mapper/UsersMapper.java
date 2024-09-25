@@ -45,5 +45,25 @@ public interface UsersMapper {
 	 * 月次勤怠の提出があった場合（1～5日の間のみ）にManagerのリストを取得
 	 */
 	List<Users> selectManager();
+	
+	/**
+	 * パスワードを忘れた時にユーザーIDとメールアドレスでユーザーを探す
+	 */
+	Integer selectUserIdAddressCheck(Integer userId, String address);
+	
+	/**
+	 * パスワードを忘れてユーザーIDとメールアドレスでユーザーを探して存在した際に、トークンと有効期限を更新
+	 */
+	void tokenUpdate (Users users);
+	
+	/**
+	 * パスワードを忘れてメールのリンク押下後にトークンに一致するユーザーデータを取得
+	 */
+	Users selectToken(String token);
+	
+	/**
+	 * パスワードを忘れてパスワード変更
+	 */
+//	void passwordUpdate(Users users);
 
 }

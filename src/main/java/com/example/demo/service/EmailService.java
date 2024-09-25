@@ -23,14 +23,16 @@ public class EmailService {
     private final MessageSource messageSource;
     private final CommonActivityService commonActivityService;
     private final MonthlyAttendanceReqMapper monthlyAttendanceReqMapper;
+    private final UserManagementService userManagementService;
     
 
-    public EmailService(JavaMailSender mailSender, UsersMapper usersMapper, MessageSource messageSource, CommonActivityService commonActivityService, MonthlyAttendanceReqMapper monthlyAttendanceReqMapper) {
+    public EmailService(JavaMailSender mailSender, UsersMapper usersMapper, MessageSource messageSource, CommonActivityService commonActivityService, MonthlyAttendanceReqMapper monthlyAttendanceReqMapper, UserManagementService userManagementService) {
         this.mailSender = mailSender;
         this.usersMapper = usersMapper;
         this.messageSource = messageSource;
         this.commonActivityService = commonActivityService;
         this.monthlyAttendanceReqMapper = monthlyAttendanceReqMapper;
+        this.userManagementService = userManagementService;
     }
     
     public void sendEmail(String to, String subject, String text) {
@@ -59,7 +61,7 @@ public class EmailService {
             	continue;// 利用開始日が未来の人にはメールを送信しない
             }
             String subjectKey = user.getRole().equals("Manager") ? "managerSubject" : "regularSubject";
-            String bodyKey = user.getRole().equals("Manager") ? "managerBody" : "regularBody";
+            String bodyKey = user.getRole().equals("Manager") ? "managerText" : "regularText";
             String subject = messageSource.getMessage(subjectKey, null, Locale.getDefault());
             String text = messageSource.getMessage(bodyKey, new Object[]{regularAndUnitManagerUserNames}, Locale.getDefault());
             sendEmail(user.getAddress(), subject, text);
@@ -110,5 +112,20 @@ public class EmailService {
             }
         }
     }
+	
+	//パスワードを忘れた際に、入力されたaddressにメールを送信
+	public void resetPassword(Integer userIdAddressCheck, Integer userId, String address) {
+		String subject = null;
+		String text = null;
+		if (userIdAddressCheck == 0) {
+			subject = messageSource.getMessage("passwordForgetSubject", null, Locale.getDefault());
+        	text = messageSource.getMessage("passwordForgetNotFoundText", null, Locale.getDefault());
+		} else {
+			String token = userManagementService.tokenUpdate(userId);
+			subject = messageSource.getMessage("passwordForgetSubject", null, Locale.getDefault());
+        	text = messageSource.getMessage("passwordForgetFoundText", new Object[]{token}, Locale.getDefault());
+		}
+		sendEmail(address, subject, text);
+	}
 
 }

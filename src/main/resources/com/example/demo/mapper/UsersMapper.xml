@@ -55,37 +55,60 @@
     WHERE role = 'Manager'
 </select>
 
+<!-- ユーザーIDとメールアドレスが一致するユーザーの有無を確認 -->
+<select id="selectUserIdAddressCheck">
+	SELECT EXISTS (SELECT 1 FROM users WHERE user_id = #{userId} and address = #{address});
+</select>
+
+<!-- パスワードを忘れてメールのリンク押下後にトークンに一致するユーザーデータを取得 -->
+<select id="selectToken" resultType="com.example.demo.model.Users">
+	SELECT *
+	FROM users
+	WHERE token = #{token}
+</select>
+
 
 <!-- 更新処理 -->
 <insert id="userCreate">
 	insert into users (user_id, password, user_name, role,
-	department_id, start_date)
+	department_id, start_date, address, tel, resetToken, tokenExpiryDate)
 	values(
 	#{userId},
 	#{password},
 	#{userName},
 	#{role},
 	#{departmentId},
-	#{startDate}
+	#{startDate},
+	#{address},
+	#{tel},
+	#{resetToken},
+	#{tokenExpiryDate}
 	)
 	ON DUPLICATE KEY
 	UPDATE 
 	password = #{password}, 
 	role = #{role},
 	department_id =#{departmentId}, 
-	start_date = #{startDate};
+	start_date = #{startDate},
+	address = #{address},
+	tel = #{tel};
 </insert>
 
 
 <!-- 更新 -->
-<update id="update" parameterType="com.example.demo.model.Users">
+<update id="passwordUpdate" parameterType="com.example.demo.model.Users">
     UPDATE users
     SET 
-    	password = #{password},
-    	user_name = #{userName},
-        role = #{role},
-        department_id = #{departmentId},
-        start_date = #{startDate}
+    	password = #{password}
+    WHERE user_id = #{userId}
+</update>
+
+<!-- パスワードを忘れてユーザーIDとメールアドレスでユーザーを探して存在した際に、トークンと有効期限を更新 -->
+<update id="tokenUpdate" parameterType="com.example.demo.model.Users">
+    UPDATE users
+    SET 
+        reset_token = #{resetToken},
+        token_expiry_date = #{tokenExpiryDate}
     WHERE user_id = #{userId}
 </update>
 
