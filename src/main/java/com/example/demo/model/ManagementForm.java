@@ -23,4 +23,8 @@ public class ManagementForm {
 	private Integer departmentId;
 	
 	private String startDate;
+	
+	private String tel;
+	
+	private String address;
 }

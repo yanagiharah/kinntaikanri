@@ -39,6 +39,9 @@ public class UserManagementFactory {
 		users.setRole(managementForm.getRole());
 		users.setDepartmentId(managementForm.getDepartmentId());
 		users.setStartDate(sqlDate);
+		//9/26追加　43,44行目
+		users.setTel(managementForm.getTel());
+		users.setAddress(managementForm.getAddress());
 		return users;
 	}
 	
@@ -62,6 +65,9 @@ public class UserManagementFactory {
 		dbAccount.setDepartment(department);
 		String str = new SimpleDateFormat("yyyy-MM-dd").format(users.getStartDate());
 		dbAccount.setStartDate(str);
+		//9/26追加　６８，６９行目
+		dbAccount.setTel(users.getTel());
+		dbAccount.setAddress(users.getAddress());
 		return dbAccount;
 	}
 	
