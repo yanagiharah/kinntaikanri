@@ -64,7 +64,7 @@
 <select id="selectToken" resultType="com.example.demo.model.Users">
 	SELECT *
 	FROM users
-	WHERE token = #{token}
+	WHERE reset_token = #{token}
 </select>
 
 
