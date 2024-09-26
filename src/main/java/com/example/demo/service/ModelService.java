@@ -70,4 +70,6 @@ public class ModelService {
 		model.addAttribute("passwordChangeSuccess", messageOutput.message("passwordChangeSuccess"));
 		return model;
 	}
+	
+	
 }
