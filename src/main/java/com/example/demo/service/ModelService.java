@@ -71,5 +71,9 @@ public class ModelService {
 		return model;
 	}
 	
-	
+	//新部署名と旧部署名が同じでなければ部署名変更
+	public Model passwordNearMiss(Model model) {
+		model.addAttribute("passwordNearMiss", messageOutput.message("passwordNearMiss"));
+		return model;
+	}
 }
