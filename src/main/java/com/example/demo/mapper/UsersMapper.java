@@ -64,6 +64,6 @@ public interface UsersMapper {
 	/**
 	 * パスワードを忘れてパスワード変更
 	 */
-//	void passwordUpdate(Users users);
+	void passwordUpdate(Users users);
 
 }

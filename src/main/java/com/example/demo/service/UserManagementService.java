@@ -137,8 +137,8 @@ public class UserManagementService {
 	//パスワードを忘れてパスワードを変更
 	public void passwordChange(String password, Users user) {
 		
-		user.setPassword(password);
-		usersMapper.userCreate(user);
+		user.setPassword(passwordEncoder.encode(password));
+		usersMapper.passwordUpdate(user);
 
 	}
 	
@@ -150,7 +150,7 @@ public class UserManagementService {
 	
 	//パスワードを忘れてパスワードを変更する際に、トークンの有効期限確認
 	public Users tokenExpirationDateCheck(Users user) {
-		if (user == null || user.getTokenExpiryDate().before(new Date())) {
+		if (user == null || user.getTokenExpiryDate().after(new Date())) {
 			// トークンが無効または期限切れ
 			user.setTokenExpirationDateCheck(false);
 			return user;
