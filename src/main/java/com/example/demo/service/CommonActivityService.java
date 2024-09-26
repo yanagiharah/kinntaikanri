@@ -91,4 +91,9 @@ public class CommonActivityService {
 		Date firstDayOfLastMonthDate = Date.from(firstDayOfLastMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
 		return firstDayOfLastMonthDate;
 	}
+	
+	 
+	    public String logInBack() {
+	    	return "index";
+	 }
 }

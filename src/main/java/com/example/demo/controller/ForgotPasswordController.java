@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.demo.service.CommonActivityService;
 import com.example.demo.service.EmailService;
 import com.example.demo.service.ModelService;
 import com.example.demo.service.UserManagementService;
@@ -18,11 +19,13 @@ public class ForgotPasswordController {
     private final ModelService modelService;
     private final UserManagementService userManagementService;
     private final EmailService emailService;
+    final CommonActivityService commonActivityService;
     
-    public ForgotPasswordController(ModelService modelService, UserManagementService userManagementService, EmailService emailService){
+    public ForgotPasswordController(ModelService modelService, UserManagementService userManagementService, EmailService emailService,CommonActivityService commonActivityService){
         this.modelService = modelService;
         this.userManagementService = userManagementService;
         this.emailService = emailService;
+        this.commonActivityService = commonActivityService;
     }
     
     @GetMapping
@@ -37,4 +40,9 @@ public class ForgotPasswordController {
         modelService.emailSent(model);
         return "forgot/forgotpassword";
     }
+    
+    @GetMapping("/index")
+    public String logInBack(){
+    	return commonActivityService.logInBack();
+    };
 }

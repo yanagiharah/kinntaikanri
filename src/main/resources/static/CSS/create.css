@@ -26,6 +26,19 @@
 /*  border-radius:30px;*/
 }
 
+.loginback{
+	text-align: right;
+}
+
+.variableButtonSize{
+/*	width: 100px;*/
+	display: inline-block;
+	padding: 10px 20px;
+	cursor: pointer;
+	background-color: yellow;
+	font-size:20px;
+}
+
 .linklike {
   border:none;
   background-color:transparent;
@@ -35,6 +48,11 @@
 
 .loginFontsize{
 	  font-size:30px;
+}
+
+.loginFontsize label{
+	display: inline-block;
+	width:154px;
 }
 
 .menuButtonSize{
@@ -60,10 +78,6 @@
     font-weight: bold; 
 }
 
-dt {
-    margin-right: 10px;
-}
-
 .text-center {
     text-align: center;
 }
@@ -76,6 +90,8 @@ dt {
 	/*  border-radius:30px;*/
 	}
  }
+ }
+ 
 
 /*.textBox{*/
 /*	border-radius: 40% 80% 35% 65% / 50% 50% 70% 40%;*/
