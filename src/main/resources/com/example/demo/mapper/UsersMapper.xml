@@ -12,10 +12,10 @@
 	WHERE user_id = #{userId}
 </select>
  
- 
+ <!-- 9/27パスワードを初期取得しないように変更-->
 <!-- 検索ボタン押下時アカウント取得 -->
 <select id="selectByAccount" resultType="com.example.demo.model.Users">
-	SELECT * 
+	SELECT user_id,user_name,role,department_id,address,tel,start_date
 	FROM users 
     WHERE user_name = #{userName} 
     <if test="userId != null">

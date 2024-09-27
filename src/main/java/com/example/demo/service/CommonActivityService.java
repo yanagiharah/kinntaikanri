@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import jakarta.servlet.http.HttpSession;
@@ -96,4 +97,12 @@ public class CommonActivityService {
 	    public String logInBack() {
 	    	return "index";
 	 }
+	    
+	    //現在の日にちを"yyyy-MM"の型で取得するメソッド
+	    public String yearsMonth(){
+	    	LocalDate now = LocalDate.now();//現在の日にちを取得
+	    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");//年月の形式に変換
+	    	String stringYearsMonth = now.format(formatter);//String型に変換
+	    	return stringYearsMonth;
+	    }
 }

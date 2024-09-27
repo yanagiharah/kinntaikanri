@@ -46,15 +46,6 @@
   text-decoration:underline;
 }
 
-.loginFontsize{
-	  font-size:30px;
-}
-
-.loginFontsize label{
-	display: inline-block;
-	width:154px;
-}
-
 .menuButtonSize{
 	width:260px;
   	height:80px;
@@ -73,13 +64,21 @@
 }
 
 .form-row label{
-	width: 130px;
+		width: 160px;
 }
 
 .longLabel{
 	font-size:24px;
 }
 
+.loginFontsize{
+	  font-size:30px;
+}
+
+.loginFontsize label{
+	display: inline-block;
+	width:154px;
+}
 
 .error-message {
     color: red;
