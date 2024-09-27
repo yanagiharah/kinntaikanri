@@ -150,7 +150,7 @@ public class UserManagementService {
 	
 	//パスワードを忘れてパスワードを変更する際に、トークンの有効期限確認
 	public Users tokenExpirationDateCheck(Users user) {
-		if (user == null || user.getTokenExpiryDate().after(new Date())) {
+		if (user == null || user.getTokenExpiryDate().before(new Date())) {
 			// トークンが無効または期限切れ
 			user.setTokenExpirationDateCheck(false);
 			return user;
