@@ -72,6 +72,10 @@
     margin-bottom: 10px;
 }
 
+.form-row label{
+	width: 130px;
+}
+
 
 .error-message {
     color: red;
