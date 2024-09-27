@@ -83,7 +83,7 @@ public class EmailService {
 	
 	// エラーログを送信するメソッド
 	public void sendErrorLogToUsers(List<Users> usersList, String errorLog) {
-		String subject = messageSource.getMessage("AdminSubject", null, Locale.getDefault());
+		String subject = messageSource.getMessage("adminSubject", null, Locale.getDefault());
 	    for (Users user : usersList) {
 	        if (user.getAddress() != null && !user.getAddress().isEmpty()) {
 	            try {
@@ -106,8 +106,8 @@ public class EmailService {
             List<Users> usersList = usersMapper.selectManager(); 
             for (Users user : usersList) {
             	//messages.propertiesから件名と本文を取ってくる
-            	String subject = messageSource.getMessage("ManagerSubject", null, Locale.getDefault());
-            	String text = messageSource.getMessage("ManagerText", null, Locale.getDefault());
+            	String subject = messageSource.getMessage("managerSyouninnshinnseiSubject", null, Locale.getDefault());
+            	String text = messageSource.getMessage("managerSyouninnshinnseiText", null, Locale.getDefault());
                 sendEmail(user.getAddress(), subject, text);
             }
         }

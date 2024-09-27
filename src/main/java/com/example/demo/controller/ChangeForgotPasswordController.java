@@ -52,11 +52,7 @@ public class ChangeForgotPasswordController {
     }
     
     @RequestMapping(params = "check", method = RequestMethod.POST)
-    public String sendResetPassword(Model model, 
-                                     @RequestParam Integer userId, 
-                                     Users user, 
-                                     String newPassword, 
-                                     String checkNewPassword) {
+    public String sendResetPassword(Model model,  @RequestParam Integer userId, Users user, String newPassword, String checkNewPassword) {
 
         // UserオブジェクトにuserIdを設定
         user.setUserId(userId);
