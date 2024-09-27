@@ -71,7 +71,7 @@
 <!-- 更新処理 -->
 <insert id="userCreate">
 	insert into users (user_id, password, user_name, role,
-	department_id, start_date, address, tel, resetToken, tokenExpiryDate)
+	department_id, start_date, address, tel)
 	values(
 	#{userId},
 	#{password},
@@ -80,9 +80,7 @@
 	#{departmentId},
 	#{startDate},
 	#{address},
-	#{tel},
-	#{resetToken},
-	#{tokenExpiryDate}
+	#{tel}
 	)
 	ON DUPLICATE KEY
 	UPDATE 
