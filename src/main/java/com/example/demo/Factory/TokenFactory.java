@@ -2,7 +2,6 @@ package com.example.demo.Factory;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 import java.util.UUID;
 
 import org.springframework.stereotype.Component;
@@ -19,7 +18,6 @@ public class TokenFactory {
     public Date calculateExpiryDate(int expiryTimeInMinutes) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
-        cal.setTimeZone(TimeZone.getTimeZone("Asia/Tokyo")); // JSTを設定
         cal.add(Calendar.MINUTE, expiryTimeInMinutes);
         return cal.getTime();
     }
