@@ -26,10 +26,10 @@
 						<div class="col-3">
 							ステータス
 							<th:block th:case="null">　</th:block>
+							<th:block th:case="0">　未申請</th:block>
 							<th:block th:case="1">　承認待ち</th:block>
 							<th:block th:case="2">　承認済み</th:block>
 							<th:block th:case="3">　却下</th:block>
-							<th:block th:case="4">　未申請</th:block>
 						</div>
 					</th:block>
 				</div>
