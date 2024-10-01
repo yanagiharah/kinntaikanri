@@ -32,6 +32,14 @@ public class MenuController {
 		model.addAttribute("Users", users);
 		return "redirect:/attendance/index";
 	}
+	
+	//勤怠修正画面に遷移
+	@RequestMapping("/correction")
+		public String monthlyAttenddance(HttpSession session, Model model) {
+			Users users = (Users) session.getAttribute("Users");
+			model.addAttribute("Users", users);
+			return "redirect:/attendanceCorrect/correction";
+	}
 
 	//日報登録画面に遷移
 	@RequestMapping("/daily/detail")

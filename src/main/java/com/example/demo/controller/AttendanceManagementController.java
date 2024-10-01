@@ -41,15 +41,16 @@ public class AttendanceManagementController {
 		this.messageOutput = messageOutput;
 	}
 
-	@RequestMapping("/index")
+	@RequestMapping("/index") //9/30if文にelseを追加し初期カレンダー表示のメソッドを移動。マネージャークラスでデータのない表が表示される問題の解消
 	public String start(HttpSession session, MonthlyAttendanceReq monthlyAttendanceReq, Model model) {
 		commonActivityService.usersModelSession(model, session);
 		Users users = (Users) model.getAttribute("Users");
-		String stringYearsMonth = commonActivityService.yearsMonth();
-		attendanceSearch(users.getUserId(), stringYearsMonth, model, session);
 		if (users.getRole().equalsIgnoreCase("Manager")) {
 			List<MonthlyAttendanceReq> ApprovalPending = monthlyAttendanceReqService.selectApprovalPending();
 			model.addAttribute("ApprovalPending", ApprovalPending);
+		}else {
+			String stringYearsMonth = commonActivityService.yearsMonth();
+			attendanceSearch(users.getUserId(), stringYearsMonth, model, session);	
 		}
 		return "attendance/registration";
 	}
