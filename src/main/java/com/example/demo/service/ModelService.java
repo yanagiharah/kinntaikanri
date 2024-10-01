@@ -76,4 +76,22 @@ public class ModelService {
 		model.addAttribute("passwordNearMiss", messageOutput.message("passwordNearMiss"));
 		return model;
 	}
+	
+	//月次勤怠訂正依頼を送信した際の表示
+	public Model sendCorrectionApplication(Model model) {
+		model.addAttribute("sendCorrectionApplication", messageOutput.message("sendCorrectionApplication"));
+		return model;
+	}
+	
+	//月次勤怠訂正依頼を承認した際の表示
+	public Model changeMonthlyAttendanceReqApproval(Model model) {
+		model.addAttribute("changeMonthlyAttendanceReqApproval", messageOutput.message("changeMonthlyAttendanceReqApproval"));
+		return model;
+	}
+
+	//月次勤怠訂正依頼を却下した際の表示
+	public Model changeMonthlyAttendanceReqReject(Model model) {
+		model.addAttribute("changeMonthlyAttendanceReqReject", messageOutput.message("changeMonthlyAttendanceReqReject"));
+		return model;
+	}
 }

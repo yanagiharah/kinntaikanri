@@ -26,6 +26,27 @@
 	SELECT * FROM monthly_attendance_req WHERE target_year_month = DATE_FORMAT(#{targetYearMonth}, '%Y-%m-%d') AND user_id = #{userId};
 </select>
 
+<!-- 特定のユーザーの承認済み月次勤怠をリストで取得 -->
+<select id="selectApproved"
+	resultType="com.example.demo.model.MonthlyAttendanceReq">
+	SELECT DATE_FORMAT(target_year_month, '%Y-%m') FROM monthly_attendance_req WHERE user_id = #{userId} AND status = 2;
+</select>
+
+<!-- 変更依頼ステータスが1の月次勤怠をリストで取得 -->
+<select id="selectHasChangeReq"
+	resultType="com.example.demo.model.MonthlyAttendanceReq">
+	SELECT
+	t1.user_id,
+	t1.user_name,
+	t2.monthly_attendance_req_id,
+	t2.target_year_month,
+	t2.monthly_attendance_req_date,
+	t2.status
+	FROM users t1  
+	INNER JOIN monthly_attendance_req t2 on t1.user_id = t2.user_id
+	WHERE t2.target_year_month = DATE_FORMAT(#{targetYearMonth}, '%Y-%m-%d') AND t2.has_change_req = 1;
+</select>
+
 <!-- 指定された月の月次勤怠status状況確認 -->
 <select id ="selectMonthlyAttendanceReq">
 	SELECT EXISTS (SELECT 1 FROM monthly_attendance_req WHERE status=1 and target_year_month = DATE_FORMAT(#{targetYearMonth}, '%Y-%m-%d'));
@@ -60,6 +81,30 @@
 <update id="rejectedStatus">
   UPDATE monthly_attendance_req
   SET status = 3
+  WHERE user_id = #{userId} AND target_year_month = #{targetYearMonth};
+</update>
+
+<!-- 月次勤怠訂正依頼の更新文 -->
+<update id="changeRequestMonthlyAttendanceReq">
+  UPDATE monthly_attendance_req
+  SET has_change_req = 1,
+  change_reason = #{changeReason}
+  WHERE user_id = #{userId} AND target_year_month = #{targetYearMonth};
+</update>
+
+<!-- 月次勤怠訂正の承認更新文 -->
+<update id="changeApprovalMonthlyAttendanceReq">
+  UPDATE monthly_attendance_req
+  SET has_change_req = 0,
+  status = 0
+  WHERE user_id = #{userId} AND target_year_month = #{targetYearMonth};
+</update>
+
+<!-- 月次勤怠訂正の却下更新文 -->
+<update id="changeRejectionMonthlyAttendanceReq">
+  UPDATE monthly_attendance_req
+  SET has_change_req = 0,
+  rejection_reason = #{rejectionReason}
   WHERE user_id = #{userId} AND target_year_month = #{targetYearMonth};
 </update>
 

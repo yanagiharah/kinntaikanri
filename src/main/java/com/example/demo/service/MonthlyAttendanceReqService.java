@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -86,7 +88,7 @@ public class MonthlyAttendanceReqService {
 		if (statusCheck != null) {
 			users.setStatus(statusCheck.getStatus());
 		} else {
-			users.setStatus(4);
+			users.setStatus(0);
 		}
 		model.addAttribute("Users", users);
 		return model;
@@ -98,5 +100,31 @@ public class MonthlyAttendanceReqService {
 
 	public void rejectedStatus(Integer userId, String targetYearMonth) {
 		monthlyAttendanceReqMapper.rejectedStatus(userId, targetYearMonth);
+	}
+	
+	//特定のユーザーの承認申請で承認済みを取得
+	public List<MonthlyAttendanceReq> selectApproval(Integer userId) {
+		return monthlyAttendanceReqMapper.selectApproved(userId);
+	}
+	
+	//特定の年月の勤怠取得
+	public List<MonthlyAttendanceReq> selectHasChangeReq(String targetYearMonth) {
+		LocalDate dateTargetYearMonth = LocalDate.parse(targetYearMonth + "-01", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		return monthlyAttendanceReqMapper.selectHasChangeReq(dateTargetYearMonth);
+	}
+	
+	//月次勤怠訂正依頼の更新文
+	public void changeRequestMonthlyAttendanceReq(Integer userId, String targetYearMonth, String changeReason) {
+		monthlyAttendanceReqMapper.changeRequestMonthlyAttendanceReq(userId, targetYearMonth, changeReason);
+	}
+	
+	//月次勤怠訂正の承認更新文
+	public 	void changeApprovalMonthlyAttendanceReq(Integer userId, String targetYearMonth) {
+		monthlyAttendanceReqMapper.changeApprovalMonthlyAttendanceReq(userId, targetYearMonth);
+	}
+	
+	//月次勤怠訂正の却下更新文
+	public void changeRejectionMonthlyAttendanceReq(Integer userId, String targetYearMonth, String rejectionReason) {
+		monthlyAttendanceReqMapper.changeRejectionMonthlyAttendanceReq(userId, targetYearMonth, rejectionReason);
 	}
 }
