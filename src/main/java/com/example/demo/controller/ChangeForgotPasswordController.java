@@ -33,9 +33,14 @@ public class ChangeForgotPasswordController {
     public String forgotPassword(Model model, @RequestParam("token") String token) {
         System.out.println("Received token: " + token);
         Users user = userManagementService.selectUserToken(token);
-        userManagementService.tokenExpirationDateCheck(user);
-
-        if (user == null || !user.getTokenExpirationDateCheck()) {
+        if(user == null) {
+        	user = new Users();
+        	user.setTokenExpirationDateCheck(false);
+        }else {
+        	userManagementService.tokenExpirationDateCheck(user);
+        }
+        
+        if (!user.getTokenExpirationDateCheck()) {
             modelService.tokenTimeOut(model);
         } else {
             model.addAttribute("user", user);
@@ -54,15 +59,13 @@ public class ChangeForgotPasswordController {
     @RequestMapping(params = "check", method = RequestMethod.POST)
     public String sendResetPassword(Model model,  @RequestParam Integer userId, Users user, String newPassword, String checkNewPassword) {
 
-        // UserオブジェクトにuserIdを設定
-        user.setUserId(userId);
-
         if (!newPassword.equals(checkNewPassword)) {
             modelService.passwordNearMiss(model);
             model.addAttribute("user", user);
             return "changeforgot/changeforgotpassword";
         } else {
             userManagementService.tokenExpirationDateCheck(user);
+            //トークンの有効期限しか確認していない。データベースがらuserを再度取得し、トークンの文字列も再評価すべき？
             if (user == null || !user.getTokenExpirationDateCheck()) {
                 modelService.tokenTimeOut(model);
             } else {
