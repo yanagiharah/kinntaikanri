@@ -39,6 +39,7 @@ public class AttendanceManagementService {
 		
 		//年月から最終月日を算出
 		Calendar calendar = Calendar.getInstance();
+		calendar.clear();
 		calendar.set(Calendar.YEAR, years);
 		calendar.set(Calendar.MONTH, month - 1);
 		int monthDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);

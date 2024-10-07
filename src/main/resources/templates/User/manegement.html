@@ -38,7 +38,7 @@
                             <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
                         </div>
                         <p>パスワード
-                            <input type="password" name="password" th:value="${managementForm} != null ? *{password} :'' ">
+                            <input type="password" name="password" th:value="''">
                         </p>
                         <div class="text-danger">
                             <span th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></span>
@@ -67,20 +67,26 @@
                                 </option>
                             </select>
                         </div>
-                        <div class="text-danger">
-                            <span th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}"></span>
-                        </div>
-                        <div class="form-row">
-                            <label>利用開始日</label>
-							<input type="text" name="startDate" th:value="${managementForm != null} ? *{startDate} : ''">
-                        </div>
+						<div class="text-danger">
+							<span th:if="${#fields.hasErrors('tel')}" th:errors="*{tel}"></span>
+						</div>
 						<div class="form-row">
 							<label>電話番号</label>
 							<input type="text" name="tel" th:value="${managementForm != null} ? *{tel} : ''">
 						</div>
+						<div class="text-danger">
+							<span th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></span>
+						</div>
 						<div class="form-row">
 							<label>メールアドレス</label>
 							<input type="text" name="address" th:value="${managementForm != null} ? *{address} : ''">
+						</div>
+						<div class="text-danger">
+							<span th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}"></span>
+						</div>
+						<div class="form-row">
+							<label>利用開始日</label>
+							<input type="text" name="startDate" th:value="${managementForm != null} ? *{startDate} : ''">
 						</div>
 						<div class="text-center">
                     		<input type="submit" value="登録" name="insert" class="buttonRound">
