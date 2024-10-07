@@ -30,12 +30,12 @@ public class UserManagementValidation {
 		if (userName == null || userName == "") {
 			FieldError userName2 = new FieldError("managementForm", "userName", messageOutput.message("requiredUserName"));
 			result.addError(userName2);
-		} else if (userName.length() >= 20) {
-			 FieldError userName2 = new FieldError("managementForm", "userName", messageOutput.message("NoUserName"));
+		} else if (userName.length() > 20) {
+			 FieldError userName2 = new FieldError("managementForm", "userName", messageOutput.message("overUserName"));
 			  result.addError(userName2);
 		}
 		else if (!userName.matches("^[^ -~｡-ﾟ]+$")) {
-			FieldError userName2 = new FieldError("managementForm", "userName", messageOutput.message("NoUserName"));
+			FieldError userName2 = new FieldError("managementForm", "userName", messageOutput.message("requiredZennkaku"));
 			result.addError(userName2);
 		}
 	}
@@ -52,11 +52,16 @@ public class UserManagementValidation {
 	 */
 	public void errorCheck(ManagementForm managementForm,BindingResult result) {
 		
+		if(managementForm.getUserId() == null||managementForm.getUserId() == 0) {
+			FieldError userId = new FieldError("managementForm", "userId", messageOutput.message("requiredUserId"));
+			 result.addError(userId);
+			 return;
+		}
 		if (managementForm.getUserName() == null ||managementForm.getUserName() == "") {
 			  FieldError userName = new FieldError(managementForm.getUserName(), "userName", messageOutput.message("requiredUserName"));
 			  result.addError(userName);
 		}
-		if (!managementForm.getUserName().matches("^[^ -~｡-ﾟ]+$")) {
+		if (!managementForm.getUserName().equals("") && !managementForm.getUserName().matches("^[^ -~｡-ﾟ]+$")) {
 			FieldError userName = new FieldError(managementForm.getUserName(), "userName", messageOutput.message("requiredZennkaku"));
 			result.addError(userName);
 		}
@@ -68,7 +73,7 @@ public class UserManagementValidation {
 			 FieldError password = new FieldError("managementForm", "password", messageOutput.message("CharacterLimit"));
 			  result.addError(password);
 		}
-		if(managementForm.getPassword().matches(".*[^ -~｡-ﾟ]+.*")) {
+		if(managementForm.getPassword().matches(".*[^ -~]+.*")) {
 			 FieldError password = new FieldError("managementForm", "password", messageOutput.message("requiredHannkaku"));
 			 result.addError(password);
 		}
@@ -80,9 +85,21 @@ public class UserManagementValidation {
 			FieldError department = new FieldError("managementForm", "department", messageOutput.message("requiredDepartment"));
 			 result.addError(department);
 		}
-		if(managementForm.getUserId() == null||managementForm.getUserId() == 0) {
-			FieldError userId = new FieldError("managementForm", "userId", messageOutput.message("requiredUserId"));
-			 result.addError(userId);
+		if (managementForm.getTel().equals("")) {
+		    FieldError tel = new FieldError("managementForm", "tel", messageOutput.message("requiredTel"));
+		    result.addError(tel);
+		}
+		if (!managementForm.getTel().equals("") && !managementForm.getTel().matches("^\\d{2,4}-\\d{2,4}-\\d{4}$")) {
+		    FieldError tel = new FieldError("managementForm", "tel", messageOutput.message("fraudTel"));
+		    result.addError(tel);
+		}
+		if (managementForm.getAddress().equals("")) {
+		    FieldError address = new FieldError("managementForm", "address", messageOutput.message("requiredEmail"));
+		    result.addError(address);
+		}
+		if(!managementForm.getAddress().equals("") && !managementForm.getAddress().matches("^[a-zA-Z0-9_+-]+(\\.[a-zA-Z0-9_+-]+)*@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\\.)+[a-zA-Z]{2,}$")) {
+			 FieldError address = new FieldError("managementForm", "address", messageOutput.message("fraudEmail"));
+			 result.addError(address);
 		}
 		if (!"9999/99/99".equals(managementForm.getStartDate().trim())) {
 			if(!managementForm.getStartDate().matches("^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$")|| managementForm.getStartDate() == null||managementForm.getStartDate() == ""||managementForm.getStartDate().length() != 10) {
