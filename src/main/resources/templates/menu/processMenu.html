@@ -55,6 +55,19 @@
 <!--			    <p>夜の温度: <span th:text="${tomorrowWeather.temp.night}"></span>°C</p>-->
 <!--			    <p>天気: <span th:each="w : ${tomorrowWeather.weather}" th:text="${w.description}"></span></p>-->
 <!--			    <img th:each="w : ${tomorrowWeather.weather}" th:src="@{'http://openweathermap.org/img/wn/' + ${w.icon} + '@2x.png'}" alt="天気アイコン">-->
+
+<!--				天気予報API無課金版-->
+					<h2>今日の天気</h2>
+					<p>天気: <span th:text="${weatherData.todayDescription}"></span></p>
+					<p>気温: <span th:text="${weatherData.todayTemp}"></span>°C</p>
+					<p>湿度: <span th:text="${weatherData.todayHumidity}"></span>%</p>
+					<p>気圧: <span th:text="${weatherData.todayPressure}"></span> hPa</p>
+					
+					<h2>明日の天気</h2>
+					<p>天気: <span th:text="${weatherData.tomorrowDescription}"></span></p>
+					<p>気温: <span th:text="${weatherData.tomorrowTemp}"></span>°C</p>
+					<p>湿度: <span th:text="${weatherData.tomorrowHumidity}"></span>%</p>
+					<p>気圧: <span th:text="${weatherData.tomorrowPressure}"></span> hPa</p>
 			<div class="d-flex align-items-center justify-content-center " style="padding:300px;">		
 <!--					レギュラー＆ユニットマネージャー用-->
 					<div th:if="${Users.role=='Regular'||Users.role=='UnitManager'}">
