@@ -18,7 +18,7 @@ function checkInput() {
 	const input2 = document.getElementById('checkNewPassword').value;
 	const submitButton = document.getElementById('check');
 
-	if (input1 == input2) {
+	if (input1 == input2 && input1 !== null && input2 !== "") {
 		submitButton.disabled = false;
 	} else {
 		submitButton.disabled = true;

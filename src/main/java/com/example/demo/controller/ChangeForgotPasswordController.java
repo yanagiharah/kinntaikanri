@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -20,7 +21,7 @@ import com.example.demo.service.UserManagementService;
 @Controller
 @RequestMapping("/changeforgotpassword")
 public class ChangeForgotPasswordController {
-    
+	
     private final ModelService modelService;
     private final UserManagementService userManagementService;
     
@@ -58,7 +59,13 @@ public class ChangeForgotPasswordController {
     
     @RequestMapping(params = "check", method = RequestMethod.POST)
     public String sendResetPassword(Model model,  @RequestParam Integer userId, Users user, String newPassword, String checkNewPassword) {
-
+    	
+    	Pattern pattern = Pattern.compile("^[a-zA-Z0-9]+$");
+    	 if(!pattern.matcher(newPassword).matches()) {
+    		 modelService.newPasswordErrorCheck(model);
+    		 model.addAttribute("user", user);
+    		 return "changeforgot/changeforgotpassword";
+    	 }
         if (!newPassword.equals(checkNewPassword)) {
             modelService.passwordNearMiss(model);
             model.addAttribute("user", user);

@@ -94,4 +94,9 @@ public class ModelService {
 		model.addAttribute("changeMonthlyAttendanceReqReject", messageOutput.message("changeMonthlyAttendanceReqReject"));
 		return model;
 	}
+	
+	public Model newPasswordErrorCheck(Model model) {
+		model.addAttribute("requiredHannkaku", messageOutput.message("requiredHannkaku"));
+		return model;
+	}
 }
