@@ -2,7 +2,9 @@ package com.example.demo.service;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.List;
 
@@ -26,14 +28,13 @@ public class MonthlyAttendanceReqService {
 	MonthlyAttendanceReqService(MonthlyAttendanceReqMapper monthlyAttendanceReqMapper,
 			CommonActivityService commonActivityService) {
 		this.monthlyAttendanceReqMapper = monthlyAttendanceReqMapper;
-		this.commonActivityService = commonActivityService;
-	}
+		this.commonActivityService = commonActivityService;	}
 
 	public List<MonthlyAttendanceReq> selectApprovalPending() {
 		//1は承認待ち
 		List<MonthlyAttendanceReq> monthlyAttendanceReq = monthlyAttendanceReqMapper.selectApprovalPending(1);
 		for (int i = 0; i < monthlyAttendanceReq.size(); i++) {
-			//date型の年と日をinteger型で取得する
+			//date型の年と月をinteger型で取得する
 			SimpleDateFormat getYears = new SimpleDateFormat("yyyy");
 			monthlyAttendanceReq.get(i)
 					.setYears(Integer.valueOf(getYears.format(monthlyAttendanceReq.get(i).getTargetYearMonth())));
@@ -93,16 +94,16 @@ public class MonthlyAttendanceReqService {
 		model.addAttribute("Users", users);
 		return model;
 	}
-
+//マネージャ承認
 	public void approvalStatus(Integer userId, String targetYearMonth) {
 		monthlyAttendanceReqMapper.approvalStatus(userId, targetYearMonth);
 	}
-
+	//マネージャ却下
 	public void rejectedStatus(Integer userId, String targetYearMonth) {
 		monthlyAttendanceReqMapper.rejectedStatus(userId, targetYearMonth);
 	}
 	
-	//特定のユーザーの承認申請で承認済みを取得
+	//特定のユーザーの承認申請で承認済みを取得 カレンダー（一般）用
 	public List<MonthlyAttendanceReq> selectApproval(Integer userId) {
 		return monthlyAttendanceReqMapper.selectApproved(userId);
 	}
@@ -110,16 +111,25 @@ public class MonthlyAttendanceReqService {
 	//特定の年月の勤怠取得
 	public List<MonthlyAttendanceReq> selectHasChangeReq(String targetYearMonth) {
 		LocalDate dateTargetYearMonth = LocalDate.parse(targetYearMonth + "-01", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-		return monthlyAttendanceReqMapper.selectHasChangeReq(dateTargetYearMonth);
+		List<MonthlyAttendanceReq> monthlyAttendanceReq = monthlyAttendanceReqMapper.selectHasChangeReq(dateTargetYearMonth);
+		YearMonth yearMonth = YearMonth.parse(targetYearMonth,DateTimeFormatter.ofPattern("yyyy-MM"));
+		for (MonthlyAttendanceReq req : monthlyAttendanceReq) {
+	        // targetYearMonthを設定
+	        req.setTargetYearMonth(java.sql.Date.valueOf(dateTargetYearMonth));
+	        // 年と月を設定
+	        req.setYears(yearMonth.getYear());
+	        req.setMonth(yearMonth.getMonthValue());
+	    }
+		return monthlyAttendanceReq;
 	}
 	
 	//月次勤怠訂正依頼の更新文
-	public void changeRequestMonthlyAttendanceReq(Integer userId, String targetYearMonth, String changeReason) {
+	public void changeRequestMonthlyAttendanceReq(Integer userId, LocalDate targetYearMonth, String changeReason) {
 		monthlyAttendanceReqMapper.changeRequestMonthlyAttendanceReq(userId, targetYearMonth, changeReason);
 	}
 	
 	//月次勤怠訂正の承認更新文
-	public 	void changeApprovalMonthlyAttendanceReq(Integer userId, String targetYearMonth) {
+	public void changeApprovalMonthlyAttendanceReq(Integer userId, String targetYearMonth) {
 		monthlyAttendanceReqMapper.changeApprovalMonthlyAttendanceReq(userId, targetYearMonth);
 	}
 	
@@ -127,4 +137,20 @@ public class MonthlyAttendanceReqService {
 	public void changeRejectionMonthlyAttendanceReq(Integer userId, String targetYearMonth, String rejectionReason) {
 		monthlyAttendanceReqMapper.changeRejectionMonthlyAttendanceReq(userId, targetYearMonth, rejectionReason);
 	}
+	
+	//カレンダーで選んだ年月を"yyyy-MM-01"の形に変更するメソッド
+    public LocalDate convertStringToLocalDate(String stringYearsMonth) {
+        try {
+            // 元の形式
+            DateTimeFormatter monthlyAttendanceReqFormat =  DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate targetDate = LocalDate.parse(stringYearsMonth + "-01",monthlyAttendanceReqFormat);
+            // 日付を1日に設定
+            return targetDate.withDayOfMonth(1);
+        } catch (DateTimeParseException e) {
+        	System.err.println("Error parsing date: " + stringYearsMonth);
+            e.printStackTrace();
+            return null;
+        }
+        
+    }
 }

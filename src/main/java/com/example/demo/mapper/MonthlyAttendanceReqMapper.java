@@ -40,7 +40,7 @@ public interface MonthlyAttendanceReqMapper {
 	void rejectedStatus(Integer userId, String targetYearMonth);
 	
 	//月次勤怠訂正依頼の更新文
-	void changeRequestMonthlyAttendanceReq(Integer userId, String targetYearMonth, String changeReason);
+	void changeRequestMonthlyAttendanceReq(Integer userId, LocalDate targetYearMonth, String changeReason);
 	
 	//月次勤怠訂正の承認更新文
 	void changeApprovalMonthlyAttendanceReq(Integer userId, String targetYearMonth);
