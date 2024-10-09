@@ -14,6 +14,7 @@ import com.example.demo.inter.MessageOutput;
 import com.example.demo.mapper.MonthlyAttendanceReqMapper;
 import com.example.demo.model.MonthlyAttendanceReq;
 import com.example.demo.model.Users;
+import com.example.demo.model.WeatherData;
 
 @Service
 public class CommonActivityService {
@@ -91,6 +92,10 @@ public class CommonActivityService {
 //        model.addAttribute("currentWeather", weatherResponse.getCurrent());
 //        model.addAttribute("todayWeather", weatherResponse.getDaily().get(0));
 //        model.addAttribute("tomorrowWeather", weatherResponse.getDaily().get(1));
+		
+		//天気情報をmodelに詰める
+		WeatherData weatherData = weatherService.getWeather("Tokyo");
+        model.addAttribute("weatherData", weatherData);
         
 		return model;
 	}
