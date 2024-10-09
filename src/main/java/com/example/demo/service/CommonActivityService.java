@@ -29,13 +29,16 @@ public class CommonActivityService {
 	
 	private final ModelService modelService;
 	
+	private final WeatherService weatherService;
+	
 	CommonActivityService(DailyReportService dailyReportService,AttendanceManagementService attendanceManagementService,MessageOutput messageOutput, 
-			MonthlyAttendanceReqMapper monthlyAttendanceReqMapper,ModelService modelService){
+			MonthlyAttendanceReqMapper monthlyAttendanceReqMapper,ModelService modelService, WeatherService weatherService){
 		this.dailyReportService = dailyReportService;
 		this.attendanceManagementService = attendanceManagementService;
 		this.messageOutput = messageOutput;
 		this.monthlyAttendanceReqMapper = monthlyAttendanceReqMapper;
 		this.modelService=modelService;
+		this.weatherService = weatherService;
 	}
 
 
@@ -80,6 +83,15 @@ public class CommonActivityService {
 			Integer attendanceReq = monthlyAttendanceReqMapper.selectMonthlyAttendanceReq(lastMonth);
 			modelService.monthlyAttendanceIsSentInsertModel(attendanceReq, model);
 		}
+		//天気予報API課金で使用可能
+		//天気情報をmodelに詰める
+//		double tokyoLat = 35.6895;
+//        double tokyoLon = 139.6917;
+//        WeatherResponse weatherResponse = weatherService.getWeather(tokyoLat, tokyoLon);
+//        model.addAttribute("currentWeather", weatherResponse.getCurrent());
+//        model.addAttribute("todayWeather", weatherResponse.getDaily().get(0));
+//        model.addAttribute("tomorrowWeather", weatherResponse.getDaily().get(1));
+        
 		return model;
 	}
 	

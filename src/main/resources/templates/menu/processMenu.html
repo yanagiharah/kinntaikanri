@@ -38,6 +38,23 @@
 			<div th:if="${monthlyAttendanceStatusIsSent}" class="alert alert-warning" role="alert">
 				<p th:text="${monthlyAttendanceStatusIsSent}"></p>
 			</div>
+<!--			天気予報API課金で使用可能-->
+<!--			<h2>現在の天気</h2>-->
+<!--			    <p>温度: <span th:text="${currentWeather.temp}"></span>°C</p>-->
+<!--			    <p>天気: <span th:each="w : ${currentWeather.weather}" th:text="${w.description}"></span></p>-->
+<!--			    <img th:each="w : ${currentWeather.weather}" th:src="@{'http://openweathermap.org/img/wn/' + ${w.icon} + '@2x.png'}" alt="天気アイコン">-->
+
+<!--			    <h2>今日の天気</h2>-->
+<!--			    <p>昼の温度: <span th:text="${todayWeather.temp.day}"></span>°C</p>-->
+<!--			    <p>夜の温度: <span th:text="${todayWeather.temp.night}"></span>°C</p>-->
+<!--			    <p>天気: <span th:each="w : ${todayWeather.weather}" th:text="${w.description}"></span></p>-->
+<!--			    <img th:each="w : ${todayWeather.weather}" th:src="@{'http://openweathermap.org/img/wn/' + ${w.icon} + '@2x.png'}" alt="天気アイコン">-->
+
+<!--			    <h2>明日の天気</h2>-->
+<!--			    <p>昼の温度: <span th:text="${tomorrowWeather.temp.day}"></span>°C</p>-->
+<!--			    <p>夜の温度: <span th:text="${tomorrowWeather.temp.night}"></span>°C</p>-->
+<!--			    <p>天気: <span th:each="w : ${tomorrowWeather.weather}" th:text="${w.description}"></span></p>-->
+<!--			    <img th:each="w : ${tomorrowWeather.weather}" th:src="@{'http://openweathermap.org/img/wn/' + ${w.icon} + '@2x.png'}" alt="天気アイコン">-->
 			<div class="d-flex align-items-center justify-content-center " style="padding:300px;">		
 <!--					レギュラー＆ユニットマネージャー用-->
 					<div th:if="${Users.role=='Regular'||Users.role=='UnitManager'}">
