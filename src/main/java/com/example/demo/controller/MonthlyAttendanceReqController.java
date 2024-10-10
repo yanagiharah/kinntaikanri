@@ -98,6 +98,7 @@ public class MonthlyAttendanceReqController {
 		if (targetYearMonth != null) {
 			monthlyAttendanceReqService.changeRequestMonthlyAttendanceReq(userId, targetYearMonth, changeReason);
 		}
+		model.addAttribute("stringYearsMonth",stringYearsMonth);
 		return "monthlyAttendanceReq/monthlyAttendance";
 	}
 
@@ -126,15 +127,21 @@ public class MonthlyAttendanceReqController {
 			}
 			model.addAttribute("attendanceFormList", attendanceFormList);
 		}
-		List<MonthlyAttendanceReq> HasChangeReq = monthlyAttendanceReqService.selectHasChangeReq(stringYearsMonth);
-		model.addAttribute("HasChangeReq", HasChangeReq);
+		
+		List<MonthlyAttendanceReq> currentChangeReq=monthlyAttendanceReqService.filteringHasChangeReq(userId, stringYearsMonth);
+		List<MonthlyAttendanceReq> hasChangeReq = monthlyAttendanceReqService.selectHasChangeReq(stringYearsMonth);
+		//選択月該当ユーザー
+		model.addAttribute("HasChangeReq", hasChangeReq);
+		//選択したユーザー表記用
+		model.addAttribute("CurrentChangeReq",currentChangeReq);
+		//カレンダー埋める用
 		model.addAttribute("stringYearsMonth",stringYearsMonth);
 		
 		return "monthlyAttendanceReq/monthlyAttendance";
 	}
 	//
 
-	//	//マネージャー承認ボタン　同上
+		//マネージャー訂正承認ボタン　同上
 	@RequestMapping(value = "/management", params = "approval", method = RequestMethod.POST)
 	public String approval(AttendanceFormList attendanceFormList, Model model, HttpSession session,
 			RedirectAttributes redirectAttributes) {
@@ -143,24 +150,24 @@ public class MonthlyAttendanceReqController {
 		} else {
 			String inputDate = attendanceFormList.getAttendanceList().get(0).getAttendanceDateS();
 			String conversion = inputDate.replace("/", "-");
-			monthlyAttendanceReqService.approvalStatus(attendanceFormList.getAttendanceList().get(0).getUserId(),
+			monthlyAttendanceReqService.changeApprovalMonthlyAttendanceReq(attendanceFormList.getAttendanceList().get(0).getUserId(),
 					conversion);
 		}
-		return "redirect:attendanceCorrect/correction";
+		return "redirect:/attendanceCorrect/correction";
 	}
 
 	//
-	//	//マネージャー却下ボタン押下　同上
+	//	//マネージャー訂正却下ボタン押下　同上
 	@RequestMapping(value = "/management", params = "rejected", method = RequestMethod.POST)
 	public String Rejected(AttendanceFormList attendanceFormList, Model model, HttpSession session,
-			RedirectAttributes redirectAttributes) {
+			RedirectAttributes redirectAttributes,@RequestParam("rejectionReason")String rejectionReason) {
 		if (attendanceFormList.getAttendanceList() == null) {
 			redirectAttributes.addFlashAttribute("choiceUsers", messageOutput.message("choiceUsers"));
 		} else {
 			String inputDate = attendanceFormList.getAttendanceList().get(0).getAttendanceDateS();
 			String conversion = inputDate.replace("/", "-");
-			monthlyAttendanceReqService.rejectedStatus(attendanceFormList.getAttendanceList().get(0).getUserId(),
-					conversion);
+			monthlyAttendanceReqService.changeRejectionMonthlyAttendanceReq(attendanceFormList.getAttendanceList().get(0).getUserId(),
+					conversion,rejectionReason);
 		}
 		return "redirect:/attendanceCorrect/correction";
 	}
