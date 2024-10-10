@@ -11,7 +11,7 @@
 	</head>
 	<body>
 		<div class="container" th:object="${Users}">	
-			<div class="concontainer" th:object="${Users}">
+			<div class="concontainer">
 				<form id="mainForm" th:action="@{/attendanceCorrect/management}" method="post" th:object="${attendanceFormList}">
 					<div class ="row">
 						<div class="col-3" >
@@ -29,18 +29,10 @@
 		<!--					ユーザー名、訂正申請、戻るボタンを同じ行に表示-->
 						<div class="row m-4" >
 		<!--						ユーザー名を表示-->
-							<div class="col-3"> 
-							ユーザー名:
-							    <div th:unless="${Users.role=='Manager'}">
-									<span th:text="${Users.userName}"></span>
-								</div>
-								<div th:if="${Users.role=='Manager'}"th:each="HasChangeReq : ${HasChangeReq}">
-									<div th:if="${attendanceFormList} != null">
-										<span name="approvalUserName" th:text="${HasChangeReq.userName}"></span>
-									</div>
-								</div>
+							<div class="col-3" th:if="${Users.role=='Manager' && attendanceFormList != null}"th:each="CurrentChangeReq: ${CurrentChangeReq}"> 
+								ユーザー名:<span th:text="${CurrentChangeReq.userName}"></span>
 							</div>
-							<div class="col-3"　th:unless="${Users.role=='Manager'}">
+							<div class="col-3" th:unless="${Users.role=='Manager'}">
 								<th:block th:switch="${Users.status}">
 									ステータス:
 									<th:block th:case="null">　</th:block>
@@ -52,11 +44,11 @@
 							</div>		
 							<div class="col-3">
 								<div th:if="${Users.role=='Manager'}">
-									<input type="submit" id="approve" value="承認" name="approval"class="buttonSize" style="color:deepskyblue;">
-									<input type="submit" id="reject" value="却下" name="rejected"class="buttonSize"　 style="color:red;">
+									<input type="submit" id="approve" value="承認" name="approval"class="buttonSize" style="color:deepskyblue;"th:attr="disabled=${attendanceFormList == null}">
+									<input type="submit" id="reject" value="却下" name="rejected"class="buttonSize"　 style="color:red;" disabled>
 								</div>
 								<div th:unless="${Users.role=='Manager'}">
-									<input type="submit" id="willCorrect" value="訂正申請" name="willCorrect" class="buttonSize "placeholder="理由を入力してください">
+									<input type="submit" id="willCorrect" value="訂正申請" name="willCorrect" class="buttonSize" disabled>
 								</div>
 							</div>
 							
@@ -67,23 +59,15 @@
 					</div>
 					<div class="row m-4">
 		<!--						ユーザーID、テキストボックスのタイトル（変更理由）を同じ行に表示-->
-						<div class="col-6">
-							ユーザーID:
-							<div th:unless="${Users.role=='Manager'}">
-									<span th:text="${Users.userId}"></span>
-							</div>
-							<div th:if="${Users.role=='Manager'}"th:each="HasChangeReq : ${HasChangeReq}">
-								<div th:if="${attendanceFormList} != null">
-									<span name="approvalUserId" th:text="${HasChangeReq.userId}">
-									</span>
-								</div>
-							</div>
+						<div class="col-6"th:if="${Users.role=='Manager' && attendanceFormList != null}"th:each="CurrentChangeReq : ${CurrentChangeReq}">
+							ユーザーID:<span th:text="${CurrentChangeReq.userId}"></span>
 						</div>
+						
 		<!--						変更理由、却下理由それぞれMG画面、RGUM画面で値がない時に非表示かつあるときは読み取り専用（readonly）にしたい-->
-						<div  class="col-3">
-							変更理由
-						</div>	
-						<div class="col-3" th:if="${Users.role=='Manager'}">
+						<div class="col-3" th:if="${Users.role != 'Manager'} or (${Users.role == 'Manager'} and ${attendanceFormList != null})">
+						    変更理由
+						</div>
+						<div class="col-3"th:if="${Users.role=='Manager' && attendanceFormList != null}">
 							却下理由
 						</div>	
 					</div>
@@ -93,29 +77,26 @@
 								<span th:text="${check}" style="color: red;"></span>
 							</div>
 							<div class="col-6">
-<!--								<div class="text-danger" th:if="${calendarIncorrect} != null">-->
-<!--									<span th:text="${calendarIncorrect}" style="color: red;"></span>-->
-<!--								</div>-->
 								表示年月：
 								<div th:unless="${Users.role=='Manager'}">
 									<input type="month" name="stringYearsMonth" id="stringYearsMonth"
-										th:value="${attendanceFormList != null? attendanceFormList.stringYearsMonth: ''}" 
+										th:value="${attendanceFormList != null? attendanceFormList.stringYearsMonth: stringYearsMonth}" 
 										required min="1800-01"max="2400-12">
 								</div>
 								<div th:if="${Users.role=='Manager'}">
 									<input type="month" name="stringYearsMonth" id="stringYearsMonth"
-										th:value="${stringYearsMonth}" 
+										th:value="${attendanceFormList != null? stringYearsMonth:stringYearsMonth}" 
 										required min="1800-01"max="2400-12">
 								</div>
 								<input type="submit" id="display" value="表示" name="search" class="buttonSize" >
 							</div>
 						<div class="col-6">
 							<div th:unless="${Users.role=='Manager'}">
-								<textarea class="reason m-0" id="willCorrectReason" name="willCorrectReason" style="height:100px; width:250px; "th:attr="disabled=${Users.status} != 2" oninput="checkInput()"></textarea>
+								<textarea class="reason m-0" id="willCorrectReason" name="willCorrectReason" style="height:100px; width:250px; "th:disabled="${Users.status} != 2" oninput="checkInput()"></textarea>
 							</div>
-							<div th:if="${Users.role=='Manager' && attendanceFormList != null}"th:each="HasChangeReq : ${HasChangeReq}">
-								<textarea name="willCorrectReason" class="m-0"style="height:100px; width:250px;"th:text="${HasChangeReq.changeReason}"readonly></textarea>
-								<textarea class="reason m-0" id="rejectReason" style="height:100px; width:250px;" oninput="checkInput2()"></textarea>
+							<div th:if="${Users.role=='Manager' && attendanceFormList != null}"th:each="CurrentChangeReq : ${CurrentChangeReq}">
+								<textarea name="willCorrectReason" class="m-0"style="height:100px; width:250px;"th:text="${CurrentChangeReq.changeReason}"readonly></textarea>
+								<textarea class="reason m-0" id="rejectReason" name="rejectionReason" style="height:100px; width:250px;" oninput="checkInput2()"></textarea>
 							</div>
 						</div>
 					</div>
@@ -126,7 +107,7 @@
 					<div th:if="${HasChangeReq} != null"><!--マネージャー画面でない限りnull-->
 						<div class="row m-2">
 							<div class="col-7">
-								<table class="table table-bordered border border-dark ">
+								<table class="table table-bordered border border-dark " id="attendanceList">
 									<thead>
 										<tr>
 											<td>申請者ID</td>
@@ -148,13 +129,13 @@
 														<input type="hidden" name="Month" th:value="${HasChangeReq.Month}">
 													</th:block>
 														<!--以上の要素がattendanceSerchUpメソッドの引数となる-->
-													<button type="submit" name="ApprovalApplicantDisplay" class="linklike"> [[${HasChangeReq.userName}]]</button>
+													<button type="submit"name="ApprovalApplicantDisplay" class="ApprovalApplicantDisplay linklike"> [[${HasChangeReq.userName}]]</button>
 												</form>
 											</td>
 										<!--申請対象年月-->
 											<td th:text="${#dates.format(HasChangeReq.targetYearMonth,'yyyy/MM/dd')}"></td>
-										<!--申請日-->
-											<td th:text="${HasChangeReq.changeReason}"></td>
+										<!--申請理由-->
+											<td class ="shortChangeReason"th:text="${HasChangeReq.changeReason}"></td>
 										</tr>
 									</tbody>
 								</table>
@@ -165,9 +146,6 @@
 					<div th:if="${attendanceFormList} != null">
 						<div class="row m-2">
 							<div class="col-12 ml-3" >
-	<!--							<div class="text-danger" th:if="${attendanceMessage} != null">-->
-	<!--								<span th:text="${attendanceMessage}" style="color: red;"></span>-->
-	<!--							</div>-->
 								<table class="table table-bordered border border-dark">
 									<thead>
 										<tr>
@@ -230,7 +208,6 @@
 				</form>
 			</div>
 		</div>
-			<script th:src="@{/js/monthlyAttendance.js}"></script>
-		<!--	//このページのエラー修正終了後jsをbody最下層に移動予定-->
+		<script th:src="@{/js/monthlyAttendance.js}"></script>
 	</body>
 </html>

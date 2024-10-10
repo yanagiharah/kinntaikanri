@@ -50,4 +50,16 @@ function confirmSubmission(event) {
     if (!confirmation) {
         event.preventDefault(); // データ送信をキャンセル
     }
+	
+//	時間補正用のプログラム、検証してないので要検証
+//	function formatTime(event) {
+//	           let input = event.target.value;
+//	           let parts = input.split(':');
+//
+//	           if (parts.length === 2) {
+//	               let hours = parts.padStart(2, '0');
+//	               let minutes = parts.padStart(2, '0');
+//	               event.target.value = `${hours}:${minutes}`;
+//	           }
+//	       }
  }
