@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -124,6 +125,22 @@ public class AttendanceManagementService {
 	//勤怠登録のエラーチェック
 	public void errorCheck(AttendanceFormList attendanceFormList, BindingResult result) {
 		attendanceValidation.errorCheck(attendanceFormList, result);
+	}
+	
+	//AttendanceFormList内の要素、List<attendance>の中で最初のattendanceの申請日を取るためのメソッド
+	public Date getFirstAttendanceDate(AttendanceFormList attendanceFormList) {
+	    if (attendanceFormList != null && !attendanceFormList.getAttendanceList().isEmpty()) {
+	        return attendanceFormList.getAttendanceList().get(0).getAttendanceDate();
+	    }
+	    return null; // 存在しない場合nullを返す
+	}
+	
+	//上記メソッド同様にuserIdを取るためのメソッド
+	public Integer getFirstAttendanceUserId(AttendanceFormList attendanceFormList) {
+		if (attendanceFormList != null && !attendanceFormList.getAttendanceList().isEmpty()) {
+			return attendanceFormList.getAttendanceList().get(0).getUserId();
+		}
+		return null;
 	}
 }
 

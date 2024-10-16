@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import jakarta.servlet.http.HttpSession;
@@ -107,15 +108,15 @@ public class AttendanceManagementController {
 		Users users = (Users) model.getAttribute("Users");
 
 		for (int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
-			String inputDate = attendanceFormList.getAttendanceList().get(i).getAttendanceDateS();
-			String conversion = inputDate.replace("/", "-");
-			attendanceFormList.getAttendanceList().get(i).setAttendanceDate(java.sql.Date.valueOf(conversion));
+			String inputDate = monthlyAttendanceReqService.getInputDate(attendanceFormList);
+			attendanceFormList.getAttendanceList().get(i).setAttendanceDate(java.sql.Date.valueOf(inputDate));
 		}
+		Date firstAttendanceDate = attendanceManagementService.getFirstAttendanceDate(attendanceFormList);
 		monthlyAttendanceReqService.monthlyAttendanceUpdate(
-				attendanceFormList.getAttendanceList().get(0).getAttendanceDate(), monthlyAttendanceReq.getUserId(),
+				firstAttendanceDate, monthlyAttendanceReq.getUserId(),
 				monthlyAttendanceReq, attendanceFormList);
 		monthlyAttendanceReqService.submissionStatusCheck(
-				attendanceFormList.getAttendanceList().get(0).getAttendanceDate(), users.getUserId(), model, session);
+				firstAttendanceDate, users.getUserId(), model, session);
 		model.addAttribute("attendanceFormList", attendanceFormList);
 		return "attendance/registration";
 	}
@@ -155,10 +156,9 @@ public class AttendanceManagementController {
 		if (attendanceFormList.getAttendanceList() == null) {
 			redirectAttributes.addFlashAttribute("choiceUsers", messageOutput.message("choiceUsers"));
 		} else {
-			String inputDate = attendanceFormList.getAttendanceList().get(0).getAttendanceDateS();
-			String conversion = inputDate.replace("/", "-");
-			monthlyAttendanceReqService.approvalStatus(attendanceFormList.getAttendanceList().get(0).getUserId(),
-					conversion);
+			String inputDate = monthlyAttendanceReqService.getInputDate(attendanceFormList);
+			Integer firstUserId=attendanceManagementService.getFirstAttendanceUserId(attendanceFormList);
+			monthlyAttendanceReqService.approvalStatus(firstUserId, inputDate);
 		}
 		return "redirect:/attendance/index";
 	}
@@ -170,10 +170,9 @@ public class AttendanceManagementController {
 		if (attendanceFormList.getAttendanceList() == null) {
 			redirectAttributes.addFlashAttribute("choiceUsers", messageOutput.message("choiceUsers"));
 		} else {
-			String inputDate = attendanceFormList.getAttendanceList().get(0).getAttendanceDateS();
-			String conversion = inputDate.replace("/", "-");
-			monthlyAttendanceReqService.rejectedStatus(attendanceFormList.getAttendanceList().get(0).getUserId(),
-					conversion);
+			String inputDate =  monthlyAttendanceReqService.getInputDate(attendanceFormList);
+			Integer firstUserId=attendanceManagementService.getFirstAttendanceUserId(attendanceFormList);
+			monthlyAttendanceReqService.rejectedStatus(firstUserId, inputDate);
 		}
 		return "redirect:/attendance/index";
 	}
