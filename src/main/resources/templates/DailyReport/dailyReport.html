@@ -37,7 +37,7 @@
 					</th:block>
 					<th:block th:if="(${dailyReportForm} != null and ${dailyReportForm.status} == 2)">
 						<div class="col-3">
-							ステータス　承認済
+							ステータス 承認済
 						</div>
 					</th:block>
 				</div>
@@ -49,7 +49,7 @@
 						<input type="date" name="dailyReportDate" id="today" th:value="${dailyReportForm.dailyReportDate}">
 					</span>
 				</form>
-	
+<!--	approvalpending敵なのを入れる-->
 				<form th:action="@{/daily/detailUpdate}" method="post">
 	
 					<span class="d-flex flex-row-reverse">

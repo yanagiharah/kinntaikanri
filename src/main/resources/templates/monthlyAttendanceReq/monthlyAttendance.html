@@ -39,6 +39,7 @@
 									<th:block th:case="1">　承認待ち</th:block>
 									<th:block th:case="2">　承認済み</th:block>
 									<th:block th:case="3">　却下</th:block>
+									<th:block th:case="4">訂正申請中</th:block>
 									<th:block th:case="0">　未申請</th:block>
 								</th:block>
 							</div>		
@@ -79,30 +80,31 @@
 							<div class="col-6">
 								表示年月：
 								<div th:unless="${Users.role=='Manager'}">
-									<input type="month" name="stringYearsMonth" id="stringYearsMonth"
+									<input type="month" name="stringYearsMonth" id="approvedMonths"
 										th:value="${attendanceFormList != null? attendanceFormList.stringYearsMonth: stringYearsMonth}" 
-										required min="1800-01"max="2400-12">
+										 required min="1800-01"max="2400-12">
+										<div id="message" style="color: red; display: none;">勤怠が承認されていない月です。</div>
 								</div>
 								<div th:if="${Users.role=='Manager'}">
 									<input type="month" name="stringYearsMonth" id="stringYearsMonth"
 										th:value="${attendanceFormList != null? stringYearsMonth:stringYearsMonth}" 
 										required min="1800-01"max="2400-12">
 								</div>
-								<input type="submit" id="display" value="表示" name="search" class="buttonSize" >
+								<input type="submit" id="display" value="表示" name="search" class="buttonSize" oninput="disabledSearch()">
 							</div>
 						<div class="col-6">
 							<div th:unless="${Users.role=='Manager'}">
-								<textarea class="reason m-0" id="willCorrectReason" name="willCorrectReason" style="height:100px; width:250px; "th:disabled="${Users.status} != 2" oninput="checkInput()"></textarea>
+								<textarea class="reason m-0" id="willCorrectReason" name="willCorrectReason" style="height:100px; width:250px; "th:disabled="${Users.status} != 2" oninput="disabledApprove()"></textarea>
 							</div>
 							<div th:if="${Users.role=='Manager' && attendanceFormList != null}"th:each="CurrentChangeReq : ${CurrentChangeReq}">
 								<textarea name="willCorrectReason" class="m-0"style="height:100px; width:250px;"th:text="${CurrentChangeReq.changeReason}"readonly></textarea>
-								<textarea class="reason m-0" id="rejectReason" name="rejectionReason" style="height:100px; width:250px;" oninput="checkInput2()"></textarea>
+								<textarea class="reason m-0" id="rejectReason" name="rejectionReason" style="height:100px; width:250px;" oninput="disabledReject()"></textarea>
 							</div>
 						</div>
 					</div>
 						<!--マネージャー画面-->
 				
-			<!--						ユーザー選択-->
+			<!--ユーザー選択-->
 			<!--バリュー一回無視しているため変更必要-->
 					<div th:if="${HasChangeReq} != null"><!--マネージャー画面でない限りnull-->
 						<div class="row m-2">
@@ -168,7 +170,7 @@
 												<td th:text="|${#strings.substring(attendance.attendanceDateS,5,10)}|"></td>
 												<td th:text="${attendance.dayOfWeek}"></td>
 												<td>
-													<select id="status" th:field="*{attendanceList[__${start.index}__].status}" class="noneBox" disabled>
+													<select th:id="'status-'+${start.index}" th:field="*{attendanceList[__${start.index}__].status}" class="noneBox" disabled>
 														<option th:value="12" th:selected="${attendance.status} == '12'" >選択してください</option>
 														<option th:value="0" th:selected="${attendance.status} == '0'" >通常出勤</option>
 														<option th:value="1" th:selected="${attendance.status} == '1'" >休日</option>
@@ -185,17 +187,17 @@
 													</select>
 												</td>
 												<td>
-													<input type="text" id="startTime" th:field="*{attendanceList[__${start.index}__].startTime}"
+													<input type="text" th:id="'startTime-'+${start.index}" th:field="*{attendanceList[__${start.index}__].startTime}"
 														th:value="${attendance.startTime}" class="noneBox"
 														disabled>
 												</td>
 												<td>
-													<input type="text" id="endTime" th:field="*{attendanceList[__${start.index}__].endTime}"
+													<input type="text" th:id="'endTime-'+${start.index}" th:field="*{attendanceList[__${start.index}__].endTime}"
 														th:value="${attendance.endTime}" class="noneBox"
 														disabled>
 												</td>
 												<td>
-													<input type="text" id="attendanceRemarks" th:field="*{attendanceList[__${start.index}__].attendanceRemarks}"
+													<input type="text" th:id="'attendanceRemarks-'+${start.index}" th:field="*{attendanceList[__${start.index}__].attendanceRemarks}"
 														th:value="${attendance.attendanceRemarks}" class="noneBox"
 														disabled>
 												</td>
@@ -208,6 +210,11 @@
 				</form>
 			</div>
 		</div>
+		<script th:inline="javascript">
+		    /*<![CDATA[*/
+		    const approvedMonths = /*[[${approvedMonths}]]*/ [];
+		    /*]]>*/
+		</script>
 		<script th:src="@{/js/monthlyAttendance.js}"></script>
 	</body>
 </html>

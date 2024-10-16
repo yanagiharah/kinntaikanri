@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import jakarta.servlet.http.HttpSession;
@@ -45,13 +46,15 @@ public class MonthlyAttendanceReqController {
 		
 		commonActivityService.usersModelSession(model, session);
 		Users users = (Users) model.getAttribute("Users");
-		String stringYearsMonth = commonActivityService.yearsMonth();
+		String stringYearsMonth = commonActivityService.lastYearsMonth();
 		
 		if (users.getRole().equalsIgnoreCase("Manager")) {
 			List<MonthlyAttendanceReq> HasChangeReq = monthlyAttendanceReqService
 					.selectHasChangeReq(stringYearsMonth);
 			model.addAttribute("HasChangeReq", HasChangeReq);
 		} else {
+			List<MonthlyAttendanceReq> approvedMonths= monthlyAttendanceReqService.selectApproval(users.getUserId());
+			model.addAttribute("approvedMonths",approvedMonths);
 			attendanceSearch(users.getUserId(), stringYearsMonth, model, session);
 		}
 		model.addAttribute("stringYearsMonth",stringYearsMonth);
@@ -65,10 +68,10 @@ public class MonthlyAttendanceReqController {
 			HttpSession session) {
 		commonActivityService.usersModelSession(model, session);
 		Users users = (Users) model.getAttribute("Users");
-
+		//yearとmonthの作成
 		Integer years = Integer.parseInt(stringYearsMonth.substring(0, 4));
 		Integer month = Integer.parseInt(stringYearsMonth.substring(5, 7));
-			
+		//yearとmonthに該当する勤怠表を探してAttendanceFormListに詰める処理
 		List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month);
 		AttendanceFormList attendanceFormList = attendanceManagementService.setInAttendance(attendance, years, month,
 				stringYearsMonth);
@@ -79,9 +82,12 @@ public class MonthlyAttendanceReqController {
 			monthlyAttendanceReqService.submissionStatusCheck(attendance.get(0).getAttendanceDate(), userId, model,
 					session);
 			attendanceManagementService.requestActivityCheck(attendanceFormList);
+			List<MonthlyAttendanceReq> approvedMonths= monthlyAttendanceReqService.selectApproval(users.getUserId());
+			model.addAttribute("approvedMonths",approvedMonths);
 		} else {
 			List<MonthlyAttendanceReq> HasChangeReq = monthlyAttendanceReqService.selectHasChangeReq(stringYearsMonth);
 			model.addAttribute("HasChangeReq", HasChangeReq);
+			//カレンダーを初期化しないために返す
 			model.addAttribute("stringYearsMonth",stringYearsMonth);
 		}
 		return "monthlyAttendanceReq/monthlyAttendance";
@@ -93,11 +99,22 @@ public class MonthlyAttendanceReqController {
 			@RequestParam("willCorrectReason") String changeReason, @RequestParam("userId") Integer userId,
 			@RequestParam("stringYearsMonth") String stringYearsMonth) {
 		commonActivityService.usersModelSession(model, session);
-
+		//	has_change_reqを１に変更する処理のためにLocalDateに変更して処理
 		LocalDate targetYearMonth = monthlyAttendanceReqService.convertStringToLocalDate(stringYearsMonth);
 		if (targetYearMonth != null) {
 			monthlyAttendanceReqService.changeRequestMonthlyAttendanceReq(userId, targetYearMonth, changeReason);
 		}
+		//再度同じ月の勤怠表を表示するための処理
+		Integer years = Integer.parseInt(stringYearsMonth.substring(0, 4));
+		Integer month = Integer.parseInt(stringYearsMonth.substring(5, 7));
+		List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month);
+		AttendanceFormList attendanceFormList = attendanceManagementService.setInAttendance(attendance, years, month,
+				stringYearsMonth);
+		//ステータス変更処理
+		Date firstAttendanceDate = attendanceManagementService.getFirstAttendanceDate(attendanceFormList);
+		monthlyAttendanceReqService.submissionStatusCheck(firstAttendanceDate, userId, model, session);
+		
+		model.addAttribute("attendanceFormList", attendanceFormList);
 		model.addAttribute("stringYearsMonth",stringYearsMonth);
 		return "monthlyAttendanceReq/monthlyAttendance";
 	}
@@ -108,7 +125,7 @@ public class MonthlyAttendanceReqController {
 			@RequestParam("Month") Integer month, @RequestParam("approvalUserName") String userName, Model model,
 			HttpSession session) {
 		commonActivityService.usersModelSession(model, session);
-		//monthをMMの形に変更
+		//monthをMMの形に再成型
 		String monthString = String.format("%02d", month);
 		String stringYearsMonth = years + "-" + monthString;
 
@@ -132,7 +149,7 @@ public class MonthlyAttendanceReqController {
 		List<MonthlyAttendanceReq> hasChangeReq = monthlyAttendanceReqService.selectHasChangeReq(stringYearsMonth);
 		//選択月該当ユーザー
 		model.addAttribute("HasChangeReq", hasChangeReq);
-		//選択したユーザー表記用
+		//選択した特定ユーザー表記用
 		model.addAttribute("CurrentChangeReq",currentChangeReq);
 		//カレンダー埋める用
 		model.addAttribute("stringYearsMonth",stringYearsMonth);
@@ -145,13 +162,14 @@ public class MonthlyAttendanceReqController {
 	@RequestMapping(value = "/management", params = "approval", method = RequestMethod.POST)
 	public String approval(AttendanceFormList attendanceFormList, Model model, HttpSession session,
 			RedirectAttributes redirectAttributes) {
+		//else句以外ほぼ起きることはない、状況を見て消去可,システム上前半句は起きえないはず
 		if (attendanceFormList.getAttendanceList() == null) {
 			redirectAttributes.addFlashAttribute("choiceUsers", messageOutput.message("choiceUsers"));
 		} else {
-			String inputDate = attendanceFormList.getAttendanceList().get(0).getAttendanceDateS();
-			String conversion = inputDate.replace("/", "-");
-			monthlyAttendanceReqService.changeApprovalMonthlyAttendanceReq(attendanceFormList.getAttendanceList().get(0).getUserId(),
-					conversion);
+			//承認更新文のための処理とその実行
+			String inputDate =  monthlyAttendanceReqService.getInputDate(attendanceFormList);
+			Integer firstUserId=attendanceManagementService.getFirstAttendanceUserId(attendanceFormList);
+			monthlyAttendanceReqService.changeApprovalMonthlyAttendanceReq(firstUserId, inputDate);
 		}
 		return "redirect:/attendanceCorrect/correction";
 	}
@@ -164,10 +182,10 @@ public class MonthlyAttendanceReqController {
 		if (attendanceFormList.getAttendanceList() == null) {
 			redirectAttributes.addFlashAttribute("choiceUsers", messageOutput.message("choiceUsers"));
 		} else {
-			String inputDate = attendanceFormList.getAttendanceList().get(0).getAttendanceDateS();
-			String conversion = inputDate.replace("/", "-");
-			monthlyAttendanceReqService.changeRejectionMonthlyAttendanceReq(attendanceFormList.getAttendanceList().get(0).getUserId(),
-					conversion,rejectionReason);
+			//却下更新分のための処理とその実行
+			String inputDate =  monthlyAttendanceReqService.getInputDate(attendanceFormList);
+			Integer firstUserId=attendanceManagementService.getFirstAttendanceUserId(attendanceFormList);
+			monthlyAttendanceReqService.changeRejectionMonthlyAttendanceReq(firstUserId, inputDate, rejectionReason);
 		}
 		return "redirect:/attendanceCorrect/correction";
 	}

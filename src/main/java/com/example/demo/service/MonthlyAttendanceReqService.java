@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,10 +27,13 @@ public class MonthlyAttendanceReqService {
 
 	private final CommonActivityService commonActivityService;
 
+	private final AttendanceManagementService attendanceManagementService;
+
 	MonthlyAttendanceReqService(MonthlyAttendanceReqMapper monthlyAttendanceReqMapper,
-			CommonActivityService commonActivityService) {
+			CommonActivityService commonActivityService, AttendanceManagementService attendanceManagementService) {
 		this.monthlyAttendanceReqMapper = monthlyAttendanceReqMapper;
 		this.commonActivityService = commonActivityService;
+		this.attendanceManagementService = attendanceManagementService;
 	}
 
 	public List<MonthlyAttendanceReq> selectApprovalPending() {
@@ -51,9 +55,8 @@ public class MonthlyAttendanceReqService {
 	public void monthlyAttendanceReqCreate(MonthlyAttendanceReq monthlyAttendanceReq,
 			AttendanceFormList attendanceFormList) {
 		//申請月の１日をtargetYearMonthにいれる
-		String inputDate = attendanceFormList.getAttendanceList().get(0).getAttendanceDateS();
-		String conversion = inputDate.replace("/", "-");
-		monthlyAttendanceReq.setTargetYearMonth(java.sql.Date.valueOf(conversion));
+		String inputDate = getInputDate(attendanceFormList);
+		monthlyAttendanceReq.setTargetYearMonth(java.sql.Date.valueOf(inputDate));
 		//今日の日付をmonthlyAttendanceReqDateに入れる
 		Date date = new Date();
 		monthlyAttendanceReq.setMonthlyAttendanceReqDate(date);
@@ -81,19 +84,22 @@ public class MonthlyAttendanceReqService {
 			//承認申請が却下または訂正承認されていた際の処理。statusは0か3
 		} else if (monthlyAttendanceCheck != null
 				&& (monthlyAttendanceCheck.getStatus() == 3 || monthlyAttendanceCheck.getStatus() == 0)) {
-			monthlyAttendanceReq.setTargetYearMonth(attendanceFormList.getAttendanceList().get(0).getAttendanceDate());
+			Date firstAttendanceDate = attendanceManagementService.getFirstAttendanceDate(attendanceFormList);
+			monthlyAttendanceReq.setTargetYearMonth(firstAttendanceDate);
 			updateMonthlyAttendanceReq(monthlyAttendanceReq);
 		}
 	}
 
-	//承認申請のステータス確認　リファクタリング予定
+	//承認申請のステータス確認
 	public Model submissionStatusCheck(Date targetYearMonth, Integer userId, Model model, HttpSession session) {
 		commonActivityService.usersModelSession(model, session);
 		Users users = (Users) model.getAttribute("Users");
+		//ステータスチェックを呼び出し、ステータスの記録があればそれを、なければ０を割り当てる処理
 		MonthlyAttendanceReq statusCheck = monthlyAttendanceReqMapper.selectTargetYearMonthStatus(targetYearMonth,
 				userId);
 		if (statusCheck != null) {
-			users.setStatus(statusCheck.getStatus());
+			Integer nowStatus = statusCheck.getStatus();
+			users.setStatus(nowStatus);
 		} else {
 			users.setStatus(0);
 		}
@@ -101,27 +107,44 @@ public class MonthlyAttendanceReqService {
 		return model;
 	}
 
-	//マネージャ承認
+	//マネージャ勤怠申請承認文
 	public void approvalStatus(Integer userId, String targetYearMonth) {
 		monthlyAttendanceReqMapper.approvalStatus(userId, targetYearMonth);
 	}
 
-	//マネージャ却下
+	//マネージャ勤怠申請却下文
 	public void rejectedStatus(Integer userId, String targetYearMonth) {
 		monthlyAttendanceReqMapper.rejectedStatus(userId, targetYearMonth);
 	}
 
 	//特定のユーザーの承認申請で承認済みを取得 カレンダー（一般）用
 	public List<MonthlyAttendanceReq> selectApproval(Integer userId) {
-		return monthlyAttendanceReqMapper.selectApproved(userId);
+		  // MonthlyAttendanceReqのリストを取得
+        List<MonthlyAttendanceReq> targetList = monthlyAttendanceReqMapper.selectApproved(userId);
+        
+        // 先月の月を取得
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH,-1);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
+        String lastMonth = dateFormat.format(calendar.getTime());
+
+        // 先月の月のMonthlyAttendanceReqオブジェクトを作成
+        MonthlyAttendanceReq lastMonthReq = new MonthlyAttendanceReq();
+        lastMonthReq.setStringTargetYearMonth(lastMonth);
+
+        // リストに追加
+        targetList.add(lastMonthReq);
+        
+        return targetList;
 	}
 
-	//特定の年月の勤怠取得
+	//特定の年月の勤怠取得(勤怠訂正用)
 	public List<MonthlyAttendanceReq> selectHasChangeReq(String targetYearMonth) {
-		LocalDate dateTargetYearMonth = LocalDate.parse(targetYearMonth + "-01",
-				DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-		List<MonthlyAttendanceReq> monthlyAttendanceReq = monthlyAttendanceReqMapper
-				.selectHasChangeReq(dateTargetYearMonth);
+		//LocalDate型に変更
+		LocalDate dateTargetYearMonth = LocalDate.parse(targetYearMonth + "-01", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		//変更依頼ステータスが１の勤怠表呼び出し
+		List<MonthlyAttendanceReq> monthlyAttendanceReq = monthlyAttendanceReqMapper.selectHasChangeReq(dateTargetYearMonth);
+		//yearとmonthがそれぞれ必要になるので作成
 		YearMonth yearMonth = YearMonth.parse(targetYearMonth, DateTimeFormatter.ofPattern("yyyy-MM"));
 		//以下for文でstringYearsMonthとyear,monthの値をそれぞれMonthlyAttenanceReqの型にセット
 		for (MonthlyAttendanceReq req : monthlyAttendanceReq) {
@@ -158,6 +181,7 @@ public class MonthlyAttendanceReqService {
 			// 日付を1日に設定
 			return targetDate.withDayOfMonth(1);
 		} catch (DateTimeParseException e) {
+			//ほぼあり得ないがエラー時用の処理
 			System.err.println("Error parsing date: " + stringYearsMonth);
 			e.printStackTrace();
 			return null;
@@ -167,9 +191,20 @@ public class MonthlyAttendanceReqService {
 	//特定ユーザーだけ表示するフィルター
 	public List<MonthlyAttendanceReq> filteringHasChangeReq(Integer userId, String stringYearsMonth) {
 		List<MonthlyAttendanceReq> hasChangeReq = selectHasChangeReq(stringYearsMonth);
+		//hasChangeReqは複数の要素を持つので、一つに絞るためのフィルターをかける
 		List<MonthlyAttendanceReq> currentChangeReq = hasChangeReq.stream()
 				.filter(req -> userId.equals(req.getUserId()))
 				.collect(Collectors.toList());
 		return currentChangeReq;
+	}
+	
+	//InputDate共通化処理
+	public String getInputDate(AttendanceFormList attendanceFormList) {
+		 if (attendanceFormList != null && !attendanceFormList.getAttendanceList().isEmpty()) {
+	            String defaultInputDate=attendanceFormList.getAttendanceList().get(0).getAttendanceDateS();
+	            String conversion = defaultInputDate.replace("/", "-");
+	            return conversion;
+	        }
+	        return null; // または適切なデフォルト値
 	}
 }

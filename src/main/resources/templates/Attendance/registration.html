@@ -30,6 +30,7 @@
 							<th:block th:case="1">　承認待ち</th:block>
 							<th:block th:case="2">　承認済み</th:block>
 							<th:block th:case="3">　却下</th:block>
+							<th:block th:case="4">訂正申請中</th:block>
 						</div>
 					</th:block>
 				</div>
@@ -54,11 +55,9 @@
 							</div>
 						</div>
 						<div th:unless="${Users.role} == 'Manager'">
-							<span th:if="(${attendanceFormList} == null or ${attendanceFormList.RequestActivityCheck} == false) or (${Users.status} == 1 or ${Users.status} == 2)">
-								<input type="submit" id="requestApproval" name="approvalApplicationRegistration" value="承認申請" class="buttonSize" disabled>
-							</span>
-							<span th:unless="(${attendanceFormList} == null or ${attendanceFormList.RequestActivityCheck} == false) or (${Users.status} == 1 or ${Users.status} == 2)">
-								<input type="submit" id="requestApproval" name="approvalApplicationRegistration" value="承認申請" class="buttonSize" th:attr="role=${Users.role}" onclick="confirmSubmission(event)">
+							<span th:with="isDisabled = (${attendanceFormList} == null or ${attendanceFormList.RequestActivityCheck} == false) or (${Users.status} != 0 and ${Users.status} != 3)">
+								<input type="submit" id="requestApproval" name="approvalApplicationRegistration" value="承認申請" class="buttonSize" 
+								th:disabled="${isDisabled}" th:attr="role=${Users.role}" onclick="confirmSubmission(event)">
 							</span>
 							<span>
 								<input type="submit" id="register" value="登録" name="insert" class="buttonSize"

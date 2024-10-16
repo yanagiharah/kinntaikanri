@@ -89,6 +89,15 @@
     text-align: center;
 }
 
+.highlight {
+    font-weight: bold;
+    color: black;
+}
+
+.dim {
+    color: lightgray;
+}
+
 @media screen and (max-width: 480px){
 	.buttonRound{
 	  width:120px;

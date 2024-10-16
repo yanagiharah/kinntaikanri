@@ -25,7 +25,8 @@ public class MonthlyAttendanceReq {
 	
 	private Integer days;//日
 	
-	private String changeReason;
+	private String changeReason;//訂正申請理由
 	
+	private String stringTargetYearMonth;
 
 }
