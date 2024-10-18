@@ -19,6 +19,20 @@
 	AND daily_report_date = #{yesterday});
 </select>
 
+<!--確認待ちユーザー取得-->
+<select id = "selectConfirmPending">
+	SELECT 
+	t1.user_id,
+	t1.status,
+	t1.daily_report_date,
+	t2.user_name 
+	FROM daily_report t1 
+	INNER JOIN users t2 ON t1.user_id = t2.user_id 
+	WHERE t1.status = 1 and daily_report_date = #{dailyReportDate}
+</select>
+
+<!--confirmPending表示者クリック時のターゲット取得-->
+
 <!-- 日報追加 -->
 <insert id="insertDailyReport">
 	INSERT INTO
@@ -34,6 +48,15 @@
 	SET
 		status = 1
 	WHERE daily_report_id = #{dailyReportId}
+</update>
+
+<!--日報確認-->
+<update id = "updateConfirmDailyReport">
+	UPDATE daily_report
+	SET
+		status=2
+	WHERE 
+		daily_report_id = #{dailyReportId}
 </update>
 
 <!-- 日報削除 -->

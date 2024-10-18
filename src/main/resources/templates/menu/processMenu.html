@@ -73,14 +73,14 @@
 					<div th:if="${Users.role=='Regular'||Users.role=='UnitManager'}">
 						<p>
 							<form th:action="@{/menu/index}" method="get">
-							<input type="submit" value="勤怠登録" class="menuButtonSize"
-								style="background-color: rgb(255, 128, 64);">
-						</form>
-						<!--						th:actionの修正予定"@{/menu/correction}"-->
-						<form th:action="@{/menu/correction}" method="get">
-							<input type="submit" value="勤怠修正" class="menuButtonSize"
-								style="background-color: rgb(255, 128, 64);margin-top:15px;" >
-						</form>
+								<input type="submit" value="勤怠登録" class="menuButtonSize"
+									style="background-color: rgb(255, 128, 64);">
+							</form>
+							<!--						th:actionの修正予定"@{/menu/correction}"-->
+							<form th:action="@{/menu/correction}" method="get">
+								<input type="submit" value="勤怠修正" class="menuButtonSize"
+									style="background-color: rgb(255, 128, 64);margin-top:15px;" >
+							</form>
 						</p>
 						<form th:action="@{/menu/daily/detail}" method="get">
 							<input type="submit" value="日報登録" class="menuButtonSize"
@@ -110,6 +110,10 @@
 									style="background-color: rgb(255, 128, 64);margin-top:15px;" >
 							</form>
 						</p>
+						<form th:action="@{/menu/daily/detail}" method="get">
+							<input type="submit" value="日報管理" class="menuButtonSize"
+								style="background-color: rgb(128, 128, 64);">
+						</form>
 						<form th:action="@{/menu/department}" method="get">
 							<input type="submit" value="部署登録" class="menuButtonSize"
 								style="background-color: rgb(128, 255, 255);">
