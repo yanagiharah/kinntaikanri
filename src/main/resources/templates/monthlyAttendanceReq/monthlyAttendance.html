@@ -63,8 +63,6 @@
 						<div class="col-6"th:if="${Users.role=='Manager' && attendanceFormList != null}"th:each="CurrentChangeReq : ${CurrentChangeReq}">
 							ユーザーID:<span th:text="${CurrentChangeReq.userId}"></span>
 						</div>
-						
-		<!--						変更理由、却下理由それぞれMG画面、RGUM画面で値がない時に非表示かつあるときは読み取り専用（readonly）にしたい-->
 						<div class="col-3" th:if="${Users.role != 'Manager'} or (${Users.role == 'Manager'} and ${attendanceFormList != null})">
 						    変更理由
 						</div>
@@ -105,7 +103,6 @@
 						<!--マネージャー画面-->
 				
 			<!--ユーザー選択-->
-			<!--バリュー一回無視しているため変更必要-->
 					<div th:if="${HasChangeReq} != null"><!--マネージャー画面でない限りnull-->
 						<div class="row m-2">
 							<div class="col-7">

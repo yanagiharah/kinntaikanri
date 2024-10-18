@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +32,34 @@ public class DailyReportService {
 	//日報取得
 	public DailyReportForm getDailyReport(Integer userId, LocalDate localDateDay) {
 		DailyReportForm dailyReportForm = dailyReportMapper.getDailyReport(userId, localDateDay);
+		//nullなら新しいフォームを作成
+		if (dailyReportForm == null) {
+			dailyReportForm = new DailyReportForm();
+			dailyReportForm.setUserId(userId);
+			dailyReportForm.setDailyReportDate(localDateDay);
+		}
 		return dailyReportForm;
 
+	}
+	//空のリストを10行まで追加で作成
+	public List<DailyReportDetailForm> populateEmptyDailyReportDetails(List<DailyReportDetailForm> dailyReportDetailForm, 
+			Integer userId, LocalDate calendarDate) {
+	    while (dailyReportDetailForm.size() < 10) {
+	        DailyReportDetailForm emptyDetailForm = new DailyReportDetailForm();
+	        emptyDetailForm.setUserId(userId);
+	        emptyDetailForm.setDailyReportDetailDate(calendarDate);
+	        dailyReportDetailForm.add(emptyDetailForm);
+	    }
+	    return dailyReportDetailForm;
 	}
 
 	//日報詳細取得
 	public List<DailyReportDetailForm> getDailyReportDetail(Integer userId, LocalDate localDateDay) {
 		List<DailyReportDetailForm> dailyReportDetailForm = dailyReportDetailMapper.getDailyReportDetail(userId, localDateDay);
+		// nullまたは空なら新しいリストを初期化
+		if (dailyReportDetailForm == null || dailyReportDetailForm.isEmpty()) {
+			dailyReportDetailForm = new ArrayList<>();
+		}
 		return dailyReportDetailForm;
 	}
 
@@ -93,5 +116,17 @@ public class DailyReportService {
 		} catch (DuplicateKeyException e) {
 
 		}
+	}
+	//マネージャー用 確認待ち取得
+	public List<DailyReportForm> selectConfirmPending(LocalDate today) {
+		// LocalDateをStringに変換
+		 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	     String dailyReportDate = today.format(formatter);;
+		return dailyReportMapper.selectConfirmPending(dailyReportDate);
+	}
+	
+	//日報確認
+	public void updateConfirmDailyReport(DailyReportForm dailyReportForm) {
+		dailyReportMapper.updateConfirmDailyReport(dailyReportForm);
 	}
 }

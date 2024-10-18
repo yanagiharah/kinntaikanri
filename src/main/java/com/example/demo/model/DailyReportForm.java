@@ -26,4 +26,6 @@ public class DailyReportForm {
 //	private LocalDateTime dailyReportDate;
 	
 	private Integer status;
+	
+	private String userName;
 }
