@@ -62,7 +62,7 @@ public class MonthlyAttendanceReqController {
 		return "monthlyAttendanceReq/monthlyAttendance";
 	}
 
-	//	//表示ボタンの処理　
+	//	//表示ボタンの処理
 	@RequestMapping(value = "/management", params = "search", method = RequestMethod.POST)
 	public String attendanceSearch(Integer userId, String stringYearsMonth, Model model,
 			HttpSession session) {
@@ -189,12 +189,10 @@ public class MonthlyAttendanceReqController {
 		}
 		return "redirect:/attendanceCorrect/correction";
 	}
-
-	//戻るボタン
-	@RequestMapping(value = "/management", params = "back", method = RequestMethod.POST)
-	public String back(Model model, HttpSession session) {
-		commonActivityService.backMenu(model, session);
-		return "menu/processMenu";
+	
+	//更新ボタンが押された場合の処理
+	@RequestMapping(value = "/management",method = RequestMethod.GET)
+	public String reload(Model model,HttpSession session,RedirectAttributes redirectAttributes) {
+		return "redirect:/attendanceCorrect/correction";
 	}
-
 }

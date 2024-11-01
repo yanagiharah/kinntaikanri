@@ -1,113 +1,179 @@
 @charset "UTF-8";
 
-@media screen and (min-width: 481px){ 
-
-.m-50  {
-    padding-top: 50px !important; /* 上に余白を追加 */
-    padding-bottom: 50px; /* 下に余白を追加 */
-    font-size: x-large !important;
-/*    margin: 0 auto;*/
-}
-
-.noneBox{
-    /*コレ*/border: none;
- width: 100%
-}
-.buttonSize {
-  width: 100px;
-/*  border-radius: 40% 80% 35% 65% / 50% 50% 70% 40%;*/
-  background-color: yellow;
-}
-
-.buttonRound{
-  width:120px;
-  height:60px;
-  background-color: yellow;
-/*  border-radius:30px;*/
-}
-
-.loginback{
-	text-align: right;
-}
-
-.variableButtonSize{
-/*	width: 100px;*/
-	display: inline-block;
-	padding: 10px 20px;
-	cursor: pointer;
-	background-color: yellow;
-	font-size:20px;
-}
-
-.linklike {
-  border:none;
-  background-color:transparent;
-  color:blue;
-  text-decoration:underline;
-}
-
-.menuButtonSize{
-	width:260px;
-  	height:80px;
-	
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-.form-row {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.form-row label{
-		width: 160px;
-}
-
-.longLabel{
-	font-size:24px;
-}
-
-.loginFontsize{
-	  font-size:30px;
-}
-
-.loginFontsize label{
-	display: inline-block;
-	width:154px;
-}
-
-.error-message {
-    color: red;
-    font-weight: bold; 
-}
-
-.text-center {
-    text-align: center;
-}
-
-.highlight {
-    font-weight: bold;
-    color: black;
-}
-
-.dim {
-    color: lightgray;
-}
-
-@media screen and (max-width: 480px){
-	.buttonRound{
-	  width:120px;
-	  height:60px;
-	  background-color: blueviolet;
-	/*  border-radius:30px;*/
+@media screen and (min-width: 481px) {
+	body {
+		margin: 0;
+		padding-top: 60px;
 	}
- }
- }
- 
+	
+	main {
+		margin-top: 60px;
+	}
+	
+	.commonHeader {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		background-color: #999999;
+		opacity: 0.92;
+		color: white;
+		text-align: center;
+		padding: 7px 0;
+		z-index: 2000; /* 他の要素より前面に表示 */
+		margin: 0;
+	}
+	
+	.header {
+		position: fixed;
+		top: 43.8px;
+		left: 0;
+		width: 100%;
+		background-color: #999999;
+		opacity: 0.92;
+		color: white;
+		text-align: center;
+		padding: 7px 0;
+		z-index: 1000; /* 他の要素より前面に表示 */
+	}
+	
+	.m-50 {
+		padding-top: 50px !important; /* 上に余白を追加 */
+		padding-bottom: 50px; /* 下に余白を追加 */
+		font-size: x-large !important;
+		/*    margin: 0 auto;*/
+	}
+	
+	.noneBox {
+		border: none;
+		width: 100%
+	}
+	
+	.buttonSize {
+		width: 100px;
+		/*  border-radius: 40% 80% 35% 65% / 50% 50% 70% 40%;*/
+		background-color: yellow;
+	}
+	
+	.buttonRound {
+		width: 120px;
+		height: 60px;
+		background-color: yellow;
+		/*  border-radius:30px;*/
+	}
+	
+	.loginback {
+		text-align: right;
+	}
+	
+	.variableButtonSize {
+		/*	width: 100px;*/
+		display: inline-block;
+		padding: 10px 20px;
+		cursor: pointer;
+		background-color: yellow;
+		font-size: 20px;
+	}
+	
+	.linklike {
+		border: none;
+		background-color: transparent;
+		color: blue;
+		text-decoration: underline;
+	}
+	
+	.menuButtonSize {
+		width: 260px;
+		height: 80px;
+	}
+	
+	.form-group {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+	}
+	
+	.form-row {
+		display: flex;
+		align-items: center;
+		margin-bottom: 10px;
+	}
+	
+	.form-row label {
+		width: 160px;
+	}
+	
+	.longLabel {
+		font-size: 24px;
+	}
+	
+	.loginFontsize {
+		font-size: 30px;
+	}
+	
+	.loginFontsize label {
+		display: inline-block;
+		width: 154px;
+	}
+	
+	.error-message {
+		color: red;
+		font-weight: bold;
+	}
+	
+	.text-center {
+		text-align: center;
+	}
+	
+	.highlight {
+		font-weight: bold;
+		color: black;
+	}
+	
+	.dim {
+		color: lightgray;
+	}
+	
+	.weatherInfo {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+	
+	.weatherInfo li {
+		justify-content: center; /* 水平方向の中央揃え */
+		margin-left: 10px;
+		margin-bottom: 10px; /* 各項目の間隔を調整 */
+	}
+	
+	.label {
+		width: 100px; /* ラベルの幅を固定 */
+		text-align: right; /* ラベルのテキストを右揃え */
+		margin-right: 10px; /* ラベルと値の間隔を調整 */
+	}
+	
+	.sticky {
+		position: sticky;
+		z-index: 3000;
+	}
+	
+	@media screen and (max-width: 480px) {
+		.buttonRound {
+			width: 120px;
+			height: 60px;
+			background-color: blueviolet;
+			/*  border-radius:30px;*/
+		}
+		.variableButtonSize {
+			/*	width: 100px;*/
+			display: inline-block;
+			padding: 10px 20px;
+			cursor: pointer;
+			background-color: yellow;
+			font-size: 20px;
+		}
+	}
+}
 
 /*.textBox{*/
 /*	border-radius: 40% 80% 35% 65% / 50% 50% 70% 40%;*/

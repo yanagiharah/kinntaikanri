@@ -8,13 +8,14 @@
 //    event.preventDefault();
 //});
 
-
+if(userRole !== "Manager"){
 document.addEventListener('DOMContentLoaded', function() {
     // 初期値が空の場合、setYearMonthを呼び出す
     if (document.getElementById('stringYearsMonth').value === "") {
         setYearsMonth();
     }
 });
+}
 
 function setYearsMonth() {
     // 現在の年月を取得
