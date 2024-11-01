@@ -8,210 +8,220 @@
 			integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" 
 			crossorigin="anonymous">
 		<link th:href="@{/CSS/create.css}" rel="stylesheet" />
+		<link th:href="@{/CSS/monthlyAttendance.css}" rel="stylesheet" />
 	</head>
 	<body>
-		<div class="container" th:object="${Users}">	
-			<div class="concontainer">
-				<form id="mainForm" th:action="@{/attendanceCorrect/management}" method="post" th:object="${attendanceFormList}">
-					<div class ="row">
-						<div class="col-3" >
-						</div>
-						<div class="col-4 ">
-							ユーザー名:<span th:text="${Users.userName}"></span>
-							<input type="hidden" name="userName" th:value="${Users.userName}">
-						</div>
-						<div class="col-4">
-							ユーザーID:<span th:text="${Users.userId}"></span>
-							<input type="hidden" name="userId" th:value="${Users.userId}">
-						</div>
-					</div>
+		<div th:replace="~{common/commonHeader :: common-header}"></div>
+		<main>	
+			<div class="container" th:object="${Users}">	
+				<div class="concontainer">
 					<div class="row">
-		<!--					ユーザー名、訂正申請、戻るボタンを同じ行に表示-->
-						<div class="row m-4" >
-		<!--						ユーザー名を表示-->
-							<div class="col-3" th:if="${Users.role=='Manager' && attendanceFormList != null}"th:each="CurrentChangeReq: ${CurrentChangeReq}"> 
-								ユーザー名:<span th:text="${CurrentChangeReq.userName}"></span>
-							</div>
-							<div class="col-3" th:unless="${Users.role=='Manager'}">
-								<th:block th:switch="${Users.status}">
-									ステータス:
-									<th:block th:case="null">　</th:block>
-									<th:block th:case="1">　承認待ち</th:block>
-									<th:block th:case="2">　承認済み</th:block>
-									<th:block th:case="3">　却下</th:block>
-									<th:block th:case="4">訂正申請中</th:block>
-									<th:block th:case="0">　未申請</th:block>
-								</th:block>
-							</div>		
-							<div class="col-3">
-								<div th:if="${Users.role=='Manager'}">
-									<input type="submit" id="approve" value="承認" name="approval"class="buttonSize" style="color:deepskyblue;"th:attr="disabled=${attendanceFormList == null}">
-									<input type="submit" id="reject" value="却下" name="rejected"class="buttonSize"　 style="color:red;" disabled>
+						<form id="mainForm" th:action="@{/attendanceCorrect/management}" method="post" th:object="${attendanceFormList}" >
+							<div class="header">
+								<div class="col-0">
+									<input type="hidden" name="userId" th:value="${Users.userId}">
+									<input type="hidden" name="userName" th:value="${Users.userName}">
 								</div>
-								<div th:unless="${Users.role=='Manager'}">
-									<input type="submit" id="willCorrect" value="訂正申請" name="willCorrect" class="buttonSize" disabled>
+								<div class="row m-1">
+									<div class="col-3">
+										<div th:if="${Users.role=='Manager'}"></div>
+										<div th:unless="${Users.role=='Manager'}">
+											<th:block th:switch="${Users.status}">
+												ステータス:
+												<th:block th:case="null"></th:block>
+												<th:block th:case="1">承認待ち</th:block>
+												<th:block th:case="2">承認済み</th:block>
+												<th:block th:case="3">却下</th:block>
+												<th:block th:case="4">訂正申請中</th:block>
+												<th:block th:case="0">未申請</th:block>
+											</th:block>
+										</div>
+									</div>	
+									<div class="col-5">
+										表示年月：
+										<span th:unless="${Users.role=='Manager'}">
+											<input type="month" name="stringYearsMonth" id="approvedMonths"
+												th:value="${attendanceFormList != null? attendanceFormList.stringYearsMonth: stringYearsMonth}" 
+												 required min="1800-01"max="2400-12">
+										</span>
+										<span th:if="${Users.role=='Manager'}">
+											<input type="month" name="stringYearsMonth" id="stringYearsMonth"
+												th:value="${attendanceFormList != null? stringYearsMonth:stringYearsMonth}" 
+												required min="1800-01"max="2400-12">
+										</span>
+										<input type="submit" id="display" value="表示" name="search" class="buttonSize" oninput="disabledSearch()">
+										<span th:unless="${Users.role=='Manager'}">
+											<div id="message">勤怠が承認されていない月です。</div>
+										</span>
+									</div>
+									<div class="col-4">
+										<div th:unless="${Users.role=='Manager'}">
+											<input type="submit" id="willCorrect" value="訂正申請" name="willCorrect" class="buttonSize" disabled>
+										</div>
+										<div th:if="${Users.role=='Manager'}">
+											<input type="submit" id="approve" value="承認" name="approval"class="buttonSize" th:attr="disabled=${attendanceFormList == null}">
+											<input type="submit" id="reject" value="却下" name="rejected"class="buttonSize"  disabled>
+										</div>
+									</div>
+								</div>
+								<div class="row m-3" th:if="${Users.role}=='Manager'">
+									<div class="col-2"></div>
+									<div class="col-4" th:if="${Users.role=='Manager' && attendanceFormList != null}"th:each="CurrentChangeReq: ${CurrentChangeReq}"> 
+										選択中ユーザー名:<span th:text="${CurrentChangeReq.userName}"></span>
+									</div>
+									<div class="col-4" th:if="${Users.role=='Manager' && attendanceFormList != null}"th:each="CurrentChangeReq : ${CurrentChangeReq}">
+										選択中ユーザーID:<span th:text="${CurrentChangeReq.userId}"></span>
+									</div>
+									<div class="col-2"></div>
+								</div>
+							</div>
+							<div class="row m-5" ></div><div class="row m-3" ></div>
+							<div class="row m-4" >
+								<div class="col-6"></div>
+								
+								
+							</div>
+							<div class="row m-4">
+								<span class="col-xl-6">
+									<div th:if="${HasChangeReq} != null" style="margin-top:auto;"><!--マネージャー画面でない限りnull-->
+										<table class="table table-bordered border border-dark " id="attendanceList">
+											<thead>
+												<tr>
+													<td >申請者ID</td>
+													<td >訂正申請者</td>
+													<td >申請対象年月</td>
+													<td >変更理由</td>
+												</tr>
+											</thead>
+											<tbody >
+												<tr th:each="HasChangeReq : ${HasChangeReq}">
+													<td th:text="${HasChangeReq.userId}"></td>
+						<!--											ここでクリックした名前を下のhiddenを要素にして引き出す。-->
+													<td>
+														<form th:action="@{/attendanceCorrect/management}" method="post">
+															<th:block>
+																<input type="hidden" name="approvalUserId" th:value="${HasChangeReq.userId}">
+																<input type="hidden" name="approvalUserName" th:value="${HasChangeReq.userName}">
+																<input type="hidden" name="Years" th:value="${HasChangeReq.Years}">
+																<input type="hidden" name="Month" th:value="${HasChangeReq.Month}">
+															</th:block>
+																<!--以上の要素がattendanceSerchUpメソッドの引数となる-->
+															<button type="submit"name="ApprovalApplicantDisplay" class="ApprovalApplicantDisplay linklike"> [[${HasChangeReq.userName}]]</button>
+														</form>
+													</td>
+												<!--申請対象年月-->
+													<td th:text="${#dates.format(HasChangeReq.targetYearMonth,'yyyy/MM/dd')}"></td>
+												<!--申請理由-->
+													<td class ="shortChangeReason"th:text="${HasChangeReq.changeReason}"></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</span>
+								<div class="col-xl-6 reasonAreas">
+									<span class="reasonArea" th:unless="${Users.role=='Manager'}">
+										<div class="col-3 reasonTitle">
+											変更理由
+										</div>
+										<textarea class="reason col-3" id="willCorrectReason" name="willCorrectReason" placeholder="承認済みの月のみ記入可"  
+											th:disabled="${Users.status} != 2" oninput="disabledApprove()"></textarea>
+									</span>
+									<span th:if="${Users.role=='Manager' && attendanceFormList != null}"th:each="CurrentChangeReq : ${CurrentChangeReq}">
+										<span class="reasonArea">
+											<span class="reasonTitle">
+												変更理由
+											</span>
+											<textarea name="willCorrectReason" class="reason col-3"th:text="${CurrentChangeReq.changeReason}"readonly></textarea>
+										</span>
+										<span class="reasonArea">
+											<span class="reasonTitle">
+												却下理由
+											</span>	
+											<textarea class="reason col-3" id="rejectReason" name="rejectionReason"  oninput="disabledReject()"></textarea>
+										</span>
+									</span>
+								</div>
+								<div class="row m-1">
+									<div class="text-danger" th:if="${check} != null">
+										<span th:text="${check}" style="color: red;"></span>
+									</div>
 								</div>
 							</div>
 							
-							<div class="col-3">
-								<input type="submit" id="back" value="戻る" name="back" class="buttonSize "></input>
-							</div>
-						</div>
-					</div>
-					<div class="row m-4">
-		<!--						ユーザーID、テキストボックスのタイトル（変更理由）を同じ行に表示-->
-						<div class="col-6"th:if="${Users.role=='Manager' && attendanceFormList != null}"th:each="CurrentChangeReq : ${CurrentChangeReq}">
-							ユーザーID:<span th:text="${CurrentChangeReq.userId}"></span>
-						</div>
-						<div class="col-3" th:if="${Users.role != 'Manager'} or (${Users.role == 'Manager'} and ${attendanceFormList != null})">
-						    変更理由
-						</div>
-						<div class="col-3"th:if="${Users.role=='Manager' && attendanceFormList != null}">
-							却下理由
-						</div>	
-					</div>
-					<div class="row m-1">
-		<!--						対象月、カレンダー、テキストボックスを同じ行に表示-->
-							<div class="text-danger" th:if="${check} != null">
-								<span th:text="${check}" style="color: red;"></span>
-							</div>
-							<div class="col-6">
-								表示年月：
-								<div th:unless="${Users.role=='Manager'}">
-									<input type="month" name="stringYearsMonth" id="approvedMonths"
-										th:value="${attendanceFormList != null? attendanceFormList.stringYearsMonth: stringYearsMonth}" 
-										 required min="1800-01"max="2400-12">
-										<div id="message" style="color: red; display: none;">勤怠が承認されていない月です。</div>
-								</div>
-								<div th:if="${Users.role=='Manager'}">
-									<input type="month" name="stringYearsMonth" id="stringYearsMonth"
-										th:value="${attendanceFormList != null? stringYearsMonth:stringYearsMonth}" 
-										required min="1800-01"max="2400-12">
-								</div>
-								<input type="submit" id="display" value="表示" name="search" class="buttonSize" oninput="disabledSearch()">
-							</div>
-						<div class="col-6">
-							<div th:unless="${Users.role=='Manager'}">
-								<textarea class="reason m-0" id="willCorrectReason" name="willCorrectReason" style="height:100px; width:250px; "th:disabled="${Users.status} != 2" oninput="disabledApprove()"></textarea>
-							</div>
-							<div th:if="${Users.role=='Manager' && attendanceFormList != null}"th:each="CurrentChangeReq : ${CurrentChangeReq}">
-								<textarea name="willCorrectReason" class="m-0"style="height:100px; width:250px;"th:text="${CurrentChangeReq.changeReason}"readonly></textarea>
-								<textarea class="reason m-0" id="rejectReason" name="rejectionReason" style="height:100px; width:250px;" oninput="disabledReject()"></textarea>
-							</div>
-						</div>
-					</div>
-						<!--マネージャー画面-->
-				
-			<!--ユーザー選択-->
-					<div th:if="${HasChangeReq} != null"><!--マネージャー画面でない限りnull-->
-						<div class="row m-2">
-							<div class="col-7">
-								<table class="table table-bordered border border-dark " id="attendanceList">
-									<thead>
-										<tr>
-											<td>申請者ID</td>
-											<td>訂正申請者</td>
-											<td>申請対象年月</td>
-											<td>変更理由</td>
-										</tr>
-									</thead>
-									<tbody >
-										<tr th:each="HasChangeReq : ${HasChangeReq}">
-											<td th:text="${HasChangeReq.userId}"></td>
-				<!--											ここでクリックした名前を下のhiddenを要素にして引き出す。-->
-											<td>
-												<form th:action="@{/attendanceCorrect/management}" method="post">
+							<div th:if="${attendanceFormList} != null">
+								<div class="row">
+									<div class="attendanceList">
+										<table class="table table-bordered border border-dark sticked">
+											<thead>
+												<tr>
+													<th class="stickyth" >日付</th>
+													<th class="stickyth">曜日</th>
+													<th class="stickyth">勤務状況</th>
+													<th class="stickyth">出勤時間</th>
+													<th class="stickyth">退勤時間</th>
+													<th class="stickyth">備考</th>
+												</tr>
+											</thead>
+											<tbody th:each="attendance, start : ${attendanceFormList.attendanceList}">
+												<tr>
 													<th:block>
-														<input type="hidden" name="approvalUserId" th:value="${HasChangeReq.userId}">
-														<input type="hidden" name="approvalUserName" th:value="${HasChangeReq.userName}">
-														<input type="hidden" name="Years" th:value="${HasChangeReq.Years}">
-														<input type="hidden" name="Month" th:value="${HasChangeReq.Month}">
+														<input type="hidden" th:name="|attendanceList[${start.index}].userId|" th:value="${attendance.userId}">
+														<input type="hidden" th:name="|attendanceList[${start.index}].dayOfWeek|" th:value="${attendance.dayOfWeek}">
+														<input type="hidden" th:name="|attendanceList[${start.index}].attendanceDateS|" th:value="${attendance.attendanceDateS}">
 													</th:block>
-														<!--以上の要素がattendanceSerchUpメソッドの引数となる-->
-													<button type="submit"name="ApprovalApplicantDisplay" class="ApprovalApplicantDisplay linklike"> [[${HasChangeReq.userName}]]</button>
-												</form>
-											</td>
-										<!--申請対象年月-->
-											<td th:text="${#dates.format(HasChangeReq.targetYearMonth,'yyyy/MM/dd')}"></td>
-										<!--申請理由-->
-											<td class ="shortChangeReason"th:text="${HasChangeReq.changeReason}"></td>
-										</tr>
-									</tbody>
-								</table>
+			
+													<td th:text="|${#strings.substring(attendance.attendanceDateS,5,10)}|"></td>
+													<td th:text="${attendance.dayOfWeek}"></td>
+													<td>
+														<select th:id="'status-'+${start.index}" th:field="*{attendanceList[__${start.index}__].status}" class="noneBox" disabled>
+															<option th:value="12" th:selected="${attendance.status} == '12'" >選択してください</option>
+															<option th:value="0" th:selected="${attendance.status} == '0'" >通常出勤</option>
+															<option th:value="1" th:selected="${attendance.status} == '1'" >休日</option>
+															<option th:value="2" th:selected="${attendance.status} == '2'" >祝日</option>
+															<option th:value="3" th:selected="${attendance.status} == '3'" >遅刻</option>
+															<option th:value="4" th:selected="${attendance.status} == '4'" >有給</option>
+															<option th:value="5" th:selected="${attendance.status} == '5'" >欠勤</option>
+															<option th:value="6" th:selected="${attendance.status} == '6'" >早退</option>
+															<option th:value="7" th:selected="${attendance.status} == '7'" >時間外勤務</option>
+															<option th:value="8" th:selected="${attendance.status} == '8'" >振替出勤</option>
+															<option th:value="9" th:selected="${attendance.status} == '9'" >振替休日</option>
+															<option th:value="10" th:selected="${attendance.status} == '10'" >代替出勤</option>
+															<option th:value="11" th:selected="${attendance.status} == '11'" >代替休日</option>
+														</select>
+													</td>
+													<td>
+														<input type="text" th:id="'startTime-'+${start.index}" th:field="*{attendanceList[__${start.index}__].startTime}"
+															th:value="${attendance.startTime}" class="noneBox"
+															disabled>
+													</td>
+													<td>
+														<input type="text" th:id="'endTime-'+${start.index}" th:field="*{attendanceList[__${start.index}__].endTime}"
+															th:value="${attendance.endTime}" class="noneBox"
+															disabled>
+													</td>
+													<td>
+														<input type="text" th:id="'attendanceRemarks-'+${start.index}" th:field="*{attendanceList[__${start.index}__].attendanceRemarks}"
+															th:value="${attendance.attendanceRemarks}" class="noneBox"
+															disabled>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
 							</div>
-						</div>
+						</form>
 					</div>
-				
-					<div th:if="${attendanceFormList} != null">
-						<div class="row m-2">
-							<div class="col-12 ml-3" >
-								<table class="table table-bordered border border-dark">
-									<thead>
-										<tr>
-											<th>日付</th>
-											<th>曜日</th>
-											<th>勤務状況</th>
-											<th>出勤時間</th>
-											<th>退勤時間</th>
-											<th>備考</th>
-										</tr>
-									</thead>
-									<tbody th:each="attendance, start : ${attendanceFormList.attendanceList}">
-											<tr>
-												<th:block>
-													<input type="hidden" th:name="|attendanceList[${start.index}].userId|" th:value="${attendance.userId}">
-													<input type="hidden" th:name="|attendanceList[${start.index}].dayOfWeek|" th:value="${attendance.dayOfWeek}">
-													<input type="hidden" th:name="|attendanceList[${start.index}].attendanceDateS|" th:value="${attendance.attendanceDateS}">
-												</th:block>
-		
-												<td th:text="|${#strings.substring(attendance.attendanceDateS,5,10)}|"></td>
-												<td th:text="${attendance.dayOfWeek}"></td>
-												<td>
-													<select th:id="'status-'+${start.index}" th:field="*{attendanceList[__${start.index}__].status}" class="noneBox" disabled>
-														<option th:value="12" th:selected="${attendance.status} == '12'" >選択してください</option>
-														<option th:value="0" th:selected="${attendance.status} == '0'" >通常出勤</option>
-														<option th:value="1" th:selected="${attendance.status} == '1'" >休日</option>
-														<option th:value="2" th:selected="${attendance.status} == '2'" >祝日</option>
-														<option th:value="3" th:selected="${attendance.status} == '3'" >遅刻</option>
-														<option th:value="4" th:selected="${attendance.status} == '4'" >有給</option>
-														<option th:value="5" th:selected="${attendance.status} == '5'" >欠勤</option>
-														<option th:value="6" th:selected="${attendance.status} == '6'" >早退</option>
-														<option th:value="7" th:selected="${attendance.status} == '7'" >時間外勤務</option>
-														<option th:value="8" th:selected="${attendance.status} == '8'" >振替出勤</option>
-														<option th:value="9" th:selected="${attendance.status} == '9'" >振替休日</option>
-														<option th:value="10" th:selected="${attendance.status} == '10'" >代替出勤</option>
-														<option th:value="11" th:selected="${attendance.status} == '11'" >代替休日</option>
-													</select>
-												</td>
-												<td>
-													<input type="text" th:id="'startTime-'+${start.index}" th:field="*{attendanceList[__${start.index}__].startTime}"
-														th:value="${attendance.startTime}" class="noneBox"
-														disabled>
-												</td>
-												<td>
-													<input type="text" th:id="'endTime-'+${start.index}" th:field="*{attendanceList[__${start.index}__].endTime}"
-														th:value="${attendance.endTime}" class="noneBox"
-														disabled>
-												</td>
-												<td>
-													<input type="text" th:id="'attendanceRemarks-'+${start.index}" th:field="*{attendanceList[__${start.index}__].attendanceRemarks}"
-														th:value="${attendance.attendanceRemarks}" class="noneBox"
-														disabled>
-												</td>
-											</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</div>
-				</form>
+				</div>
 			</div>
-		</div>
-		<script th:inline="javascript">
-		    /*<![CDATA[*/
-		    const approvedMonths = /*[[${approvedMonths}]]*/ [];
-		    /*]]>*/
-		</script>
-		<script th:src="@{/js/monthlyAttendance.js}"></script>
+			<script th:inline="javascript">
+			    /*<![CDATA[*/
+			    const approvedMonths = /*[[${approvedMonths}]]*/ [];
+				const userRole=/*[[${Users.role}]]*/[];
+			    /*]]>*/
+			</script>
+			<script th:src="@{/js/monthlyAttendance.js}"></script>
+			<script th:src="@{/js/common.js}"></script>
+		</main>
 	</body>
 </html>

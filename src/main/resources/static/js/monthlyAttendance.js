@@ -10,33 +10,37 @@ document.addEventListener("DOMContentLoaded", function() {
 	});
 
 	//	一般用カレンダー限定表示用メソッド
-	const approvedMonthStrings = approvedMonths.map(req => req.stringTargetYearMonth).filter(month => month != null);
+	if (userRole !== 'Manager') {
+		const approvedMonthStrings = approvedMonths.map(req => req.stringTargetYearMonth).filter(month => month != null);
 
-	const monthInput = document.getElementById('approvedMonths');
-	const messageDiv = document.getElementById('message');
-	const displayInput = document.getElementById('display');
+		const monthInput = document.getElementById('approvedMonths');
+		const messageDiv = document.getElementById('message');
+		const displayInput = document.getElementById('display');
+		
 
-	function updateMonthStyles() {
-		const selectedMonth = monthInput.value;
-		if (approvedMonthStrings.includes(selectedMonth)) {
-			//選択した月がデータに入っていた場合
-			monthInput.classList.add('highlight');
-			monthInput.classList.remove('dim');
-			messageDiv.style.display = 'none';
-			displayInput.disabled = false;//表示ボタン使用可
-		} else {
-			monthInput.classList.add('dim');
-			monthInput.classList.remove('highlight');
-			messageDiv.style.display = 'block';//メッセージ表示
-			displayInput.disabled = true;//表示ボタン使用不可
+		function updateMonthStyles() {
+			const selectedMonth = monthInput.value;
+			if (approvedMonthStrings.includes(selectedMonth)) {
+				//選択した月がデータに入っていた場合
+				monthInput.classList.add('highlight');
+				monthInput.classList.remove('dim');
+				messageDiv.style.display = 'none';
+				displayInput.disabled = false;//表示ボタン使用可
+			} else {
+				monthInput.classList.add('dim');
+				monthInput.classList.remove('highlight');
+				messageDiv.style.display = 'block';//メッセージ表示
+				displayInput.disabled = true;//表示ボタン使用不可
+			}
 		}
-	}
+	
 
 	// 初期表示の設定
 	updateMonthStyles();
 
 	// 選択が変更されたときの処理
 	monthInput.addEventListener('input', updateMonthStyles);
+	}
 });
 
 //承認ボタンオンオフのメソッド

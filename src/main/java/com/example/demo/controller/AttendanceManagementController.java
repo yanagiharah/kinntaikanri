@@ -121,7 +121,7 @@ public class AttendanceManagementController {
 		return "attendance/registration";
 	}
 
-	//マネージャー承認申請者勤怠表表示ボタン
+	//マネージャー承認申請者の勤怠表表示ボタン
 	@RequestMapping(value = "/management", params = "ApprovalApplicantDisplay", method = RequestMethod.POST)
 	public String attendance(@RequestParam("approvalUserId") Integer userId, @RequestParam("Years") Integer years,
 			@RequestParam("Month") Integer month, Model model,
@@ -177,11 +177,10 @@ public class AttendanceManagementController {
 		return "redirect:/attendance/index";
 	}
 
-	//戻るボタン
-	@RequestMapping(value = "/management", params = "back", method = RequestMethod.POST)
-	public String back(Model model, HttpSession session) {
-		commonActivityService.backMenu(model, session);
-		return "menu/processMenu";
+	//更新ボタンが押された場合の処理
+	@RequestMapping(value = "/management",method = RequestMethod.GET)
+	public String reload(Model model,HttpSession session,RedirectAttributes redirectAttributes) {
+		return "redirect:/attendance/index";
 	}
 
 }

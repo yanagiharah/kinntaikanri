@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>月次勤怠変更処理</title>
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" 
+			crossorigin="anonymous">
+		<link th:href="@{/CSS/create.css}" rel="stylesheet" />
+	</head>
+	<body>
+		<header>
+			<div class="container" th:fragment="common-header" th:object="${Users}">	
+				<div class="concontainer">
+					<form id="mainForm" th:action="@{/header/goMenu}" method="post">
+						<div class ="commonHeader">
+							<div class ="row" style="display: flex; justify-content: space-evenly;">
+								<div class="col-3">
+									ユーザー名:<span th:text="${Users.userName}"></span>
+									<input type="hidden" name="userName" th:value="${Users.userName}">
+								</div>
+								<div class="col-3">
+									ユーザーID:<span th:text="${Users.userId}"></span>
+									<input type="hidden" name="userId" th:value="${Users.userId}">
+								</div>
+								<div class="col-3">
+									<input type="submit" id="back" value="戻る" name="back" class="buttonSize "></input>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</header>
+	</body>
+</html>

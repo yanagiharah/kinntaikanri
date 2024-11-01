@@ -31,9 +31,7 @@
 	WHERE t1.status = 1 and daily_report_date = #{dailyReportDate}
 </select>
 
-<!--confirmPending表示者クリック時のターゲット取得-->
-
-<!-- 日報追加 -->
+<!-- 日報追加 index追加候補（daily_report_date）-->
 <insert id="insertDailyReport">
 	INSERT INTO
 		daily_report
