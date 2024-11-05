@@ -1,0 +1,63 @@
+@charset "UTF-8";@charset "UTF-8";
+
+.header div {
+		display:flex;
+		justify-content:space-evenly;
+	}
+	
+#dateSubmit{
+		display: none;
+	}
+	
+.DailyReportTable {
+		height: 350px;
+		overflow-y: auto;
+		-webkit-overflow-scrolling: touch;
+	}
+
+
+@media screen and (min-width: 481px) {
+
+	@media screen and (max-width: 480px) {
+		
+	}
+}
+
+/*.textBox{*/
+/*	border-radius: 40% 80% 35% 65% / 50% 50% 70% 40%;*/
+/*}*/
+/*.buttonSize {*/
+/*  color: #fff;*/
+/*  font-size: 16px;*/
+/*  font-weight: bold;*/
+/*  background: #333;*/
+/*  padding: 18px 30px;*/
+/*  border-radius: 6px;*/
+/*  position: relative;*/
+/*  z-index: 1;*/
+/*  display: inline-block;*/
+/*  transition: .3s;*/
+/*}*/
+/*.buttonSize::before {*/
+/*  content: "";*/
+/*  position: absolute;*/
+/*  width: 100%;*/
+/*  height: 100%;*/
+/*  top: 0;*/
+/*  left: 0;*/
+/*  border: 3px solid #333;*/
+/*  border-radius: 6px;*/
+/*  box-sizing: border-box;*/
+/*  z-index: -1;*/
+/*  transform: scale(1.2);*/
+/*  opacity: 0;*/
+/*  transition: transform ease .3s, opacity .3s;*/
+/*}*/
+/*.buttonSize:hover {*/
+/*  color: #333;*/
+/*  background: transparent;*/
+/*}*/
+/*.buttonSize:hover::before {*/
+/*  transform: scale(1);*/
+/*  opacity: 1;*/
+/*}*/
