@@ -5,135 +5,127 @@
 		<title>日報提出画面</title>
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 		<link th:href="@{/CSS/create.css}" rel="stylesheet" />
+		<link th:href="@{/CSS/dailyReport.css}" rel="stylesheet" />
 	</head>
 	<body>
-		<div class="concontainer" th:object="${Users}">
-			<div th:object="${dailyReportForm}">
-				<div class="alert alert-success text-center" th:if="${message}">
-					<p th:text="${message}"></p>
-				</div>
-				<div class="row">
-					<div class="row m-4">
-						<div class="col-6">
-							ユーザー名
-							<span th:text="${Users.userName}"></span>
-						</div>
-						<div class="col-3">
-							ユーザーID
-							<span th:text="${Users.userId}"></span>
-						</div>
-						<div th:unless = "${Users.role =='Manager'}">
-							<th:block th:if="(${dailyReportForm} == null or ${dailyReportForm.status} == null or (${dailyReportForm} != null and ${dailyReportForm.status} == 0))">
+		<div th:replace="~{common/commonHeader :: common-header}"></div>
+		<main>
+			<div class="concontainer" th:object="${Users}">
+				<div th:object="${dailyReportForm}">
+					<form th:action="@{/daily/detailUpdate}" method="post" th:object="${dailyReportForm}" id = "mainForm">
+						<span class="header">
+							<div class="row" >
+								<div class ="col-3" >
+									<span>
+										<div th:if="${dailyReportForm} != null" >
+											<input type="date" name="dailyReportDate" id="today" th:value="${dailyReportForm.dailyReportDate}">
+										</div>
+										<div th:unless="${dailyReportForm} != null">
+											<input type="date" name="dailyReportDate" id="today"  th:value="${calendarDate}">
+										</div>
+									</span>
+									<input type="submit" name="date" id="dateSubmit">
+								</div>
 								<div class="col-3">
-									ステータス　未提出
+									<span  th:unless = "${Users.role =='Manager'}">
+										ステータス :
+										<th:block th:if="(${dailyReportForm} == null or ${dailyReportForm.status} == null or (${dailyReportForm} != null and ${dailyReportForm.status} == 0))">
+											<span >
+												未提出
+											</span>
+										</th:block>
+										<th:block th:if="(${dailyReportForm} != null and ${dailyReportForm.status} == 1)">
+											<span >
+												提出済承認前
+											</span>
+										</th:block>
+										<th:block th:if="(${dailyReportForm} != null and ${dailyReportForm.status} == 2)">
+											<span >
+												承認済
+											</span>
+										</th:block>
+									</span>
 								</div>
-							</th:block>
-							<th:block th:if="(${dailyReportForm} != null and ${dailyReportForm.status} == 1)">
 								<div class="col-3">
-									ステータス　提出済承認前
+									<div th:if="${Users.role == 'Manager'}">
+										<div th:if="${dailyReportForm} != null">
+											<input type="submit" id="confirm" value="確認" name="confirm" class="buttonSize">
+											<input type="hidden" name="dailyReportId" th:value="${dailyReportForm.dailyReportId}">
+											<input type="hidden" name="userId" th:value="${dailyReportForm.userId}">
+											<input type="hidden" name="status" th:value="${dailyReportForm.status}">
+										</div>
+									</div>
+									<div th:unless="${Users.role == 'Manager'}">
+										<input type="submit" id="submission" value="提出" name="submission" class="buttonSize">
+										<input type="hidden" name="status" th:value="${dailyReportForm.status}">
+										<input type="hidden" name="userId" th:value="${dailyReportForm.userId}">
+									</div>
 								</div>
-							</th:block>
-							<th:block th:if="(${dailyReportForm} != null and ${dailyReportForm.status} == 2)">
-								<div class="col-3">
-									ステータス 承認済
-								</div>
-							</th:block>
-						</div>
-					</div>
-				</div>
-				
-				<div class="row m-4">
-					<form id="dateForm" th:action="@{/daily/date}" method="post">
-						<span class="col-6">
-							<span th:if="${dailyReportForm} != null" >
-								<input type="date" name="dailyReportDate" id="today" th:value="${dailyReportForm.dailyReportDate}">
-							</span>
-							<span th:unless="${dailyReportForm} != null">
-								<input type="date" name="dailyReportDate" id="today"  th:value="${calendarDate}">
-							</span>
-						</span>
-					</form>
-	<!--	approvalpending敵なのを入れる-->
-					<div th:if="${ConfirmPending} != null">
-<!--						マネージャー画面でない限りnull-->
-						<div class="row m-2">
-							<div class="col-7">
-								<table class="table table-bordered border border-dark " id="dairyReportList">
-									<thead>
-										<tr>
-											<td>提出者ID</td>
-											<td>日報提出者</td>
-											<td>提出対象年月日</td>
-										</tr>
-									</thead>
-									<tbody >
-										<tr th:each="ConfirmPending : ${ConfirmPending}">
-											<td th:text="${ConfirmPending.userId}"></td>
-<!--															ここでクリックした名前を下のhiddenを要素にして引き出す。-->
-											<td>
-												<form th:action="@{/daily/management}" method="post">
-													<th:block>
-														<input type="hidden" name="confirmaitionUserId" th:value="${ConfirmPending.userId}">
-														<input type="hidden" name="dailyReportDate" th:value="${ConfirmPending.dailyReportDate}">
-														<input type="hidden" name="confirmaitionUserName" th:value="${ConfirmPending.userName}">
-													</th:block>
-<!--														以上の要素がattendanceSerchUpメソッドの引数となる-->
-													<button type="submit"name="DailyReportSubmitterDisplay" class="DailyReportSubmitterDisplay linklike">[[${ConfirmPending.userName}]]</button>
-												</form>
-											</td>
-											<td th:text="${ConfirmPending.dailyReportDate}"></td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</div>
-					<form th:action="@{/daily/detailUpdate}" method="post">
-						<input type="submit" id="back" value="戻る" name="back" class="buttonSize ">
-						<span class="d-flex flex-row-reverse">
-							<div th:if="${Users.role == 'Manager'}">
-								<div th:if="${dailyReportForm} != null">
-									<input type="submit" id="confirm" value="確認" name="confirm" class="buttonSize offset-1">
-									<input type="hidden" name="dailyReportDate" th:value="${dailyReportForm.dailyReportDate}">
-									<input type="hidden" name="dailyReportId" th:value="${dailyReportForm.dailyReportId}">
-									<input type="hidden" name="userId" th:value="${dailyReportForm.userId}">
-									<input type="hidden" name="status" th:value="${dailyReportForm.status}">
-								</div>
-							</div>
-							<div th:unless="${Users.role == 'Manager'}">
-								<input type="submit" id="submission" value="提出" name="submission" class="buttonSize offset-1">
-								<input type="hidden" name="dailyReportId" th:value="${dailyReportForm.dailyReportId}">
-								<input type="hidden" name="userId" th:value="${dailyReportForm.userId}">
-								<input type="hidden" name="status" th:value="${dailyReportForm.status}">
-								<input type="hidden" name="dailyReportDate" th:value="${dailyReportForm.dailyReportDate}">
 							</div>
 						</span>
-		
-						<div th:if="${dailyReportForm} != null">
-							<div class="row m-2">
-								<div class="col-12 ml-5">
-									<table class="table table-bordered border border-dark">
-										<thead>
-											<tr>
-												<td th:if="${Users.role == 'Manager'}">提出者</td>
-												<td>作業時間(h)</td>
-												<td>作業内容</td>
-											</tr>
-										</thead>
-										<tbody id="dailyReportDetail"th:each="dailyReportDetail, start : ${dailyReportForm.dailyReportDetailForm}">
-											<th:block>
-												<input type="hidden"
-													th:name="|dailyReportDetailForm[__${start.index}__].dailyReportDetailId|"
-													th:value="${dailyReportDetail.dailyReportDetailId}">
-												<input type="hidden" th:name="|dailyReportDetailForm[__${start.index}__].userId|"
-													th:value="${dailyReportDetail.userId}">
-												<input type="hidden"
-													th:name="|dailyReportDetailForm[__${start.index}__].dailyReportDetailDate|"
-													th:value="${dailyReportDetail.dailyReportDetailDate}">
-											</th:block>
-											
-											<th:block>
+						
+						
+						<div class="row m-4">
+							<div class="alert alert-success text-center" th:if="${message}">
+								<p th:text="${message}"></p>
+							</div>
+							<div th:if="${ConfirmPending} != null">
+		<!--						マネージャー画面でない限りnull-->
+								<div class="row m-2">
+									<div class="col-7">
+										<table class="table table-bordered border border-dark " id="dailyReportList">
+											<thead>
 												<tr>
+													<th>提出者ID</th>
+													<th>日報提出者</th>
+													<th>提出対象年月日</th>
+												</tr>
+											</thead>
+											<tbody >
+												<tr th:each="ConfirmPending : ${ConfirmPending}">
+													<td th:text="${ConfirmPending.userId}"></td>
+		<!--															ここでクリックした名前を下のhiddenを要素にして引き出す。-->
+													<td>
+														<form th:action="@{/daily/detailUpdate}" method="post">
+															<th:block>
+																<input type="hidden" name="confirmationUserId" th:value="${ConfirmPending.userId}">
+																<input type="hidden" name="dailyReportDate" th:value="${ConfirmPending.dailyReportDate}">
+																<input type="hidden" name="confirmationUserName" th:value="${ConfirmPending.userName}">
+															</th:block>
+															<button type="submit"name="DailyReportSubmitterDisplay" class="DailyReportSubmitterDisplay linklike">[[${ConfirmPending.userName}]]</button>
+														</form>
+													</td>
+													<td th:text="${ConfirmPending.dailyReportDate}"></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+							
+							<div th:if="${dailyReportForm} != null">
+								<div class="row m-2">
+									<div class="col-12 ml-5 DailyReportTable">
+										<table class="table table-bordered border border-dark sticked">
+											<thead>
+												<tr>
+													<th th:if="${Users.role == 'Manager'}">提出者</th>
+													<th>作業時間(h)</th>
+													<th>作業内容</th>
+												</tr>
+											</thead>
+											<tbody id="dailyReportDetail"th:each="dailyReportDetail, start : ${dailyReportForm.dailyReportDetailForm}">
+												<tr>
+													<th:block>
+														<input type="hidden"
+															th:name="|dailyReportDetailForm[__${start.index}__].dailyReportDetailId|"
+															th:value="${dailyReportDetail.dailyReportDetailId}">
+														<input type="hidden" th:name="|dailyReportDetailForm[__${start.index}__].userId|"
+															th:value="${dailyReportDetail.userId}">
+														<input type="hidden"
+															th:name="|dailyReportDetailForm[__${start.index}__].dailyReportDetailDate|"
+															th:value="${dailyReportDetail.dailyReportDetailDate}">
+													</th:block>
 													<td th:if="${Users.role == 'Manager'}"><span th:if="${start.index == 0}"th:text="${dailyReportForm.userName}"></span>
 														<span th:unless="${start.index == 0}"text=null></span>
 													</td>
@@ -143,7 +135,8 @@
 																th:field="*{dailyReportDetailForm[__${start.index}__].dailyReportDetailTime}"
 																th:value="${dailyReportDetail.dailyReportDetailTime}" class="noneBox" 
 																th:disabled="${dailyReportForm.status == 2}"
-																th:placeholder="${start.index == 0} ? '半角数字で入力' : ''"/>
+																th:placeholder="${start.index == 0} ? '半角数字で入力' : ''"
+																th:readonly="${Users.role == 'Manager'}"/>
 															<div th:if="${#fields.hasErrors('dailyReportDetailForm[__${start.index}__].dailyReportDetailTime')}"
 																th:errors="*{dailyReportDetailForm[__${start.index}__].dailyReportDetailTime}"
 																class="error-message"></div>
@@ -154,24 +147,31 @@
 															th:field="*{dailyReportDetailForm[__${start.index}__].content}"
 															th:value="${dailyReportDetail.content}" class="noneBox" 
 															th:disabled="${dailyReportForm.status == 2}"
-															th:placeholder="${start.index == 0} ? '全角文字で入力' : ''"/>
+															th:placeholder="${start.index == 0} ? '全角文字で入力' : ''"
+															th:readonly="${Users.role == 'Manager'}"/>
 														<div th:if="${#fields.hasErrors('dailyReportDetailForm[__${start.index}__].content')}"
 															th:errors="*{dailyReportDetailForm[__${start.index}__].content}"
 															class="error-message">
 														</div>
 													</td>
 												</tr>
-											</th:block>
-										</tbody>
-									</table>
+											</tbody>
+										</table>
+									</div>
 								</div>
 							</div>
 						</div>
 					</form>
 				</div>
 			</div>
-		</div>
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<script th:src="@{/js/Report.js}"></script>
+		</main>
+		<script th:inline="javascript">
+		    /*<![CDATA[*/
+			const userRole=/*[[${Users.role}]]*/[];
+		    /*]]>*/
+		</script>
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script th:src="@{/js/Report.js}"></script>
+		<script th:src="@{/js/common.js}"></script>
 	</body>
 </html>

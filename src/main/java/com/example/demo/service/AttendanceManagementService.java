@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
 import com.example.demo.Factory.AttendanceFactory;
@@ -76,6 +77,7 @@ public class AttendanceManagementService {
 	}
 
 	//勤怠テーブルに登録処理
+	@Transactional
 	public void attendanceUpsert(AttendanceFormList attendanceFormList) {
 
 		List<Integer> workDay = Arrays.asList(0, 3, 6, 7, 8, 10);

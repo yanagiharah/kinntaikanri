@@ -12,11 +12,13 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.model.DailyReportDetailForm;
 import com.example.demo.model.DailyReportForm;
@@ -48,7 +50,7 @@ public class DailyReportController {
 		Users users = (Users) model.getAttribute("Users");
 
 		LocalDate calendarDate;
-
+		
 		if (date == null) {
 			calendarDate = LocalDate.now();
 		} else {
@@ -56,6 +58,7 @@ public class DailyReportController {
 		}
 		if (!users.getRole().equalsIgnoreCase("Manager")) {
 			Integer userId = users.getUserId();
+			
 			//日報取得 
 			DailyReportForm dailyReportForm = dailyReportService.getDailyReport(userId, calendarDate);
 			// 日報詳細を取得
@@ -66,8 +69,6 @@ public class DailyReportController {
 			//（今日の日付とユーザーIDをセット）
 			dailyReportForm.setDailyReportDetailForm(dailyReportDetailForm);
 			dailyReportForm.setUserId(userId);
-
-			//	    System.out.print("提出はここです！！！！！！！！"+dailyReportForm);
 
 			model.addAttribute("dailyReportForm", dailyReportForm);
 
@@ -82,9 +83,9 @@ public class DailyReportController {
 	}
 
 	//confirmPending表示者を押したときの処理
-	@RequestMapping(value = "/management", params = "DailyReportSubmitterDisplay", method = RequestMethod.POST)
+	@RequestMapping(value = "/detailUpdate", params = "DailyReportSubmitterDisplay", method = RequestMethod.POST)
 	public String dailyRepManagement(@RequestParam("dailyReportDate") LocalDate dailyReportDate,
-			@RequestParam("confirmaitionUserId") Integer confirmaitionUserId, @RequestParam("confirmaitionUserName") String confirmaitionUserName,Model model,HttpSession session) {
+			@RequestParam("confirmationUserId") Integer confirmaitionUserId, @RequestParam("confirmationUserName") String confirmaitionUserName,Model model,HttpSession session) {
 		commonActivityService.usersModelSession(model, session);
 		
 		//日報取得 
@@ -107,7 +108,7 @@ public class DailyReportController {
 
 	//提出ボタン押下後
 	@RequestMapping(value = "/detailUpdate", params = "submission", method = RequestMethod.POST)
-	public String updateDailyReportDetail(@Valid @ModelAttribute("dailyReportForm") DailyReportForm dailyReportForm,
+	public String updateDailyReportDetail(@ModelAttribute DailyReportForm dailyReportForm,
 			BindingResult result, HttpSession session, Model model, Locale locale) {
 
 		Users users = (Users) session.getAttribute("Users");
@@ -118,6 +119,9 @@ public class DailyReportController {
 		}
 
 		dailyReportService.updateDailyReportDetail(dailyReportForm);
+		
+		String successMessage = messageSource.getMessage("dailyReport.update.success", null, locale);
+		model.addAttribute("message", successMessage);
 
 		LocalDate calendarDate = dailyReportForm.getDailyReportDetailForm().get(0).getDailyReportDetailDate();
 		String calendarDateS = calendarDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -136,9 +140,6 @@ public class DailyReportController {
 		
 		dailyReportService.updateConfirmDailyReport(dailyReportForm);
 		
-		String successMessage = messageSource.getMessage("dailyReport.update.success", null, locale);
-		model.addAttribute("message", successMessage);
-		
 		LocalDate calendarDate = dailyReportForm.getDailyReportDate();
 		List<DailyReportForm> confirmPending = dailyReportService.selectConfirmPending(calendarDate);
 		model.addAttribute("ConfirmPending", confirmPending);
@@ -149,20 +150,21 @@ public class DailyReportController {
 		
 		return "DailyReport/dailyReport";
 	}
-	//戻るボタン
-	@RequestMapping(value = "/detailUpdate", params = "back", method = RequestMethod.POST)
-	public String back(Model model, HttpSession session) {
-		commonActivityService.backMenu(model, session);
-		return "menu/processMenu";
-	}
+
 
 	//カレンダーコントロール押下後
-	@RequestMapping(value = "/date", params = "dailyReportDate", method = RequestMethod.POST)
+	@RequestMapping(value = "/detailUpdate" ,params="date",method = RequestMethod.POST)
 	public ModelAndView handleDateSubmission(@ModelAttribute("dailyReportDate") String dateS, HttpSession session,
 			Model model) {
 		return new ModelAndView(dailyReportDetail(dateS, session, model));
 	}
-
+	
+	//更新ボタンが押された場合の処理
+	@GetMapping(value={"/management","/detailUpdate"})
+	public String Reload(Model model,HttpSession session,RedirectAttributes redirectAttributes) {
+		return "redirect:/daily/detail";
+		}
+	
 	///----------★一時的にとっておきたい(javaScript連携の為)------------------
 
 	//カレンダーコントロール押下後

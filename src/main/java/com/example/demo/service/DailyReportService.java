@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.mapper.DailyReportDetailMapper;
 import com.example.demo.mapper.DailyReportMapper;
@@ -64,6 +65,7 @@ public class DailyReportService {
 	}
 
 	//日報更新
+	@Transactional
 	public void updateDailyReportDetail(DailyReportForm dailyReportForm) {
 		try {
 			//dailyReportの存在確認ののち、無ければinsert
