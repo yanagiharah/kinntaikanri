@@ -75,15 +75,10 @@
 									<div class="col-2"></div>
 								</div>
 							</div>
-							<div class="row m-5" ></div><div class="row m-3" ></div>
-							<div class="row m-4" >
-								<div class="col-6"></div>
-								
-								
-							</div>
+							<div class="row m-5" ></div>
 							<div class="row m-4">
-								<span class="col-xl-6" style="margin-top:40px;">
-									<div th:if="${HasChangeReq} != null" style="margin-top:auto;"><!--マネージャー画面でない限りnull-->
+								<span class="col-xl-6 mt-5">
+									<div th:if="${HasChangeReq} != null" class="mt-auto;"><!--マネージャー画面でない限りnull-->
 										<table class="table table-bordered border border-dark " id="attendanceList">
 											<thead>
 												<tr>
@@ -142,8 +137,8 @@
 									</span>
 								</div>
 								<div class="row m-1">
-									<div class="text-danger" th:if="${check} != null">
-										<span th:text="${check}" style="color: red;"></span>
+									<div class="text-danger error-message" th:if="${check} != null">
+										<span th:text="${check}"></span>
 									</div>
 								</div>
 							</div>
@@ -151,7 +146,7 @@
 							<div th:if="${attendanceFormList} != null">
 								<div class="row">
 									<div class="attendanceList">
-										<table class="table table-bordered border border-dark sticked">
+										<table class="table table-bordered border border-dark collapsedTable">
 											<thead>
 												<tr>
 													<th>日付</th>

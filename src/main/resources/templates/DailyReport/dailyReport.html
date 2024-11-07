@@ -106,7 +106,7 @@
 							<div th:if="${dailyReportForm} != null">
 								<div class="row m-2">
 									<div class="col-12 ml-5 DailyReportTable">
-										<table class="table table-bordered border border-dark sticked">
+										<table class="table table-bordered border border-dark collapsedTable">
 											<thead>
 												<tr>
 													<th th:if="${Users.role == 'Manager'}">提出者</th>
@@ -139,7 +139,7 @@
 																th:readonly="${Users.role == 'Manager'}"/>
 															<div th:if="${#fields.hasErrors('dailyReportDetailForm[__${start.index}__].dailyReportDetailTime')}"
 																th:errors="*{dailyReportDetailForm[__${start.index}__].dailyReportDetailTime}"
-																class="error-message"></div>
+																class="text-danger"></div>
 														</div>
 													</td>
 													<td>
@@ -151,7 +151,7 @@
 															th:readonly="${Users.role == 'Manager'}"/>
 														<div th:if="${#fields.hasErrors('dailyReportDetailForm[__${start.index}__].content')}"
 															th:errors="*{dailyReportDetailForm[__${start.index}__].content}"
-															class="error-message">
+															class="text-danger">
 														</div>
 													</td>
 												</tr>

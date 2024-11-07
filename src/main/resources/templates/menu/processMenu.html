@@ -7,13 +7,14 @@
 	rel="stylesheet"
 	integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" 
 	crossorigin="anonymous">
+<link th:href="@{/CSS/processMenu.css}" rel="stylesheet"/>
 <link th:href="@{/CSS/create.css}" rel="stylesheet" />
 
 </head>
 <body>
 	<div class="container" th:object="${Users}">
 		<div class="row"> 
-			<form id="mainForm" th:action="@{/logOff}" method="post" class="d-flex align-items-center justify-content-center commonHeader" >
+			<form id="mainForm" th:action="@{/logOff}" method="post" class="commonHeader" >
 				<div class="col-4 ">
 					ユーザー名: <span th:text="${Users.userName}"></span>
 					<input type="hidden" name="userName" th:value="${Users.userName}">
@@ -57,75 +58,58 @@
 <!--			    <img th:each="w : ${tomorrowWeather.weather}" th:src="@{'http://openweathermap.org/img/wn/' + ${w.icon} + '@2x.png'}" alt="天気アイコン">-->
 
 <!--				天気予報API無課金版-->
-				<div  style="display: flex; justify-content: space-evenly; background-color: #f0fff0; border-radius:.25rem; box-shadow: 1px 2px 1px #333;">
-					<ul class = "weatherInfo">
-						<h2>今日の天気</h2>
-						<li><span class = label>天気:</span> <span th:text="${weatherData.todayDescription}"></span></li>
-						<li><span class = label>気温:</span> <span th:text="${weatherData.todayTemp}"></span>°C</li>
-						<li><span class = label>湿度:</span> <span th:text="${weatherData.todayHumidity}"></span>%</li>
-						<li><span class = label>気圧:</span> <span th:text="${weatherData.todayPressure}"></span> hPa</li>
-					</ul>
-					<ul class="weatherInfo" >
-						<h2>明日の天気</h2>
-						<li><span class = label>天気:</span> <span th:text="${weatherData.tomorrowDescription}"></span></li>
-						<li><span class = label>気温:</span> <span th:text="${weatherData.tomorrowTemp}"></span>°C</li>
-						<li><span class = label>湿度:</span> <span th:text="${weatherData.tomorrowHumidity}"></span>%</li>
-						<li><span class = label>気圧:</span> <span th:text="${weatherData.tomorrowPressure}"></span> hPa</li>
-					</ul>
-				</div>
-			<div class="d-flex align-items-center justify-content-center " style="padding:50px;">		
+			<div  class = "weatherContainer">
+				<ul class = "weatherInfo">
+					<h2>今日の天気</h2>
+					<li><span class = "weatherColumn">天気:</span> <span th:text="${weatherData.todayDescription}"></span></li>
+					<li><span class = "weatherColumn">気温:</span> <span th:text="${weatherData.todayTemp}"></span>°C</li>
+					<li><span class = "weatherColumn">湿度:</span> <span th:text="${weatherData.todayHumidity}"></span>%</li>
+					<li><span class = "weatherColumn">気圧:</span> <span th:text="${weatherData.todayPressure}"></span> hPa</li>
+				</ul>
+				<ul class="weatherInfo" >
+					<h2>明日の天気</h2>
+					<li><span class = "weatherColumn">天気:</span> <span th:text="${weatherData.tomorrowDescription}"></span></li>
+					<li><span class = "weatherColumn">気温:</span> <span th:text="${weatherData.tomorrowTemp}"></span>°C</li>
+					<li><span class = "weatherColumn">湿度:</span> <span th:text="${weatherData.tomorrowHumidity}"></span>%</li>
+					<li><span class = "weatherColumn">気圧:</span> <span th:text="${weatherData.tomorrowPressure}"></span> hPa</li>
+				</ul>
+			</div>
+			<div class="d-flex align-items-center justify-content-center mt-2">		
 <!--					レギュラー＆ユニットマネージャー用-->
-					<div th:if="${Users.role=='Regular'||Users.role=='UnitManager'}">
-						<p>
-							<form th:action="@{/menu/index}" method="get">
-								<input type="submit" value="勤怠登録" class="menuButtonSize"
-									style="background-color: rgb(255, 128, 64);">
-							</form>
-							<!--						th:actionの修正予定"@{/menu/correction}"-->
-							<form th:action="@{/menu/correction}" method="get">
-								<input type="submit" value="勤怠修正" class="menuButtonSize"
-									style="background-color: rgb(255, 128, 64);margin-top:15px;" >
-							</form>
-						</p>
+				<div th:unless="${Users.role=='Admin'}">
+					<p>
+						<form th:action="@{/menu/index}" method="get">
+							<input type="submit" value="勤怠登録" class="menuButtonSize attendanceColor">
+						</form>
+						<form th:action="@{/menu/correction}" method="get">
+							<input type="submit" value="勤怠修正" class="menuButtonSize attendanceColor notFirstButton">
+						</form>
+					</p>
+					<p>
 						<form th:action="@{/menu/daily/detail}" method="get">
-							<input type="submit" value="日報登録" class="menuButtonSize"
-								style="background-color: rgb(128, 128, 64);">
+							<input type="submit" value="日報登録" class="menuButtonSize dailyRepColor">
 						</form>
-					</div>
-	
-<!--					管理者用-->
-					<div th:if="${Users.role=='Admin'}">
-<!--						ユーザー情報登録-->
-						<form th:action="@{/menu/usermanagement}" method="get">
-							<input type="submit" value="ユーザー情報登録" class="menuButtonSize"
-								style="background-color: rgb(131, 118, 137);">
-						</form>
-					</div>
-	
-<!--					マネージャー用-->
+					</p>
+					<!--					マネージャー用-->
 					<div th:if="${Users.role=='Manager'}">
 						<p>
-							<form th:action="@{/menu/index}" method="get">
-							<input type="submit" value="勤怠管理" class="menuButtonSize"
-								style="background-color: rgb(255, 128, 64);">
-							</form>
-							<form th:action="@{/menu/correction}" method="get">
-								<input type="submit" value="勤怠修正" class="menuButtonSize"
-									style="background-color: rgb(255, 128, 64);margin-top:15px;" >
+							<form th:action="@{/menu/department}" method="get">
+								<input type="submit" value="部署登録" class="menuButtonSize departmentColor">
 							</form>
 						</p>
-						<p>
-							<form th:action="@{/menu/daily/detail}" method="get">
-								<input type="submit" value="日報管理" class="menuButtonSize"
-									style="background-color: rgb(128, 128, 64);">
-							</form>
-						</p>
-						<form th:action="@{/menu/department}" method="get">
-							<input type="submit" value="部署登録" class="menuButtonSize"
-								style="background-color: rgb(128, 255, 255);">
-						</form>
+					</div>
 				</div>
-			</p>
+	
+<!--					管理者用-->
+				<div th:if="${Users.role=='Admin'}">
+<!--						ユーザー情報登録-->
+					<p>
+						<form th:action="@{/menu/usermanagement}" method="get">
+							<input type="submit" value="ユーザー情報登録" class="menuButtonSize managementColor">
+						</form>
+					</p>
+				</div>
+			</div>
 		</div>
 	</div>
 	<script th:src="@{/js/common.js}"></script>

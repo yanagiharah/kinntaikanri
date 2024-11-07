@@ -67,6 +67,15 @@
 		text-align: center;
 		margin: 0 auto;
 	}
+	/*カレンダーコントロール周り ｊｓで使用 消さないで*/
+	.highlight {
+		font-weight: bold;
+		color: black;
+	}
+
+	.dim {
+		color: lightgray;
+	}
 
 	/*[ID]*/
 	#approve {
