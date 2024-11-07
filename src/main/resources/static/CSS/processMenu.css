@@ -1,0 +1,65 @@
+@charset "UTF-8";
+@media screen and (min-width: 481px) {
+	/*ボタン系*/
+	.menuButtonSize {
+		width: 260px;
+		height: 80px;
+	}
+	
+	.attendanceColor{
+		background-color: rgb(255, 128, 64);
+	}
+	
+	.dailyRepColor{
+		background-color: rgb(128, 128, 64);
+	}
+	
+	.departmentColor{
+		background-color: rgb(128, 255, 255);
+	}
+	
+	.managementColor{
+		background-color: rgb(131, 118, 137);
+	}
+	
+	.notFirstButton{
+		margin-top:15px;
+	}
+	/*天気系*/
+	.weatherContainer{
+		display: flex; 
+		justify-content: space-evenly;
+		background-color: #f0fff0; 
+		border-radius:.25rem; 
+		box-shadow: 1px 2px 1px #333;
+	}
+	
+	.weatherInfo {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	.weatherInfo li {
+		justify-content: center; /* 水平方向の中央揃え */
+		margin-left: 10px;
+		margin-bottom: 10px; /* 各項目の間隔を調整 */
+	}
+	
+	.weatherColumn {
+		width: 100px; /* ラベルの幅を固定 */
+		text-align: right; /* ラベルのテキストを右揃え */
+		margin-right: 10px; /* ラベルと値の間隔を調整 */
+	}
+
+	
+	#mainForm{
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	
+	@media screen and (max-width: 480px) {
+	
+	}
+}

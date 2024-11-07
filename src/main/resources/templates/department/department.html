@@ -20,7 +20,7 @@
 			<form th:action="@{/department/action}" method="post">
 				<div class="row">
 					<div class="col-md-6">
-						<div class="form-group">
+						<div class="d-flex flex-column align-items-start">
 							<label for="activeDepartmentSelect" class="mb-2">登録済の部署</label>
 							<select class="form-control mb-5" id="activeDepartmentSelect" name="oldDepartmentName">
 								<option value="" selected></option>
@@ -40,11 +40,11 @@
 						</div>
 					</div>
 					<div class="col-md-6">
-						<div class="form-group">
+						<div class="d-flex flex-column align-items-start">
 							<label for="departmentAction">新部署名（登録/変更）</label>
 							<input type="text" class="form-control mb-3" id="departmentAction"
 								   name="newDepartmentName" placeholder="部署名を入力">
-							<p id="error-message" style="color: red;"></p>
+							<p id="error-message" class="text-danger"></p>
 							<div class="d-grid gap-2">
 								<div>
 									<input type="submit" name="back" value="戻る"

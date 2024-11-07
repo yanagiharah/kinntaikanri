@@ -1,0 +1,45 @@
+@charset "UTF-8";
+
+	.indexContainer{
+		display: flex; /* フレックスボックスを使用 */
+	    justify-content: center; /* 水平方向に中央揃え */
+	    align-items: center; /* 垂直方向に中央揃え */
+	    margin: 0 auto; /* コンテナを中央に配置 */
+	}
+	
+	.indexBox{
+		padding:60px;
+	}
+	
+	.loginFontsize {
+		font-size: 30px;
+	}
+	
+	.loginFontsize label {
+		display: inline-block;
+		width: 154px;
+	}
+
+@media screen and (min-width: 481px) {
+	.variableButtonSize {
+			/*	width: 100px;*/
+			display: inline-block;
+			padding: 10px 20px;
+			cursor: pointer;
+			background-color: yellow;
+			font-size: 20px;
+		}
+		
+	
+	@media screen and (max-width: 480px) {
+		.variableButtonSize {
+					/*	width: 100px;*/
+					display: inline-block;
+					padding: 10px 20px;
+					cursor: pointer;
+					background-color: yellow;
+					font-size: 20px;
+				}
+	
+	}
+}
