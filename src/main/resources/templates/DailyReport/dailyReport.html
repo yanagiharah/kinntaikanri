@@ -3,14 +3,14 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>日報提出画面</title>
-		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+		<link th:href="@{/css/styles.css}" rel="stylesheet"/>
 		<link th:href="@{/CSS/create.css}" rel="stylesheet" />
 		<link th:href="@{/CSS/dailyReport.css}" rel="stylesheet" />
 	</head>
 	<body>
 		<div th:replace="~{common/commonHeader :: common-header}"></div>
 		<main>
-			<div class="concontainer" th:object="${Users}">
+			<div class="container" th:object="${Users}">
 				<div th:object="${dailyReportForm}">
 					<form th:action="@{/daily/detailUpdate}" method="post" th:object="${dailyReportForm}" id = "mainForm">
 						<span class="header">
@@ -24,7 +24,7 @@
 											<input type="date" name="dailyReportDate" id="today"  th:value="${calendarDate}">
 										</div>
 									</span>
-									<input type="submit" name="date" id="dateSubmit">
+									<input type="submit" name="date" id="dateSubmit" class="d-none">
 								</div>
 								<div class="col-3">
 									<span  th:unless = "${Users.role =='Manager'}">
@@ -73,7 +73,7 @@
 		<!--						マネージャー画面でない限りnull-->
 								<div class="row m-2">
 									<div class="col-7">
-										<table class="table table-bordered border border-dark " id="dailyReportList">
+										<table class="default-table" id="dailyReportList">
 											<thead>
 												<tr>
 													<th>提出者ID</th>
@@ -105,8 +105,8 @@
 							
 							<div th:if="${dailyReportForm} != null">
 								<div class="row m-2">
-									<div class="col-12 ml-5 DailyReportTable">
-										<table class="table table-bordered border border-dark collapsedTable">
+									<div class="col-12 dailyReportTable">
+										<table class="collapsedTable">
 											<thead>
 												<tr>
 													<th th:if="${Users.role == 'Manager'}">提出者</th>

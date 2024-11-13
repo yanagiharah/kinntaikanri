@@ -45,35 +45,12 @@
 		background-color: yellow;
 	}
 	
-	.buttonRound {
-		width: 120px;
-		height: 60px;
-		background-color: yellow;
-		/*  border-radius:30px;*/
-	}
 	/*文字ボタン*/
 	.linklike {
 		border: none;
 		background-color: transparent;
 		color: blue;
 		text-decoration: underline;
-	}
-	
-	.form-row {
-		display: flex;
-		align-items: center;
-		margin-bottom: 10px;
-	}
-	
-	.form-row label {
-		width: 160px;
-	}
-	
-	/*エラーメッセージ使っても使わなくても　text-dangerと合わせると色が濃くなります*/
-	
-	.error-message {
-		color: red;
-		font-weight: bold;
 	}
 	
 	/*テーブル要素*/
@@ -83,7 +60,6 @@
 	}
 	
 	.collapsedTable {
-			border-collapse: collapse;
 			border-spacing: 0;
 			width: 100%;
 		}
@@ -108,12 +84,7 @@
 	}
 	
 	@media screen and (max-width: 480px) {
-		.buttonRound {
-			width: 120px;
-			height: 60px;
-			background-color: blueviolet;
-			/*  border-radius:30px;*/
-		}
+		
 		
 	}
 }
@@ -156,3 +127,5 @@
 /*  transform: scale(1);*/
 /*  opacity: 1;*/
 /*}*/
+
+/*bootstrap*/

@@ -5,11 +5,7 @@
 		justify-content:space-evenly;
 	}
 	
-#dateSubmit{
-		display: none;
-	}
-	
-.DailyReportTable {
+.dailyReportTable {
 		height: 350px;
 		overflow-y: auto;
 		-webkit-overflow-scrolling: touch;

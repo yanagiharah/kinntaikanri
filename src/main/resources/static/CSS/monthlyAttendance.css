@@ -1,13 +1,12 @@
 @charset "UTF-8";
 
-@media screen and (min-width: 481px) {
+/*@media screen and (min-width: 481px) {*/
 	/*[基本レイアウト]*/
 	main {
 		margin-top: -20px;
 	}
 	
 	table {
-		border-collapse: collapse;
 		border-spacing: 0;
 		width: 100%;
 	}
@@ -90,21 +89,21 @@
 		color: red;
 		display: none;
 	}
-	
-	@media screen and (max-width: 480px) {
-		.buttonRound {
-			width: 120px;
-			height: 60px;
-			background-color: blueviolet;
-			/*  border-radius:30px;*/
-		}
-		main {
-			margin-top: -120px;
-		}
-		table {
-			border-collapse: collapse;
-			border-spacing: 0;
-			width: 60%;
-		}
+		
+/*}*/
+@media screen and (max-width: 480px) {
+	.buttonRound {
+		width: 120px;
+		height: 60px;
+		background-color: blueviolet;
+		/*  border-radius:30px;*/
 	}
-}
+	main {
+		margin-top: -120px;
+	}
+	table {
+		border-collapse: collapse;
+		border-spacing: 0;
+		width: 60%;
+	}
+	}
