@@ -1,29 +1,36 @@
 @charset "UTF-8";
+:root{
+	--default-color:white;
+	--attendance-color: rgb(255, 128, 64);
+	--dailyRep-color: rgb(128, 128, 64);
+	--department-color: rgb(128, 255, 255);
+	--management-color: rgb(131, 118, 137);
+}
+
 @media screen and (min-width: 481px) {
+	
 	/*ボタン系*/
 	.menuButtonSize {
 		width: 260px;
 		height: 80px;
-	}
-	
-	.attendanceColor{
-		background-color: rgb(255, 128, 64);
-	}
-	
-	.dailyRepColor{
-		background-color: rgb(128, 128, 64);
-	}
-	
-	.departmentColor{
-		background-color: rgb(128, 255, 255);
-	}
-	
-	.managementColor{
-		background-color: rgb(131, 118, 137);
-	}
-	
-	.notFirstButton{
+		background-color:var(--default-color);
 		margin-top:15px;
+	}
+	
+	.attendance .menuButtonSize{
+		background-color:var(--attendance-color);
+	}
+	
+	.dailyRep .menuButtonSize {
+		background-color:var(--dailyRep-color);
+	}
+		
+	.department .menuButtonSize {
+		background-color:var(--department-color);
+	}
+	
+	.management .menuButtonSize {
+		background-color: var(--management-color);
 	}
 	/*天気系*/
 	.weatherContainer{
@@ -46,13 +53,13 @@
 		margin-bottom: 10px; /* 各項目の間隔を調整 */
 	}
 	
-	.weatherColumn {
+	.weatherInfo li span:first-child{
 		width: 100px; /* ラベルの幅を固定 */
 		text-align: right; /* ラベルのテキストを右揃え */
 		margin-right: 10px; /* ラベルと値の間隔を調整 */
 	}
 
-	
+	/*カスタムクラス候補*/
 	#mainForm{
 		display: flex;
 		align-items: center;

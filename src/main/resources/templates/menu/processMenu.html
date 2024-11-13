@@ -3,19 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <title>処理メニュー</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-	rel="stylesheet"
-	integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" 
-	crossorigin="anonymous">
-<link th:href="@{/CSS/processMenu.css}" rel="stylesheet"/>
+<link th:href="@{/css/styles.css}" rel="stylesheet"/>
 <link th:href="@{/CSS/create.css}" rel="stylesheet" />
+<link th:href="@{/CSS/processMenu.css}" rel="stylesheet"/>
 
 </head>
 <body>
 	<div class="container" th:object="${Users}">
 		<div class="row"> 
 			<form id="mainForm" th:action="@{/logOff}" method="post" class="commonHeader" >
-				<div class="col-4 ">
+				<div class="col-4">
 					ユーザー名: <span th:text="${Users.userName}"></span>
 					<input type="hidden" name="userName" th:value="${Users.userName}">
 				</div>
@@ -61,53 +58,53 @@
 			<div  class = "weatherContainer">
 				<ul class = "weatherInfo">
 					<h2>今日の天気</h2>
-					<li><span class = "weatherColumn">天気:</span> <span th:text="${weatherData.todayDescription}"></span></li>
-					<li><span class = "weatherColumn">気温:</span> <span th:text="${weatherData.todayTemp}"></span>°C</li>
-					<li><span class = "weatherColumn">湿度:</span> <span th:text="${weatherData.todayHumidity}"></span>%</li>
-					<li><span class = "weatherColumn">気圧:</span> <span th:text="${weatherData.todayPressure}"></span> hPa</li>
+					<li><span>天気:</span> <span th:text="${weatherData.todayDescription}"></span></li>
+					<li><span>気温:</span> <span th:text="${weatherData.todayTemp}"></span>°C</li>
+					<li><span>湿度:</span> <span th:text="${weatherData.todayHumidity}"></span>%</li>
+					<li><span>気圧:</span> <span th:text="${weatherData.todayPressure}"></span> hPa</li>
 				</ul>
 				<ul class="weatherInfo" >
 					<h2>明日の天気</h2>
-					<li><span class = "weatherColumn">天気:</span> <span th:text="${weatherData.tomorrowDescription}"></span></li>
-					<li><span class = "weatherColumn">気温:</span> <span th:text="${weatherData.tomorrowTemp}"></span>°C</li>
-					<li><span class = "weatherColumn">湿度:</span> <span th:text="${weatherData.tomorrowHumidity}"></span>%</li>
-					<li><span class = "weatherColumn">気圧:</span> <span th:text="${weatherData.tomorrowPressure}"></span> hPa</li>
+					<li><span>天気:</span> <span th:text="${weatherData.tomorrowDescription}"></span></li>
+					<li><span>気温:</span> <span th:text="${weatherData.tomorrowTemp}"></span>°C</li>
+					<li><span>湿度:</span> <span th:text="${weatherData.tomorrowHumidity}"></span>%</li>
+					<li><span>気圧:</span> <span th:text="${weatherData.tomorrowPressure}"></span> hPa</li>
 				</ul>
 			</div>
 			<div class="d-flex align-items-center justify-content-center mt-2">		
 <!--					レギュラー＆ユニットマネージャー用-->
 				<div th:unless="${Users.role=='Admin'}">
-					<p>
+					<div class="attendance">
 						<form th:action="@{/menu/index}" method="get">
-							<input type="submit" value="勤怠登録" class="menuButtonSize attendanceColor">
+							<input type="submit" value="勤怠登録" class="menuButtonSize">
 						</form>
 						<form th:action="@{/menu/correction}" method="get">
-							<input type="submit" value="勤怠修正" class="menuButtonSize attendanceColor notFirstButton">
+							<input type="submit" value="勤怠修正" class="menuButtonSize">
 						</form>
-					</p>
-					<p>
+					</div>
+					<div class="dailyRep">
 						<form th:action="@{/menu/daily/detail}" method="get">
-							<input type="submit" value="日報登録" class="menuButtonSize dailyRepColor">
+							<input type="submit" value="日報登録" class="menuButtonSize">
 						</form>
-					</p>
+					</div>
 					<!--					マネージャー用-->
 					<div th:if="${Users.role=='Manager'}">
-						<p>
+						<div class="department">
 							<form th:action="@{/menu/department}" method="get">
-								<input type="submit" value="部署登録" class="menuButtonSize departmentColor">
+								<input type="submit" value="部署登録" class="menuButtonSize">
 							</form>
-						</p>
+						</div>
 					</div>
 				</div>
 	
 <!--					管理者用-->
 				<div th:if="${Users.role=='Admin'}">
 <!--						ユーザー情報登録-->
-					<p>
+					<div class="management">
 						<form th:action="@{/menu/usermanagement}" method="get">
-							<input type="submit" value="ユーザー情報登録" class="menuButtonSize managementColor">
+							<input type="submit" value="ユーザー情報登録" class="menuButtonSize">
 						</form>
-					</p>
+					</div>
 				</div>
 			</div>
 		</div>

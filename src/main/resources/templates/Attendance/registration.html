@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>出勤管理</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<link th:href="@{/css/styles.css}" rel="stylesheet"/>
 <link th:href="@{/CSS/create.css}" rel="stylesheet" />
 
 </head>
@@ -14,14 +14,14 @@
 			<div class="row">
 				<form id="mainForm" th:action="@{/attendance/management}" method="post" th:object="${attendanceFormList}">
 					<div class="header">
-						<div class="col-0 ">
+						<div class="col-2">
 							<input type="hidden" name="userName" th:value="${Users.userName}">
 						</div>
-						<div class="col-4">
+						<div class="col-2">
 							<input type="hidden" name="userId" th:value="${Users.userId}">
 						</div>
 						<div class="row">
-							<div class="text-danger error-message" th:if="${check} != null">
+							<div class="text-danger fw-bold" th:if="${check} != null">
 								<span th:text="${check}"></span>
 							</div>
 							<span class="col-4">
@@ -36,13 +36,13 @@
 							<span class="col-4">
 								<span th:unless="${Users.role=='Manager'}">
 									<th:block th:switch="${Users.status}">
-											ステータス:
-											<th:block th:case="null">　</th:block>
-											<th:block th:case="0">　未申請</th:block>
-											<th:block th:case="1">　承認待ち</th:block>
-											<th:block th:case="2">　承認済み</th:block>
-											<th:block th:case="3">　却下</th:block>
-											<th:block th:case="4">　訂正申請中</th:block>
+											ステータス: 
+											<th:block th:case="null"></th:block>
+											<th:block th:case="0">未申請</th:block>
+											<th:block th:case="1">承認待ち</th:block>
+											<th:block th:case="2">承認済み</th:block>
+											<th:block th:case="3">却下</th:block>
+											<th:block th:case="4">訂正申請中</th:block>
 									</th:block>
 								</span>
 							</span>
@@ -50,7 +50,7 @@
 								<div th:if="${Users.role} == 'Manager'">
 									<input type="submit" id="reject" value="却下" name="rejected"class="buttonSize" th:attr="role=${Users.role}" onclick="confirmSubmission(event)">
 									<input type="submit" id="approve" value="承認" name="approval"class="buttonSize"  th:attr="role=${Users.role}" onclick="confirmSubmission(event)">
-									<div class="text-danger error-message" th:if="${choiceUsers} != null">
+									<div class="text-danger fw-bold" th:if="${choiceUsers} != null">
 										<span th:text="${choiceUsers}"></span>
 									</div>
 								</div>
@@ -71,7 +71,7 @@
 					<div th:if="${ApprovalPending} != null">
 						<div class="row m-2">
 							<div class="col-7">
-								<table class="table table-bordered border border-dark ">
+								<table class="default-table ">
 									<thead>
 										<tr>
 											<td>承認申請者</td>
@@ -102,14 +102,14 @@
 					
 					<div th:if="${attendanceFormList} != null">
 						<div class="row m-2">
-							<div class="col-12 ml-3" >
-								<div class="text-danger error-message" th:if="${attendanceMessage} != null">
+							<div class="col-12" >
+								<div class="text-danger fw-bold" th:if="${attendanceMessage} != null">
 									<span th:text="${attendanceMessage}"></span>
 								</div>
 								<div class="text-danger">
 									<span th:if="${#fields.hasErrors('itemInaccurate')}" th:errors="*{itemInaccurate}"></span>
 								</div>
-								<table class="table table-bordered border border-dark">
+								<table class="default-table">
 									<thead>
 										<tr>
 											<th>日付</th>

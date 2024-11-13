@@ -1,0 +1,66 @@
+@import "../../../../../node_modules/bootstrap/scss/functions";
+
+@import "../../../../../node_modules/bootstrap/scss/variables";
+@import "../../../../../node_modules/bootstrap/scss/variables-dark";
+
+@import "../../../../../node_modules/bootstrap/scss/maps";
+@import "../../../../../node_modules/bootstrap/scss/mixins"; 
+@import "../../../../../node_modules/bootstrap/scss/root";
+
+@import "../../../../../node_modules/bootstrap/scss/containers"; 
+@import "../../../../../node_modules/bootstrap/scss/tables";
+
+//以上が必要。順番は塊単位で変えないように。
+
+//以下が自由選択
+
+@import "../../../../../node_modules/bootstrap/scss/bootstrap-utilities.scss";
+@import "../../../../../node_modules/bootstrap/scss/grid";
+@import "../../../../../node_modules/bootstrap/scss/alert";
+@import "../../../../../node_modules/bootstrap/scss/forms";
+@import "../../../../../node_modules/bootstrap/scss/buttons";
+@import "../../../../../node_modules/bootstrap/scss/reboot";
+
+@import "../../../../../node_modules/bootstrap/scss/utilities/api";
+
+.dflex-content_center-item_center{
+    @extend .d-flex;
+    @extend .justify-content-center;
+    @extend .align-items-center;
+}
+
+.indexContainer{
+    @include make-container();
+    @extend .dflex-content_center-item_center;
+    @extend .mx-auto;
+	@extend .my-4;
+}
+
+.indexBox{
+    @extend .border;
+    @extend .border-dark;
+    @extend .dflex-content_center-item_center;
+    padding:60px;
+}
+
+.default-table{
+    @extend .table;
+    @extend .table-bordered;
+    @extend .border; 
+    @extend .border-dark; 
+}
+
+.collapsedTable{
+    @extend .default-table;
+    @extend .w-100;
+    border-spacing: 0;
+}
+
+.managementBox{
+    padding:50px 30px !important;
+    font-size:x-large !important;
+    @extend .border;
+    @extend .border-dark;
+}
+
+
