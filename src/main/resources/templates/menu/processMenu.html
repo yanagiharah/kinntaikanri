@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>処理メニュー</title>
 <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 </head>
 <body>
@@ -22,10 +23,12 @@
 					<input type="submit" id="logOff" value="ログオフ" name="logOff" class="buttonSize">
 				</div>
 			</form>
-			<div th:if="${CheckAttendance}" class="alert alert-warning" role="alert">
+			<div th:if="${CheckAttendance}" class="alert alert-warning icon-link" role="alert">
+				<i class="fa-solid fa-circle-exclamation"></i>
 				<p th:text="${CheckAttendance}"></p>
 			</div>
-			<div th:if="${CheckDailyReport}" class="alert alert-warning" role="alert">
+			<div th:if="${CheckDailyReport}" class="alert alert-warning icon-link" role="alert">
+				<i class="fa-solid fa-circle-exclamation"></i>
 				<p th:text="${CheckDailyReport}"></p>
 			</div>
 			<div th:if="${monthlyAttendanceStatusIsThree}" class="alert alert-warning" role="alert">
@@ -56,14 +59,14 @@
 			<div  class = "weatherContainer">
 				<ul class = "weatherInfo">
 					<h2>今日の天気</h2>
-					<li><span>天気:</span> <span th:text="${weatherData.todayDescription}"></span></li>
+					<li><span>天気:</span> <i id="todayWeatherIcon" class="fa-solid "></i><span th:text="${weatherData.todayDescription}"></span></li>
 					<li><span>気温:</span> <span th:text="${weatherData.todayTemp}"></span>°C</li>
 					<li><span>湿度:</span> <span th:text="${weatherData.todayHumidity}"></span>%</li>
 					<li><span>気圧:</span> <span th:text="${weatherData.todayPressure}"></span> hPa</li>
 				</ul>
 				<ul class="weatherInfo" >
 					<h2>明日の天気</h2>
-					<li><span>天気:</span> <span th:text="${weatherData.tomorrowDescription}"></span></li>
+					<li><span>天気:</span> <i id="tomorrowWeatherIcon" class="fa-solid "></i><span th:text="${weatherData.tomorrowDescription}"></span></li>
 					<li><span>気温:</span> <span th:text="${weatherData.tomorrowTemp}"></span>°C</li>
 					<li><span>湿度:</span> <span th:text="${weatherData.tomorrowHumidity}"></span>%</li>
 					<li><span>気圧:</span> <span th:text="${weatherData.tomorrowPressure}"></span> hPa</li>
@@ -107,7 +110,14 @@
 			</div>
 		</div>
 	</div>
+	<script th:inline="javascript">
+	    /*<![CDATA[*/
+		 const todayWeatherType = /*[[${weatherData.todayWeatherType}]]*/[];
+		 const tomorrowWeatherType = /*[[${weatherData.tomorrowWeatherType}]]*/[];
+	    /*]]>*/
+	</script>
 	<script th:src="@{/js/common.js}"></script>
+	<script th:src="@{/js/weather.js}"></script>
 </body>	
 </html> 
 
