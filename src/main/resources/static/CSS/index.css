@@ -1,77 +1,77 @@
-@charset "UTF-8";
+/*@charset "UTF-8";*/
 
-body{
-	padding-top:0;
-}
+/*body{*/
+/*	padding-top:0;*/
+/*}*/
 	
-	.loginFontsize {
-		font-size: 30px;
-	}
+/*	.loginFontsize {*/
+/*		font-size: 30px;*/
+/*	}*/
 	
-	.loginFontsize label {
-		display: inline-block;
-		width: 154px;
-	}
+/*	.loginFontsize label {*/
+/*		display: inline-block;*/
+/*		width: 154px;*/
+/*	}*/
 	
-	.form-row {
-		display: flex;
-		align-items: center;
-		margin-bottom: 10px;
-		padding-left:3px;
-	}
+/*	.form-row {*/
+/*		display: flex;*/
+/*		align-items: center;*/
+/*		margin-bottom: 10px;*/
+/*		padding-left:3px;*/
+/*	}*/
 
-@media screen and (min-width: 481px) {
-	.variableButtonSize {
-			/*	width: 100px;*/
-			display: inline-block;
-			padding: 10px 20px;
-			cursor: pointer;
-			background-color: yellow;
-			font-size: 20px;
-	}
-	.buttonRound {
-			width: 120px;
-			height: 60px;
-			background-color: yellow;
-			/*  border-radius:30px;*/
-	}
+/*@media screen and (min-width: 481px) {*/
+/*	.variableButtonSize {*/
+/*				width: 100px;*/
+/*			display: inline-block;*/
+/*			padding: 10px 20px;*/
+/*			cursor: pointer;*/
+/*			background-color: yellow;*/
+/*			font-size: 20px;*/
+/*	}*/
+/*	.buttonRound {*/
+/*			width: 120px;*/
+/*			height: 60px;*/
+/*			background-color: yellow;*/
+/*			  border-radius:30px;*/
+/*	}*/
 	
-	.form-row label {
-			width: 160px;
-		}
+/*	.form-row label {*/
+/*			width: 160px;*/
+/*		}*/
 
 
-}
-@media screen and (max-width: 480px) {
-	.variableButtonSize {
-				/*	width: 100px;*/
-				display: inline-block;
-				padding: 10px 20px;
-				cursor: pointer;
-				background-color: yellow;
-				font-size: 20px;
-			}
+/*}*/
+/*@media screen and (max-width: 480px) {*/
+/*	.variableButtonSize {*/
+/*					width: 100px;*/
+/*				display: inline-block;*/
+/*				padding: 10px 20px;*/
+/*				cursor: pointer;*/
+/*				background-color: yellow;*/
+/*				font-size: 20px;*/
+/*			}*/
 			
-	.buttonRound {
-				width: 120px;
-				height: 60px;
-				background-color: yellow;
-				/*  border-radius:30px;*/
-	}
-	.loginFontsize{
-		font-size: larger;
-	}
-	.indexBox{
-		padding:20px;
-	}
-	.form-row{
-		width:30vw;
-	}	
+/*	.buttonRound {*/
+/*				width: 120px;*/
+/*				height: 60px;*/
+/*				background-color: yellow;*/
+/*				  border-radius:30px;*/
+/*	}*/
+/*	.loginFontsize{*/
+/*		font-size: larger;*/
+/*	}*/
+/*	.indexBox{*/
+/*		padding:20px;*/
+/*	}*/
+/*	.form-row{*/
+/*		width:30vw;*/
+/*	}	*/
 
-	.form-row label {
-			font-size: smaller;
-			width:30vw;
-	}
+/*	.form-row label {*/
+/*			font-size: smaller;*/
+/*			width:30vw;*/
+/*	}*/
 	
 	
-}
+/*}*/

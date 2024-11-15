@@ -1,72 +1,64 @@
 @charset "UTF-8";
-:root{
-	--default-color:white;
-	--attendance-color: rgb(255, 128, 64);
-	--dailyRep-color: rgb(128, 128, 64);
-	--department-color: rgb(128, 255, 255);
-	--management-color: rgb(131, 118, 137);
-}
+/*:root{*/
+/*	--default-color:white;*/
+/*	--attendance-color: rgb(255, 128, 64);*/
+/*	--dailyRep-color: rgb(128, 128, 64);*/
+/*	--department-color: rgb(128, 255, 255);*/
+/*	--management-color: rgb(131, 118, 137);*/
+/*}*/
 
-@media screen and (min-width: 481px) {
+/*@media screen and (min-width: 481px) {*/
 	
-	/*ボタン系*/
-	.menuButtonSize {
-		width: 260px;
-		height: 80px;
-		background-color:var(--default-color);
-		margin-top:15px;
-	}
+/*	ボタン系*/
+/*	.menuButtonSize {*/
+/*		width: 260px;*/
+/*		height: 80px;*/
+/*		background-color:var(--default-color);*/
+/*		margin-top:15px;*/
+/*	}*/
 	
-	.attendance .menuButtonSize{
-		background-color:var(--attendance-color);
-	}
+/*	.attendance .menuButtonSize{*/
+/*		background-color:var(--attendance-color);*/
+/*	}*/
 	
-	.dailyRep .menuButtonSize {
-		background-color:var(--dailyRep-color);
-	}
+/*	.dailyRep .menuButtonSize {*/
+/*		background-color:var(--dailyRep-color);*/
+/*	}*/
 		
-	.department .menuButtonSize {
-		background-color:var(--department-color);
-	}
+/*	.department .menuButtonSize {*/
+/*		background-color:var(--department-color);*/
+/*	}*/
 	
-	.management .menuButtonSize {
-		background-color: var(--management-color);
-	}
+/*	.management .menuButtonSize {*/
+/*		background-color: var(--management-color);*/
+/*	}*/
 	/*天気系*/
-	.weatherContainer{
-		display: flex; 
-		justify-content: space-evenly;
-		background-color: #f0fff0; 
-		border-radius:.25rem; 
-		box-shadow: 1px 2px 1px #333;
-	}
+/*	.weatherContainer{*/
+/*		display: flex; */
+/*		justify-content: space-evenly;*/
+/*		background-color: #f0fff0; */
+/*		border-radius:.25rem; */
+/*		box-shadow: 1px 2px 1px #333;*/
+/*	}*/
 	
-	.weatherInfo {
-		list-style: none;
-		padding: 0;
-		margin: 0;
-	}
+/*	.weatherInfo {*/
+/*		list-style: none;*/
+/*		padding: 0;*/
+/*		margin: 0;*/
+/*	}*/
 
-	.weatherInfo li {
-		justify-content: center; /* 水平方向の中央揃え */
-		margin-left: 10px;
-		margin-bottom: 10px; /* 各項目の間隔を調整 */
-	}
+/*	.weatherInfo li {*/
+/*		justify-content: center;  水平方向の中央揃え */
+/*		margin-left: 10px;*/
+/*		margin-bottom: 10px;  各項目の間隔を調整 */
+/*	}*/
 	
-	.weatherInfo li span:first-child{
-		width: 100px; /* ラベルの幅を固定 */
-		text-align: right; /* ラベルのテキストを右揃え */
-		margin-right: 10px; /* ラベルと値の間隔を調整 */
-	}
-
-	/*カスタムクラス候補*/
-	#mainForm{
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
+/*	.weatherInfo li span:first-child{*/
+/*		width: 100px;  ラベルの幅を固定 */
+/*		text-align: right;  ラベルのテキストを右揃え */
+/*		margin-right: 10px;  ラベルと値の間隔を調整 */
+/*	}*/
 	
 	@media screen and (max-width: 480px) {
 	
 	}
-}

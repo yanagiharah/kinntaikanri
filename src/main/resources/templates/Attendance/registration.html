@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <title>出勤管理</title>
 <link th:href="@{/css/styles.css}" rel="stylesheet"/>
-<link th:href="@{/CSS/create.css}" rel="stylesheet" />
 
 </head>
 <body>
@@ -48,8 +47,8 @@
 							</span>
 							<div class="col-4 d-flex justify-content-evenly">
 								<div th:if="${Users.role} == 'Manager'">
-									<input type="submit" id="reject" value="却下" name="rejected"class="buttonSize" th:attr="role=${Users.role}" onclick="confirmSubmission(event)">
 									<input type="submit" id="approve" value="承認" name="approval"class="buttonSize"  th:attr="role=${Users.role}" onclick="confirmSubmission(event)">
+									<input type="submit" id="reject" value="却下" name="rejected"class="buttonSize" th:attr="role=${Users.role}" onclick="confirmSubmission(event)">
 									<div class="text-danger fw-bold" th:if="${choiceUsers} != null">
 										<span th:text="${choiceUsers}"></span>
 									</div>
@@ -69,14 +68,14 @@
 					</div>
 					
 					<div th:if="${ApprovalPending} != null">
-						<div class="row m-2">
+						<div th:class="${Users.role != 'Manager' ? 'row' : 'row m-2'}"><!--マネージャーではないならrow,（マネージャー）ならrow m-2-->
 							<div class="col-7">
-								<table class="default-table ">
+								<table class="default-table">
 									<thead>
 										<tr>
-											<td>承認申請者</td>
-											<td>申請対象年月</td>
-											<td>申請日</td>
+											<th>承認申請者</th>
+											<th>申請対象年月</th>
+											<th>申請日</th>
 										</tr>
 									</thead>
 									<tbody>

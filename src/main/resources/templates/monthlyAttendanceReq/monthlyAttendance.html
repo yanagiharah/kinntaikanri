@@ -4,8 +4,6 @@
 		<meta charset="UTF-8">
 		<title>月次勤怠変更処理</title>
 		<link th:href="@{/CSS/styles.css}" rel="stylesheet"/>
-		<link th:href="@{/CSS/create.css}" rel="stylesheet" />
-		<link th:href="@{/CSS/monthlyAttendance.css}" rel="stylesheet" />
 	</head>
 	<body>
 		<div th:replace="~{common/commonHeader :: common-header}"></div>
@@ -60,28 +58,25 @@
 									</div>
 								</div>
 							</div>
-							<div class="row m-3" th:if="${Users.role}=='Manager'">
-								<div class="col-2"></div>
-								<div class="col-4" th:if="${Users.role=='Manager' && attendanceFormList != null}"th:each="CurrentChangeReq: ${CurrentChangeReq}"> 
+							<div class="row m-3" th:if="${Users.role=='Manager' && attendanceFormList != null}">
+								<div class="col" th:each="CurrentChangeReq: ${CurrentChangeReq}"> 
 									選択中ユーザー名:<span th:text="${CurrentChangeReq.userName}"></span>
 								</div>
-								<div class="col-4" th:if="${Users.role=='Manager' && attendanceFormList != null}"th:each="CurrentChangeReq : ${CurrentChangeReq}">
+								<div class="col" th:each="CurrentChangeReq : ${CurrentChangeReq}">
 									選択中ユーザーID:<span th:text="${CurrentChangeReq.userId}"></span>
 								</div>
-								<div class="col-2"></div>
 							</div>
 						</div>
-						<div class="row m-5" ></div>
-						<div class="row m-4">
-							<span class="col-xl-6 mt-5">
-								<div th:if="${HasChangeReq} != null" class="mt-auto;"><!--マネージャー画面でない限りnull-->
+						<div th:class="${Users.role != 'Manager' ? 'row mt-3' : 'row managers'}">
+							<div class="col-xl-6 managers-xl">
+								<div th:if="${HasChangeReq} != null" ><!--マネージャー画面でない限りnull-->
 									<table class="default-table" id="attendanceList">
 										<thead>
 											<tr>
-												<td >申請者ID</td>
-												<td >訂正申請者</td>
-												<td >申請対象年月</td>
-												<td >変更理由</td>
+												<th>申請者ID</th>
+												<th>訂正申請者</th>
+												<th>申請対象年月</th>
+												<th>変更理由</th>
 											</tr>
 										</thead>
 										<tbody >
@@ -108,7 +103,7 @@
 										</tbody>
 									</table>
 								</div>
-							</span>
+							</div>
 							<div class="col-xl-6 reasonAreas">
 								<span class="reasonArea" th:unless="${Users.role=='Manager'}">
 									<div class="col-3 reasonTitle">
@@ -140,7 +135,7 @@
 						</div>
 						
 						<div th:if="${attendanceFormList} != null">
-							<div class="row">
+							<div class="row m-0">
 								<div class="attendanceList">
 									<table class="collapsedTable">
 										<thead>
