@@ -1,11 +1,12 @@
-@import "../../../../../node_modules/bootstrap/scss/functions";
+@import "../../../../../node_modules/bootstrap/scss/bootstrap-utilities.scss";
 
-@import "../../../../../node_modules/bootstrap/scss/variables";
-@import "../../../../../node_modules/bootstrap/scss/variables-dark";
-
-@import "../../../../../node_modules/bootstrap/scss/maps";
-@import "../../../../../node_modules/bootstrap/scss/mixins"; 
-@import "../../../../../node_modules/bootstrap/scss/root";
+//bootstrapのデフォルト変数を操作したい場合ここで行う
+$header-color:#999999;
+$weather-color:#f0fff0;
+$attendance-color:rgb(255, 128, 64);
+$dailyRep-color: rgb(128, 128, 64);
+$department-color: rgb(128, 255, 255);
+$management-color: rgb(131, 118, 137);
 
 @import "../../../../../node_modules/bootstrap/scss/containers"; 
 @import "../../../../../node_modules/bootstrap/scss/tables";
@@ -14,15 +15,312 @@
 
 //以下が自由選択
 
-@import "../../../../../node_modules/bootstrap/scss/bootstrap-utilities.scss";
 @import "../../../../../node_modules/bootstrap/scss/grid";
 @import "../../../../../node_modules/bootstrap/scss/alert";
 @import "../../../../../node_modules/bootstrap/scss/forms";
 @import "../../../../../node_modules/bootstrap/scss/buttons";
 @import "../../../../../node_modules/bootstrap/scss/reboot";
 
-@import "../../../../../node_modules/bootstrap/scss/utilities/api";
+//*********************map*************************************************************
+$menuColors:(
+	management:$management-color,
+	attendance:$attendance-color,
+	dailyRep:$dailyRep-color,
+	department:$department-color,
+);
 
+$spacers: (
+    6: 3.5rem // mt-6のための新しい値を追加
+);
+//
+//$urls:(
+//	dailyRep:$dailyRep,
+//	monthlyAttendance:$monthlyAttendance,
+//	index:$index,
+//);
+
+
+//********************css移植↓↓ *******************共通css↓****************************
+
+//定義されていない色を使うとき用
+@mixin bg-color($color){
+	background-color: $color;
+}
+
+@mixin txt-color($color){
+	color:$color;
+}
+
+body{
+	@extend .m-0;
+	@extend .pt-5;
+}
+
+main{
+	@extend .mt-5;
+}
+
+.commonHeader {
+		@extend .position-fixed;
+		top: 0;
+		left: 0;
+		@extend .w-100;
+		@include bg-color($header-color);
+		opacity: 0.92;
+		@include txt-color($white);
+		text-align: center;
+		@extend .py-2;
+		@extend .px-0;
+		z-index: 2000;
+		@extend .m-0;
+	}
+	
+.header {
+		@extend .commonHeader;
+		top: 46px;
+		z-index: 1000;  
+		}
+
+.linklike{
+	@extend .link-primary;//ホバーと青色
+	text-decoration: underline;
+	border: none;
+	@extend .bg-transparent;
+}
+
+.buttonSize{
+	width: 100px;
+	@include bg-color($yellow);
+}
+
+.noneBox {
+	border: none;
+	@extend .w-100;
+}
+
+.default-table{
+    @extend .table;
+    @extend .table-bordered;
+    @extend .border; 
+    @extend .border-dark; 
+	th{
+			vertical-align: middle;
+			border: 1px solid #000;
+			font-size: 14px;
+			text-align: center;
+			white-space: nowrap;
+		}		
+}
+
+.collapsedTable {
+    @extend .default-table;
+    @extend .w-100;
+    border-spacing: 0;
+
+    tr {
+        th {
+            @extend .sticky-top;
+            left: 0;
+
+            &::before {
+                content: "";
+                @extend .position-absolute;
+                top: -1px;
+                left: 0;
+                @extend .w-100;
+                height: 103%;
+                border-top: 1.9px solid #000;
+                border-bottom: 1px solid #000;
+                background: #ccc;
+                z-index: -1;
+            }
+        }
+    }
+}
+
+.mt-6{
+	margin-top: calc(#{$spacer}*4.5);
+}
+
+
+//************************処理メニュー画面↓************************************************
+.menuButtonSize {
+		width: 260px;
+		height: 80px;
+		@include bg-color($white);
+		@extend .mt-1;
+}
+
+@each $type,$color in $menuColors{
+	.#{$type} .menuButtonSize {
+	       @include bg-color($color);
+	   }
+}
+
+//天気系
+	.weatherContainer{
+		@extend .d-flex; 
+		@extend .justify-content-evenly;
+		@include bg-color($weather-color);
+		@extend .rounded-2;
+		@extend .shadow-sm;
+	}
+	
+	.weatherInfo {
+		list-style: none;
+		@extend .m-0;
+		@extend .p-0;
+		li {
+				@extend .justify-content-center; // 水平方向の中央揃え
+				margin-left: 10px;
+				margin-bottom: 10px; // 各項目の間隔を調整
+				
+				span:first-child{
+						width: 100px; //ラベルの幅を固定 
+						@extend .text-center;//ラベルのテキストを右揃え 
+						margin-right: 10px; //ラベルと値の間隔を調整 
+					}
+			}
+	}
+	
+//**************************訂正申請画面*******************************************
+.managers{
+		margin-top: 90px;
+		@media screen and (min-width:1200px ){
+					margin-top:80px;
+					.managers-xl{
+								margin-top:14px;
+							}
+			}
+	}
+.attendanceList {
+		height: 350px;
+		overflow-y: auto;
+		-webkit-overflow-scrolling: touch;
+	}
+		//テキストエリア回り
+	.reason {
+		border: 1px solid #ccc;
+		height: 100px;
+		width: 250px;
+	}
+	
+	.reasonTitle {
+		@extend .position-absolute;
+		top: -115px;
+		left: 0;
+		@extend .w-100;
+		padding: 10px;
+	}
+
+			//reasonとreasonTitleの一つの集合
+	.reasonArea {
+		@extend .position-relative;
+	}
+	
+			//reasonAreaひとまとめにするdiv
+	.reasonAreas {
+		text-align: center;
+		margin: 0 auto;
+		@media screen and (min-width:1200px ){
+					margin-top:14px;
+			}
+		@media screen and (max-width:1200px ){
+					margin-top:12px;
+					}
+	}
+	//カレンダーコントロール周り ｊｓで使用 消さないで
+	.highlight {
+		font-weight: bold;
+		@include txt-color($black)
+	}
+
+	.dim {
+		@include txt-color($gray-500);
+	}
+
+	//[ID]
+	#approve {
+		@include txt-color($blue-600);
+	}
+	
+	#reject {
+		@include txt-color($red);
+	}
+	
+	#message {
+		@include txt-color($red);
+		display: none;
+	}
+
+//***************************日報***********************************************
+.header  {
+	.dailyRepHeader{
+		display:flex;
+		justify-content:space-evenly;
+		}
+	}
+	
+.dailyReportTable {
+		height: 350px;
+		overflow-y: auto;
+		-webkit-overflow-scrolling: touch;
+	}
+	
+//******************************ログイン系*****************************************	
+.loginFontsize {
+		font-size: 30px;
+		label {
+				display: inline-block;
+				width: 154px;
+			}
+		@media screen and (max-width: 480px) {
+			font-size: larger;
+			}	
+	}
+	
+.form-row {
+	display: flex;
+	align-items: center;
+	margin-bottom: 10px;
+	padding-left:3px;
+	@media screen and (min-width: 481px) {
+		label {
+					width: 160px;
+				}
+		}
+	@media screen and (max-width: 480px) {
+			width:85vw;
+			label {
+				font-size: smaller;
+				width:20vw;
+			}
+		}
+}
+.buttonRound {
+			width: 120px;
+			height: 60px;
+			@include bg-color($yellow);
+			// border-radius:30px;
+	}
+
+.variableButtonSize {
+				//width: 100px;
+				display: inline-block;
+				padding: 10px 20px;
+				cursor: pointer;
+				@include bg-color($yellow);
+				font-size: 20px;
+			}
+
+	
+//*****************************アドミン********************************************
+hr{
+	color:midnightblue;
+}
+
+			
+//***************************bootstrapとcssをまとめる用↓****************************
 .dflex-content_center-item_center{
     @extend .d-flex;
     @extend .justify-content-center;
@@ -41,19 +339,9 @@
     @extend .border-dark;
     @extend .dflex-content_center-item_center;
     padding:60px;
-}
-
-.default-table{
-    @extend .table;
-    @extend .table-bordered;
-    @extend .border; 
-    @extend .border-dark; 
-}
-
-.collapsedTable{
-    @extend .default-table;
-    @extend .w-100;
-    border-spacing: 0;
+	@media screen and (max-width: 480px) {
+		padding:10px;
+		}
 }
 
 .managementBox{

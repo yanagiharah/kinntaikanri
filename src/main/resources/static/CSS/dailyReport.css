@@ -1,15 +1,15 @@
 @charset "UTF-8";@charset "UTF-8";
 
-.header div {
-		display:flex;
-		justify-content:space-evenly;
-	}
+/*.header div {*/
+/*		display:flex;*/
+/*		justify-content:space-evenly;*/
+/*	}*/
 	
-.dailyReportTable {
-		height: 350px;
-		overflow-y: auto;
-		-webkit-overflow-scrolling: touch;
-	}
+/*.dailyReportTable {*/
+/*		height: 350px;*/
+/*		overflow-y: auto;*/
+/*		-webkit-overflow-scrolling: touch;*/
+/*	}*/
 
 
 @media screen and (min-width: 481px) {

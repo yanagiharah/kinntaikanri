@@ -4,10 +4,8 @@
 <meta charset="UTF-8">
 <title>ユーザー管理画面</title>
 <link th:href="@{/css/styles.css}" rel="stylesheet"/>
-<link th:href="@{/CSS/create.css}" rel="stylesheet"/>
-<link th:href="@{/CSS/management.css}" rel="stylesheet"/>
 </head>
-<body>
+<body class="p-0">
 	<div class="container d-flex align-items-center justify-content-center vh-100">
 		<div class="row">
 			<form th:action="@{/user/management}" name="managementForm" method="post">
@@ -15,11 +13,11 @@
 					<input type="submit" id="back" value="戻る" name="back" class="buttonSize">
 				</div>
 				<div class="managementBox" >
-					<div class="text-danger fw-bold" th:if="${check} != null">
+					<div class="text-danger fw-bold fs-5" th:if="${check} != null">
 						<span th:text="${check}"></span>
 					</div>
 					<div th:if="${managementForm} == null or ${managementForm} != null" th:object="${managementForm}" >
-						<div class="text-danger fw-bold">
+						<div class="text-danger fw-bold fs-5">
 							<span th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></span>
 						</div>
 						<p>ユーザー名
@@ -27,7 +25,7 @@
 							<input type="submit" value="検索" name="search" class="buttonRound">
 						</p>
 						<hr>
-						<div class="text-danger fw-bold">
+						<div class="text-danger fw-bold fs-5">
 							<span th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}"></span>
 						</div>
 						<div class="form-row">
@@ -35,14 +33,14 @@
 							<span th:text="${managementForm} != null ? *{userId} : ''"></span>
 							<input type="hidden" name="userId" th:value="${managementForm} != null ? *{userId} : ''">
 						</div>
-						<div class="text-danger fw-bold">
+						<div class="text-danger fw-bold fs-5">
 							<span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
 						</div>
 						<div class="form-row">
 							<label>パスワード</label>
 							<input type="password" name="password" th:value="''">
 						</div>
-						<div class="text-danger fw-bold">
+						<div class="text-danger fw-bold fs-5">
 							<span th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></span>
 						</div>
 						<div class="form-row">
@@ -55,7 +53,7 @@
 								<option value="Admin" th:selected="*{role} == 'Admin'">Admin</option>
 							</select>
 						</div>
-						<div class="text-danger fw-bold">
+						<div class="text-danger fw-bold fs-5">
 							<span th:if="${#fields.hasErrors('department')}" th:errors="*{department}"></span>
 						</div>
 						<div class="form-row">
@@ -69,21 +67,21 @@
 								</option>
 							</select>
 						</div>
-						<div class="text-danger fw-bold">
+						<div class="text-danger fw-bold fs-5">
 							<span th:if="${#fields.hasErrors('tel')}" th:errors="*{tel}"></span>
 						</div>
 						<div class="form-row">
 							<label>電話番号</label>
 							<input type="text" name="tel" th:value="${managementForm != null} ? *{tel} : ''">
 						</div>
-						<div class="text-danger fw-bold">
+						<div class="text-danger fw-bold fs-5">
 							<span th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></span>
 						</div>
 						<div class="form-row">
 							<label>メールアドレス</label>
 							<input type="text" name="address" th:value="${managementForm != null} ? *{address} : ''">
 						</div>
-						<div class="text-danger fw-bold">
+						<div class="text-danger fw-bold fs-5">
 							<span th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}"></span>
 						</div>
 						<div class="form-row">

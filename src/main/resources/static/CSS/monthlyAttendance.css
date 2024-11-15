@@ -1,109 +1,129 @@
-@charset "UTF-8";
+/*@charset "UTF-8";*/
 
 /*@media screen and (min-width: 481px) {*/
-	/*[基本レイアウト]*/
-	main {
-		margin-top: -20px;
-	}
+/*	[基本レイアウト]*/
+/*	main {*/
+/*		margin-top: -20px!important;*/
+/*	}*/
 	
-	table {
-		border-spacing: 0;
-		width: 100%;
-	}
+/*	table {*/
+/*		border-spacing: 0;*/
+/*		width: 100%;*/
+/*	}*/
 	
-	th, td {
-		vertical-align: middle;
-		padding: 20px;
-		border: 1px solid #000;
-		color: #000;
-		font-size: 14px;
-		text-align: center;
-		white-space: nowrap;
-	}
+/*	th, td {*/
+/*		vertical-align: middle;*/
+/*		padding: 20px;*/
+/*		border: 1px solid #000;*/
+/*		color: #000;*/
+/*		font-size: 14px;*/
+/*		text-align: center;*/
+/*		white-space: nowrap;*/
+/*	}*/
 	
-	th {
-		background: #000;
-	}
+/*	th {*/
+/*		background: #000;*/
+/*	}*/
 	
-	td {
-		background: #fff;
-	}
+/*	td {*/
+/*		background: #fff;*/
+/*	}*/
+	
+/*	.managers{*/
+/*		margin-top:150px;*/
+/*	}*/
 
-	/*[class]*/
-		/*リスト関係*/
-			/*tableカラム*/
+/*	[class]*/
+/*		リスト関係*/
+/*			tableカラム*/
 
-			/*table*/
+/*			table*/
 	
-	.attendanceList {
-		height: 350px;
-		overflow-y: auto;
-		-webkit-overflow-scrolling: touch;
-	}
-		/*テキストエリア回り*/
-	.reason {
-		border: 1px solid #ccc;
-		height: 100px;
-		width: 250px;
-		margin-top: 57px;
-	}
+/*	.attendanceList {*/
+/*		height: 350px;*/
+/*		overflow-y: auto;*/
+/*		-webkit-overflow-scrolling: touch;*/
+/*	}*/
+/*		テキストエリア回り*/
+/*	.reason {*/
+/*		border: 1px solid #ccc;*/
+/*		height: 100px;*/
+/*		width: 250px;*/
+/*	}*/
 	
-	.reasonTitle {
-		position: absolute;
-		top: -120px;
-		left: 0;
-		width: 100%;
-		padding: 10px;
-	}
+/*	.reasonTitle {*/
+/*		position: absolute;*/
+/*		top: -120px;*/
+/*		left: 0;*/
+/*		width: 100%;*/
+/*		padding: 10px;*/
+/*	}*/
 
-			/*reasonとreasonTitleの一つの集合*/
-	.reasonArea {
-		position: relative;
-	}
+/*			reasonとreasonTitleの一つの集合*/
+/*	.reasonArea {*/
+/*		position: relative;*/
+/*	}*/
 	
-			/*reasonAreaひとまとめにするdiv*/
-	.reasonAreas {
-		text-align: center;
-		margin: 0 auto;
-	}
-	/*カレンダーコントロール周り ｊｓで使用 消さないで*/
-	.highlight {
-		font-weight: bold;
-		color: black;
-	}
+/*			reasonAreaひとまとめにするdiv*/
+/*	.reasonAreas {*/
+/*		text-align: center;*/
+/*		margin: 0 auto;*/
+/*	}*/
+/*	カレンダーコントロール周り ｊｓで使用 消さないで*/
+/*	.highlight {*/
+/*		font-weight: bold;*/
+/*		color: black;*/
+/*	}*/
 
-	.dim {
-		color: lightgray;
-	}
+/*	.dim {*/
+/*		color: lightgray;*/
+/*	}*/
 
-	/*[ID]*/
-	#approve {
-		color: deepskyblue;
-	}
+/*	[ID]*/
+/*	#approve {*/
+/*		color: deepskyblue;*/
+/*	}*/
 	
-	#reject {
-		color: red;
-	}
+/*	#reject {*/
+/*		color: red;*/
+/*	}*/
 	
-	#message {
-		color: red;
-		display: none;
-	}
+/*	#message {*/
+/*		color: red;*/
+/*		display: none;*/
+/*	}*/
+	
+/*	#mainForm{*/
+/*		margin-top:-30px;*/
+/*	}*/
 		
 /*}*/
-@media screen and (max-width: 480px) {
-	.buttonRound {
-		width: 120px;
-		height: 60px;
-		background-color: blueviolet;
-		/*  border-radius:30px;*/
-	}
-	main {
-		margin-top: -120px;
-	}
-	table {
-		border-collapse: collapse;
-		border-spacing: 0;
-		width: 60%;
-	}
-	}
+/*@media screen and (max-width: 480px) {*/
+/*	.buttonRound {*/
+/*		width: 120px;*/
+/*		height: 60px;*/
+/*		background-color: blueviolet;*/
+/*		  border-radius:30px;*/
+/*	}*/
+/*	main {*/
+/*		margin-top: -120px;*/
+/*	}*/
+/*	table {*/
+/*		border-collapse: collapse;*/
+/*		border-spacing: 0;*/
+/*		width: 60%;*/
+/*	}*/
+/*	}*/
+/*	@media screen and (max-width:1400px ){*/
+/*		.reasonAreas{*/
+/*			margin-top:12px;*/
+/*		}*/
+		
+/*		.managers-xl{*/
+/*			margin-top:12px;*/
+/*		}*/
+		
+/*		.managers{*/
+/*			margin-top:120px;*/
+/*		}*/
+/*	}*/

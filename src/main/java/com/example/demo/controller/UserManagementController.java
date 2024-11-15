@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,8 +16,6 @@ import com.example.demo.model.Users;
 import com.example.demo.service.CommonActivityService;
 import com.example.demo.service.DepartmentService;
 import com.example.demo.service.UserManagementService;
-
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/user")
@@ -112,6 +112,11 @@ public class UserManagementController {
 	public String back(Model model, HttpSession session) {
 		commonActivityService.backMenu(model, session);
 		return "menu/processMenu";
+	}
+	
+	@RequestMapping(value = "/goMenu",method = RequestMethod.GET)
+	public String reload(Model model,HttpSession session,RedirectAttributes redirectAttributes) {
+		return "redirect:/menu";
 	}
 
 }

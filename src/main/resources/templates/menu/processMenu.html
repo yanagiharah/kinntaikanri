@@ -4,14 +4,12 @@
 <meta charset="UTF-8">
 <title>処理メニュー</title>
 <link th:href="@{/css/styles.css}" rel="stylesheet"/>
-<link th:href="@{/CSS/create.css}" rel="stylesheet" />
-<link th:href="@{/CSS/processMenu.css}" rel="stylesheet"/>
 
 </head>
 <body>
 	<div class="container" th:object="${Users}">
 		<div class="row"> 
-			<form id="mainForm" th:action="@{/logOff}" method="post" class="commonHeader" >
+			<form id="mainForm" th:action="@{/logOff}" method="post" class="commonHeader dflex-content_center-item_center" >
 				<div class="col-4">
 					ユーザー名: <span th:text="${Users.userName}"></span>
 					<input type="hidden" name="userName" th:value="${Users.userName}">
