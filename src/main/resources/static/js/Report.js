@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	const dailyReportDetailTime = Array.from(document.querySelectorAll('input[name^="dailyReportDetailForm"][name$=".dailyReportDetailTime"]'));
 	const content = Array.from(document.querySelectorAll('input[name^="dailyReportDetailForm"][name$=".content"]'));
 	const dailyReportDetailId = Array.from(document.querySelectorAll('input[name^="dailyReportDetailForm"][name$=".dailyReportDetailId"]'));
-	const status =  Array.from(document.querySelectorAll('input[name^="statu"][name$="s"]'));
+	const status =  Array.from(document.querySelectorAll('input[name^="stat"][name$="us"]'));
 	let activeFlag = false;
     
 	function checkTable() {
