@@ -21,14 +21,13 @@ public class HeaderController {
 	}
 
 	@RequestMapping(value = "/goMenu", params = "back", method = RequestMethod.POST)
-	public String back(Model model, HttpSession session) {
-		commonActivityService.backMenu(model, session);
-		return "menu/processMenu";
+	public String back(Model model, HttpSession session,RedirectAttributes redirectAttributes) {
+		return "redirect:/menu/loaded";
 	}
 
 	//更新ボタンが押された場合の処理
-	@RequestMapping(value = "/goMenu",method = RequestMethod.GET)
-	public String reload(Model model,HttpSession session,RedirectAttributes redirectAttributes) {
-		return "redirect:/menu";
-	}
+//	@RequestMapping(value = "/goMenu",method = RequestMethod.GET)
+//	public String reload(Model model,HttpSession session,RedirectAttributes redirectAttributes) {
+//		return "redirect:/menu";
+//	}
 }

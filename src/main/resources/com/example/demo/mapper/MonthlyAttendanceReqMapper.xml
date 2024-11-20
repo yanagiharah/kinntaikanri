@@ -73,7 +73,7 @@
 <!-- ステータス承認 -->
 <update id="approvalStatus">
   UPDATE monthly_attendance_req
-  SET status = 2
+  SET status = 2, has_change_req = null
   WHERE user_id = #{userId} AND target_year_month = #{targetYearMonth};
 </update>
 
@@ -108,6 +108,42 @@
   rejection_reason = #{rejectionReason},
   status = 2
   WHERE user_id = #{userId} AND target_year_month = #{targetYearMonth};
+</update>
+
+<!-- 月次勤怠訂正のステータス確認文(一般用) -->
+<select id="selectMonthlyAttendanceReqHasChangeReq">
+  SELECT status FROM monthly_attendance_req
+  WHERE user_id = #{userId} AND has_change_req = 0;
+</select>
+
+<!-- 月次勤怠訂正のステータス確認文(マネージャー用) -->
+<select id="selectMonthlyAttendanceReqAnyHasChangeReq">
+  SELECT EXISTS (SELECT 1 FROM monthly_attendance_req WHERE has_change_req = 1);
+</select>
+
+<!-- 却下理由取得文 -->
+<select id="selectRejectionReason">
+  SELECT rejection_reason FROM monthly_attendance_req 
+  WHERE user_id = #{userId} AND has_change_req = 0 AND status = 2
+  ORDER BY target_year_month  LIMIT 1;
+</select>
+
+<!-- 月次勤怠訂正却下アラート消去用更新分 -->
+<update id="changeRejectedMonthlyAttendanceReq">
+  UPDATE monthly_attendance_req AS main
+  JOIN (
+    SELECT rejection_reason 
+    FROM monthly_attendance_req 
+    WHERE user_id = #{userId}
+    AND has_change_req = 0 
+    AND status = 2 
+    ORDER BY target_year_month 
+    LIMIT 1
+  ) AS sub ON main.rejection_reason = sub.rejection_reason
+  SET main.has_change_req = null
+  WHERE main.user_id = #{userId}
+  AND main.has_change_req = 0 
+  AND main.status = 2;
 </update>
 
 

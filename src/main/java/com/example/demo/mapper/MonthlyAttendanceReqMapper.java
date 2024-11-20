@@ -47,4 +47,16 @@ public interface MonthlyAttendanceReqMapper {
 	
 	//月次勤怠訂正の却下更新文
 	void changeRejectionMonthlyAttendanceReq(Integer userId, String targetYearMonth, String rejectionReason);
+	
+	//月次勤怠訂正のステータス確認文
+	List<Integer> selectMonthlyAttendanceReqHasChangeReq(Integer userId);
+	
+	//月次勤怠訂正のステータス確認文(マネージャー用) 
+	Integer selectMonthlyAttendanceReqAnyHasChangeReq();
+	
+	//直近で却下された訂正申請却下理由取得文
+	String selectRejectionReason(Integer userId);
+	
+	//月次勤怠訂正却下アラート消去用更新文
+	void changeRejectedMonthlyAttendanceReq(Integer userId);
 }

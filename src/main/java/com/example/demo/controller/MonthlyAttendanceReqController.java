@@ -21,7 +21,9 @@ import com.example.demo.model.MonthlyAttendanceReq;
 import com.example.demo.model.Users;
 import com.example.demo.service.AttendanceManagementService;
 import com.example.demo.service.CommonActivityService;
+import com.example.demo.service.ModelService;
 import com.example.demo.service.MonthlyAttendanceReqService;
+
 
 @Controller
 @RequestMapping("/attendanceCorrect")
@@ -31,14 +33,16 @@ public class MonthlyAttendanceReqController {
 	private final MonthlyAttendanceReqService monthlyAttendanceReqService;
 	private final AttendanceManagementService attendanceManagementService;
 	private final MessageOutput messageOutput;
+	private final ModelService modelService;
 
 	public MonthlyAttendanceReqController(CommonActivityService commonActivityService,
 			MonthlyAttendanceReqService monthlyAttendanceReqService,
-			AttendanceManagementService attendanceManagementService, MessageOutput messageOutput) {
+			AttendanceManagementService attendanceManagementService, MessageOutput messageOutput,ModelService modelService) {
 		this.commonActivityService = commonActivityService;
 		this.monthlyAttendanceReqService = monthlyAttendanceReqService;
 		this.attendanceManagementService = attendanceManagementService;
 		this.messageOutput = messageOutput;
+		this.modelService = modelService;
 	}
 
 	@RequestMapping("/correction")
@@ -46,8 +50,13 @@ public class MonthlyAttendanceReqController {
 		
 		commonActivityService.usersModelSession(model, session);
 		Users users = (Users) model.getAttribute("Users");
-		String stringYearsMonth = commonActivityService.lastYearsMonth();
 		
+		String stringYearsMonth;
+		stringYearsMonth = (String) model.asMap().get("stringYearsMonth");
+	    if (stringYearsMonth == null) {
+	        stringYearsMonth = commonActivityService.lastYearsMonth();
+	    }
+	    
 		if (users.getRole().equalsIgnoreCase("Manager")) {
 			List<MonthlyAttendanceReq> HasChangeReq = monthlyAttendanceReqService
 					.selectHasChangeReq(stringYearsMonth);
@@ -114,6 +123,7 @@ public class MonthlyAttendanceReqController {
 		Date firstAttendanceDate = attendanceManagementService.getFirstAttendanceDate(attendanceFormList);
 		monthlyAttendanceReqService.submissionStatusCheck(firstAttendanceDate, userId, model, session);
 		
+		model.addAttribute("sendCorrectionApplication", messageOutput.message("sendCorrectionApplication"));
 		model.addAttribute("attendanceFormList", attendanceFormList);
 		model.addAttribute("stringYearsMonth",stringYearsMonth);
 		return "monthlyAttendanceReq/monthlyAttendance";
@@ -161,7 +171,8 @@ public class MonthlyAttendanceReqController {
 		//マネージャー訂正承認ボタン　同上
 	@RequestMapping(value = "/management", params = "approval", method = RequestMethod.POST)
 	public String approval(AttendanceFormList attendanceFormList, Model model, HttpSession session,
-			RedirectAttributes redirectAttributes) {
+			RedirectAttributes redirectAttributes,@RequestParam("stringYearsMonth")String stringYearsMonth) {
+		redirectAttributes.addFlashAttribute("stringYearsMonth",stringYearsMonth);
 		//else句以外ほぼ起きることはない、状況を見て消去可,システム上前半句は起きえないはず
 		if (attendanceFormList.getAttendanceList() == null) {
 			redirectAttributes.addFlashAttribute("choiceUsers", messageOutput.message("choiceUsers"));
@@ -170,6 +181,7 @@ public class MonthlyAttendanceReqController {
 			String inputDate =  monthlyAttendanceReqService.getInputDate(attendanceFormList);
 			Integer firstUserId=attendanceManagementService.getFirstAttendanceUserId(attendanceFormList);
 			monthlyAttendanceReqService.changeApprovalMonthlyAttendanceReq(firstUserId, inputDate);
+			modelService.changeMonthlyAttendanceReqApproval(model);
 		}
 		return "redirect:/attendanceCorrect/correction";
 	}
@@ -178,7 +190,8 @@ public class MonthlyAttendanceReqController {
 	//	//マネージャー訂正却下ボタン押下　同上
 	@RequestMapping(value = "/management", params = "rejected", method = RequestMethod.POST)
 	public String Rejected(AttendanceFormList attendanceFormList, Model model, HttpSession session,
-			RedirectAttributes redirectAttributes,@RequestParam("rejectionReason")String rejectionReason) {
+			RedirectAttributes redirectAttributes,@RequestParam("rejectionReason")String rejectionReason,@RequestParam("stringYearsMonth")String stringYearsMonth) {
+		redirectAttributes.addFlashAttribute("stringYearsMonth",stringYearsMonth);
 		if (attendanceFormList.getAttendanceList() == null) {
 			redirectAttributes.addFlashAttribute("choiceUsers", messageOutput.message("choiceUsers"));
 		} else {
@@ -186,6 +199,7 @@ public class MonthlyAttendanceReqController {
 			String inputDate =  monthlyAttendanceReqService.getInputDate(attendanceFormList);
 			Integer firstUserId=attendanceManagementService.getFirstAttendanceUserId(attendanceFormList);
 			monthlyAttendanceReqService.changeRejectionMonthlyAttendanceReq(firstUserId, inputDate, rejectionReason);
+			modelService.changeMonthlyAttendanceReqReject(model);
 		}
 		return "redirect:/attendanceCorrect/correction";
 	}
@@ -195,4 +209,11 @@ public class MonthlyAttendanceReqController {
 	public String reload(Model model,HttpSession session,RedirectAttributes redirectAttributes) {
 		return "redirect:/attendanceCorrect/correction";
 	}
+	
+	@RequestMapping(value = "/updateData", params = "confirmReason", method = RequestMethod.POST)
+	public String ConfirmRejectedReason(Integer userId) {
+		monthlyAttendanceReqService.changeRejectedMonthlyAttendanceReq(userId);
+		return "redirect:/menu/loaded";
+	}
+	
 }
