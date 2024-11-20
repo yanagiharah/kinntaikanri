@@ -136,6 +136,9 @@
 						
 						<div th:if="${attendanceFormList} != null">
 							<div class="row m-0">
+								<div class="text-danger fw-bold" th:if="${sendCorrectionApplication} != null">
+									<span th:text="${sendCorrectionApplication}"></span>
+								</div>
 								<div class="attendanceList">
 									<table class="collapsedTable">
 										<thead>

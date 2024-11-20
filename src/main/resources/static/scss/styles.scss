@@ -151,6 +151,15 @@ main{
 		@extend .mt-1;
 }
 
+.menuAlert{
+	div{
+	@extend .icon-link;
+	@extend .alert; 
+	@extend .alert-warning;
+	@extend .justify-content-center;
+	}
+}
+
 @each $type,$color in $menuColors{
 	.#{$type} .menuButtonSize {
 	       @include bg-color($color);
@@ -345,7 +354,7 @@ hr{
 }
 
 .managementBox{
-    padding:50px 30px !important;
+    padding:40px 30px !important;
     font-size:x-large !important;
     @extend .border;
     @extend .border-dark;

@@ -30,17 +30,20 @@ public class CommonActivityService {
 	private final ModelService modelService;
 
 	private final WeatherService weatherService;
+	
+	private final MonthlyAttendanceReqService monthlyAttendanceReqService;
 
 	CommonActivityService(DailyReportService dailyReportService,
 			AttendanceManagementService attendanceManagementService, MessageOutput messageOutput,
 			MonthlyAttendanceReqMapper monthlyAttendanceReqMapper, ModelService modelService,
-			WeatherService weatherService) {
+			WeatherService weatherService,MonthlyAttendanceReqService monthlyAttendanceReqService) {
 		this.dailyReportService = dailyReportService;
 		this.attendanceManagementService = attendanceManagementService;
 		this.messageOutput = messageOutput;
 		this.monthlyAttendanceReqMapper = monthlyAttendanceReqMapper;
 		this.modelService = modelService;
 		this.weatherService = weatherService;
+		this.monthlyAttendanceReqService = monthlyAttendanceReqService;
 	}
 
 	//Usersセッションに詰める
@@ -54,8 +57,9 @@ public class CommonActivityService {
 	public Model backMenu(Model model, HttpSession session) {
 		usersModelSession(model, session);
 		Users users = (Users) model.getAttribute("Users");
-		model.addAttribute("Users", users);
+//		model.addAttribute("Users", users);
 		if ("Regular".equals(users.getRole()) || "UnitManager".equals(users.getRole())) {
+			//メソッドの位置をそれぞれ変えたほうがいい。あるいはヘルパークラスを作成してそこに入れる
 			LocalDate today = LocalDate.now();
 			LocalDate yesterday = today.minusDays(1);
 			Integer checkDailyReport = dailyReportService.checkYesterdayDailyReport(users.getUserId(), yesterday);
@@ -67,17 +71,25 @@ public class CommonActivityService {
 			if (checkAttendance == 0) {
 				model.addAttribute("CheckAttendance", messageOutput.message("checkAttendance"));
 			}
+			
+			//勤怠訂正結果表示アラート
+			Integer userId = users.getUserId();
+			monthlyAttendanceReqService.checkMonthlyAttendanceReqStatus(userId,model);
 
+			//勤怠管理アラート
 			//先月の一日をDate型で取得
 			Date firstDayOfLastMonthDate = oneDayLastMonth();
 			//先月のmonthlyAttendanceReqを変数に詰める
-			MonthlyAttendanceReq monthlyAttendanceReq = monthlyAttendanceReqMapper
-					.selectTargetYearMonthStatus(firstDayOfLastMonthDate, users.getUserId());
+			MonthlyAttendanceReq monthlyAttendanceReq = monthlyAttendanceReqMapper.selectTargetYearMonthStatus(firstDayOfLastMonthDate, users.getUserId());
 			//先月のmonthlyAttendanceReqが存在し、かつ月次勤怠承認状況をあらわすstatusが３（却下）のとき、処理メニュー画面にメッセージを表示させる。
 			if (monthlyAttendanceReq != null && monthlyAttendanceReq.getStatus() == 3) {
-				model.addAttribute("monthlyAttendanceStatusIsThree",
-						messageOutput.message("monthlyAttendanceStatusIsThree"));
+				model.addAttribute("monthlyAttendanceStatusIsThree", messageOutput.message("monthlyAttendanceStatusIsThree"));
 			}
+			
+			//勤怠修正アラート
+//			if(hasChangeReq! = null && monthlyAttendanceReq.getStatus() == 0){
+//				MonthlyAttendanceReq monthlyAttendanceReq = monthlyAttendanceReqMapper
+//			}
 		}
 
 		if ("Manager".equals(users.getRole())) {
@@ -85,6 +97,8 @@ public class CommonActivityService {
 			// データベースから月次出席情報を取得
 			Integer attendanceReq = monthlyAttendanceReqMapper.selectMonthlyAttendanceReq(lastMonth);
 			modelService.monthlyAttendanceIsSentInsertModel(attendanceReq, model);
+			
+			monthlyAttendanceReqService.selectMonthlyAttendanceReqAnyHasChangeReq(model);
 		}
 		//天気予報API課金で使用可能
 		//天気情報をmodelに詰める

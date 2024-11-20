@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -15,6 +16,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import com.example.demo.inter.MessageOutput;
 import com.example.demo.mapper.MonthlyAttendanceReqMapper;
 import com.example.demo.model.AttendanceFormList;
 import com.example.demo.model.MonthlyAttendanceReq;
@@ -25,15 +27,14 @@ public class MonthlyAttendanceReqService {
 
 	private final MonthlyAttendanceReqMapper monthlyAttendanceReqMapper;
 
-	private final CommonActivityService commonActivityService;
-
 	private final AttendanceManagementService attendanceManagementService;
+	
+	private final MessageOutput messageOutput;
 
-	MonthlyAttendanceReqService(MonthlyAttendanceReqMapper monthlyAttendanceReqMapper,
-			CommonActivityService commonActivityService, AttendanceManagementService attendanceManagementService) {
+	MonthlyAttendanceReqService(MonthlyAttendanceReqMapper monthlyAttendanceReqMapper, AttendanceManagementService attendanceManagementService,MessageOutput messageOutput) {
 		this.monthlyAttendanceReqMapper = monthlyAttendanceReqMapper;
-		this.commonActivityService = commonActivityService;
 		this.attendanceManagementService = attendanceManagementService;
+		this.messageOutput = messageOutput;
 	}
 
 	public List<MonthlyAttendanceReq> selectApprovalPending() {
@@ -92,8 +93,7 @@ public class MonthlyAttendanceReqService {
 
 	//承認申請のステータス確認
 	public Model submissionStatusCheck(Date targetYearMonth, Integer userId, Model model, HttpSession session) {
-		commonActivityService.usersModelSession(model, session);
-		Users users = (Users) model.getAttribute("Users");
+		Users users = (Users) session.getAttribute("Users");
 		//ステータスチェックを呼び出し、ステータスの記録があればそれを、なければ０を割り当てる処理
 		MonthlyAttendanceReq statusCheck = monthlyAttendanceReqMapper.selectTargetYearMonthStatus(targetYearMonth,
 				userId);
@@ -117,6 +117,8 @@ public class MonthlyAttendanceReqService {
 		monthlyAttendanceReqMapper.rejectedStatus(userId, targetYearMonth);
 	}
 
+//*********************************↓↓勤怠訂正↓↓***********************************
+	
 	//特定のユーザーの承認申請で承認済みを取得 カレンダー（一般）用
 	public List<MonthlyAttendanceReq> selectApproval(Integer userId) {
 		  // MonthlyAttendanceReqのリストを取得
@@ -157,6 +159,35 @@ public class MonthlyAttendanceReqService {
 		return monthlyAttendanceReq;
 	}
 
+	//一般ユーザー用アラート表示機能
+	public Model checkMonthlyAttendanceReqStatus(Integer userId,Model model) {
+		List<Integer> checkGeneralUsersHasChangeReq = new ArrayList<>();
+		
+		//訂正申請がされていた（hasChangeReq=0）のステータスを入手
+		checkGeneralUsersHasChangeReq = monthlyAttendanceReqMapper.selectMonthlyAttendanceReqHasChangeReq(userId);
+		//もし上記があれば
+		if(!checkGeneralUsersHasChangeReq.isEmpty()) {
+			if(checkGeneralUsersHasChangeReq.contains(0)) {
+				model.addAttribute("monthlyAttendanceReqApproved",messageOutput.message("monthlyAttendanceReqApproved"));
+			}
+			if(checkGeneralUsersHasChangeReq.contains(2)) {
+				String monthlyAttendanceReqRejected = messageOutput.message("monthlyAttendanceReqRejected");
+				String rejectionReason = monthlyAttendanceReqMapper.selectRejectionReason(userId);
+				String combinedMessageAndReason = monthlyAttendanceReqRejected + "\n"+ rejectionReason;
+				model.addAttribute("combinedMessageAndReason",combinedMessageAndReason);
+			}
+		}
+		return model;
+	}
+	
+	public Model selectMonthlyAttendanceReqAnyHasChangeReq(Model model) {
+		Integer existHasChangeReq = monthlyAttendanceReqMapper.selectMonthlyAttendanceReqAnyHasChangeReq();
+		if(existHasChangeReq == 1) {
+			model.addAttribute("monthlyAttendanceReqArrival",messageOutput.message("monthlyAttendanceReqArrival"));
+		}
+		return model;
+	}
+
 	//月次勤怠訂正依頼の更新文
 	public void changeRequestMonthlyAttendanceReq(Integer userId, LocalDate targetYearMonth, String changeReason) {
 		monthlyAttendanceReqMapper.changeRequestMonthlyAttendanceReq(userId, targetYearMonth, changeReason);
@@ -170,6 +201,10 @@ public class MonthlyAttendanceReqService {
 	//月次勤怠訂正の却下更新文
 	public void changeRejectionMonthlyAttendanceReq(Integer userId, String targetYearMonth, String rejectionReason) {
 		monthlyAttendanceReqMapper.changeRejectionMonthlyAttendanceReq(userId, targetYearMonth, rejectionReason);
+	}
+	
+	public void changeRejectedMonthlyAttendanceReq(Integer userId) {
+		monthlyAttendanceReqMapper.changeRejectedMonthlyAttendanceReq(userId);
 	}
 
 	//カレンダーで選んだ年月を"yyyy-MM-01"の形に変更するメソッド

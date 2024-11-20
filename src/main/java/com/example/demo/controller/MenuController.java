@@ -19,11 +19,30 @@ public class MenuController {
 		this.commonActivityService = commonActivityService;
 		}
 
+//	@RequestMapping("")
+//	public String authorityDetermining(HttpSession session, Model model) {
+//		commonActivityService.backMenu(model, session);
+//		return "menu/processMenu";
+//	}
 	@RequestMapping("")
 	public String authorityDetermining(HttpSession session, Model model) {
+		return "redirect:/menu/loaded";
+	}
+	
+	@RequestMapping("loaded")
+	public String changeUrl(HttpSession session, Model model) {
 		commonActivityService.backMenu(model, session);
 		return "menu/processMenu";
 	}
+	
+	
+//	@GetMapping("/")
+//	public String newPage(HttpServletRequest request,HttpSession session, Model model) {
+//	    Users users = (Users) request.getSession().getAttribute("User");
+//	    commonActivityService.backMenu(model, session);
+//	    model.addAttribute("User", users);
+//	    return "menu/processMenu"; 
+//	}
 
 	//勤怠登録画面に遷移
 	@RequestMapping("/index")

@@ -86,9 +86,8 @@ public class DepartmentController {
 	
 	//戻るボタン押下
 	@RequestMapping(value = "/action", params = "back", method = RequestMethod.POST)
-	public String back(Model model, HttpSession session) {
-		commonActivityService.backMenu(model, session);
-		return "menu/processMenu";
+	public String back(Model model, HttpSession session,RedirectAttributes redirectAttributes) {
+		return "redirect:/menu/loaded";
 	}
 	
 	

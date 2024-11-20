@@ -109,14 +109,13 @@ public class UserManagementController {
 	 * @return メニュー画面
 	 */
 	@RequestMapping(value = "/management", params = "back", method = RequestMethod.POST)
-	public String back(Model model, HttpSession session) {
-		commonActivityService.backMenu(model, session);
-		return "menu/processMenu";
+	public String back(Model model, HttpSession session,RedirectAttributes redirectAttributes) {
+		return "redirect:/menu/loaded";
 	}
 	
-	@RequestMapping(value = "/goMenu",method = RequestMethod.GET)
+	@RequestMapping(value = "/management",method = RequestMethod.GET)
 	public String reload(Model model,HttpSession session,RedirectAttributes redirectAttributes) {
-		return "redirect:/menu";
+		return "redirect:/user/";
 	}
 
 }

@@ -23,20 +23,43 @@
 					<input type="submit" id="logOff" value="ログオフ" name="logOff" class="buttonSize">
 				</div>
 			</form>
-			<div th:if="${CheckAttendance}" class="alert alert-warning icon-link" role="alert">
-				<i class="fa-solid fa-circle-exclamation"></i>
-				<p th:text="${CheckAttendance}"></p>
+<!--			一般用アラート-->
+			<div class="menuAlert row">
+				<div th:if="${monthlyAttendanceReqApproved}" role="alert">
+					<i class="fa-solid fa-bell"></i>
+					<p class="mb-0" th:text="${monthlyAttendanceReqApproved}"></p>
+				</div>
+				<div th:if="${combinedMessageAndReason}" role="alert">
+					<i class="fa-solid fa-bell"></i>
+					<pre class="mb-0" th:text="${combinedMessageAndReason}"></pre>
+					<form th:action="@{/attendanceCorrect/updateData}" method="post" class="dflex-content_center-item_center">
+						<input type="hidden" name="userId" th:value="${Users.userId}">
+						<input type="submit" name="confirmReason" value="確認" class="buttonSize">
+					</form>
+				</div>
+				<div th:if="${CheckAttendance}"role="alert">
+					<i class="fa-solid fa-circle-exclamation"></i>
+					<p class="mb-0" th:text="${CheckAttendance}"></p>
+				</div>
+				<div th:if="${CheckDailyReport}"  role="alert">
+					<i class="fa-solid fa-circle-exclamation"></i>
+					<p class="mb-0" th:text="${CheckDailyReport}"></p>
+				</div>
+				<div th:if="${monthlyAttendanceStatusIsThree}"  role="alert">
+					<i class="fa-solid fa-bell"></i>
+					<p class="mb-0" th:text="${monthlyAttendanceStatusIsThree}"></p>
+				</div>
+				<!--			マネージャー用アラート-->
+				<div th:if="${monthlyAttendanceStatusIsSent}" role="alert">
+					<i class="fa-solid fa-bell"></i>
+					<p class="mb-0" th:text="${monthlyAttendanceStatusIsSent}"></p>
+				</div>
+				<div th:if="${monthlyAttendanceReqArrival}" role="alert">
+					<i class="fa-solid fa-bell"></i>
+					<p class="mb-0" th:text="${monthlyAttendanceReqArrival}"></p>
+				</div>
 			</div>
-			<div th:if="${CheckDailyReport}" class="alert alert-warning icon-link" role="alert">
-				<i class="fa-solid fa-circle-exclamation"></i>
-				<p th:text="${CheckDailyReport}"></p>
-			</div>
-			<div th:if="${monthlyAttendanceStatusIsThree}" class="alert alert-warning" role="alert">
-				<p th:text="${monthlyAttendanceStatusIsThree}"></p>
-			</div>
-			<div th:if="${monthlyAttendanceStatusIsSent}" class="alert alert-warning" role="alert">
-				<p th:text="${monthlyAttendanceStatusIsSent}"></p>
-			</div>
+		</div>
 <!--			天気予報API課金で使用可能-->
 <!--			<h2>現在の天気</h2>-->
 <!--			    <p>温度: <span th:text="${currentWeather.temp}"></span>°C</p>-->
