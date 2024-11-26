@@ -148,7 +148,7 @@
 												</select>
 											</td>
 											<td>
-												<input type="text" th:id="'startTime-'+${start.index}" th:field="*{attendanceList[__${start.index}__].startTime}"
+												<input type="time" th:id="'startTime-'+${start.index}" th:field="*{attendanceList[__${start.index}__].startTime}"
 													th:value="${attendance.startTime}" class="noneBox"
 													th:disabled="${(Users.role == 'Regular' and (Users.status == 1 or Users.status == 2)) or (Users.role == 'UnitManager' and (Users.status == 1 or Users.status == 2)) or (Users.role == 'Manager')}">
 												<div th:if="${#fields.hasErrors('attendanceList[__${start.index}__].startTime')}" class="text-danger"
@@ -156,7 +156,7 @@
 												</div>
 											</td>
 											<td>
-												<input type="text"th:id="'endTime-'+${start.index}" th:field="*{attendanceList[__${start.index}__].endTime}"
+												<input type="time"th:id="'endTime-'+${start.index}" th:field="*{attendanceList[__${start.index}__].endTime}"
 													th:value="${attendance.endTime}" class="noneBox"
 													th:disabled="${(Users.role == 'Regular' and (Users.status == 1 or Users.status == 2)) or (Users.role == 'UnitManager' and (Users.status == 1 or Users.status == 2)) or (Users.role == 'Manager')}">
 												<div th:if="${#fields.hasErrors('attendanceList[__${start.index}__].endTime')}" class="text-danger"
@@ -183,6 +183,7 @@
 		<script th:inline="javascript">
 		    /*<![CDATA[*/
 			const userRole=/*[[${Users.role}]]*/[];
+			const attendanceList = /*[[${attendanceFormList.attendanceList}]]*/[];
 		    /*]]>*/
 		</script>
 		<script th:src="@{/js/Attendance.js}">

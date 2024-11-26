@@ -46,10 +46,14 @@ public class AttendanceManagementController {
 	public String start(HttpSession session, MonthlyAttendanceReq monthlyAttendanceReq, Model model) {
 		commonActivityService.usersModelSession(model, session);
 		Users users = (Users) model.getAttribute("Users");
+		//Serviceへ。AttendanceManagementService見込み。メソッド名HandleUserAttendance
+		//Managerなら
 		if (users.getRole().equalsIgnoreCase("Manager")) {
+			//approvalPendingデータを取得しモデルに追加
 			List<MonthlyAttendanceReq> ApprovalPending = monthlyAttendanceReqService.selectApprovalPending();
 			model.addAttribute("ApprovalPending", ApprovalPending);
 		}else {
+			//Managerでないなら現在の年月を取得して、それをもとに自身の勤怠情報を取得する。
 			String stringYearsMonth = commonActivityService.yearsMonth();
 			attendanceSearch(users.getUserId(), stringYearsMonth, model, session);	
 		}
@@ -63,7 +67,7 @@ public class AttendanceManagementController {
 
 		Integer years = Integer.parseInt(stringYearsMonth.substring(0, 4));
 		Integer month = Integer.parseInt(stringYearsMonth.substring(5, 7));
-
+		//勤怠詳細と勤怠データをそれぞれ取得。モデルに追加
 		List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month);
 		AttendanceFormList attendanceFormList = attendanceManagementService.setInAttendance(attendance, years, month,
 				stringYearsMonth);
@@ -72,6 +76,7 @@ public class AttendanceManagementController {
 		//月次勤怠テーブルのstatusをユーザー)モデルのstatusに詰める
 		monthlyAttendanceReqService.submissionStatusCheck(attendance.get(0).getAttendanceDate(), userId, model,
 				session);
+		//承認申請ボタンのOnOff切り替え設定
 		attendanceManagementService.requestActivityCheck(attendanceFormList);
 
 		return "attendance/registration";
@@ -84,15 +89,15 @@ public class AttendanceManagementController {
 		commonActivityService.usersModelSession(model, session);
 		Users users = (Users) model.getAttribute("Users");
 
+		//承認申請ボタンのONOffきりかえと書式のエラーチェック
 		attendanceManagementService.requestActivityCheck(attendanceFormList);
 		attendanceManagementService.errorCheck(attendanceFormList, result);
 
 		if (result.hasErrors()) {
 			return "attendance/registration";
 		}
-
-		AttendanceFormList updateAttendanceFormEntity = attendanceManagementService
-				.updateAttendanceFormCreate(attendanceFormList, users.getUserId());
+		//新しいデータに修正してデータベースに登録
+		AttendanceFormList updateAttendanceFormEntity = attendanceManagementService.updateAttendanceFormCreate(attendanceFormList, users.getUserId());
 		attendanceManagementService.attendanceUpsert(updateAttendanceFormEntity);
 
 		model.addAttribute("attendanceMessage", messageOutput.message("attendanceSuccess"));
@@ -107,16 +112,21 @@ public class AttendanceManagementController {
 		commonActivityService.usersModelSession(model, session);
 		Users users = (Users) model.getAttribute("Users");
 
+		//サービス層へ。monthlyAttendanceService見込み
+		//勤怠リストのサイズを取得し、そのサイズだけ回す
 		for (int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
+			//形を整える
 			String inputDate = monthlyAttendanceReqService.getInputDate(attendanceFormList);
+			//日数分日付を埋める
 			attendanceFormList.getAttendanceList().get(i).setAttendanceDate(java.sql.Date.valueOf(inputDate));
 		}
+		//月初めの日にちを取る
 		Date firstAttendanceDate = attendanceManagementService.getFirstAttendanceDate(attendanceFormList);
-		monthlyAttendanceReqService.monthlyAttendanceUpdate(
-				firstAttendanceDate, monthlyAttendanceReq.getUserId(),
+		//月初日、Listから取得したUserId、勤怠データ、勤怠詳細をもとに勤怠詳細の作成・更新処理
+		monthlyAttendanceReqService.monthlyAttendanceUpdate(firstAttendanceDate, monthlyAttendanceReq.getUserId(),
 				monthlyAttendanceReq, attendanceFormList);
-		monthlyAttendanceReqService.submissionStatusCheck(
-				firstAttendanceDate, users.getUserId(), model, session);
+		//ステータスの更新処理
+		monthlyAttendanceReqService.submissionStatusCheck(firstAttendanceDate, users.getUserId(), model, session);
 		model.addAttribute("attendanceFormList", attendanceFormList);
 		return "attendance/registration";
 	}
@@ -130,10 +140,12 @@ public class AttendanceManagementController {
 
 		List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month);
 
+		//勤怠詳細があるとき
 		if (attendance != null) {
-			// formに詰めなおす
+			//初期化
 			AttendanceFormList attendanceFormList = new AttendanceFormList();
 			ArrayList<Attendance> attendanceList = new ArrayList<Attendance>();
+			//勤怠データ(AttendanceList)と勤怠詳細(attendance)をそれぞれに追加する
 			attendanceFormList.setAttendanceList(attendanceList);
 			attendanceList.addAll(attendance);
 
