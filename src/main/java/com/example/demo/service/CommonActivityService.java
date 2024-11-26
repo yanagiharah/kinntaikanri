@@ -46,7 +46,7 @@ public class CommonActivityService {
 		this.monthlyAttendanceReqService = monthlyAttendanceReqService;
 	}
 
-	//Usersセッションに詰める
+	//Users情報をセッションから取得し、モデルに追加する
 	public Model usersModelSession(Model model, HttpSession session) {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
