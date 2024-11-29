@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ import com.example.demo.mapper.AttendanceSearchMapper;
 import com.example.demo.model.Attendance;
 import com.example.demo.model.AttendanceFormList;
 import com.example.demo.validation.AttendanceValidation;
+import com.google.api.services.calendar.model.Events;
 
 @Service
 public class AttendanceManagementService {
@@ -37,7 +39,7 @@ public class AttendanceManagementService {
 	}
 	
   	//勤怠表の取得 
-	public List<Attendance> attendanceSearchListUp(Integer userId, Integer years, Integer month) {
+	public List<Attendance> attendanceSearchListUp(Integer userId, Integer years, Integer month,Optional<Events> events) {
 		
 		//年月から最終月日を算出
 		Calendar calendar = Calendar.getInstance();
@@ -45,9 +47,14 @@ public class AttendanceManagementService {
 		calendar.set(Calendar.YEAR, years);
 		calendar.set(Calendar.MONTH, month - 1);
 		int monthDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+		List<Attendance> emptyAttendanceList = null;
 
 		//空の勤怠表を生成
-		 List<Attendance> emptyAttendanceList =attendanceFactory.emptyAttendanceCreate(monthDays, years, month);
+		if(events.isPresent()) {
+		emptyAttendanceList =attendanceFactory.emptyAttendanceCreate(monthDays, years, month,events.get());
+		} else{
+		emptyAttendanceList =attendanceFactory.emptyAttendanceCreate(monthDays, years, month);
+		}
 		
 		//DBから勤怠表を取得
 		LocalDate firsrtDayMonth = LocalDate.of(years, month, 1);

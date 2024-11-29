@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -22,7 +23,9 @@ import com.example.demo.model.MonthlyAttendanceReq;
 import com.example.demo.model.Users;
 import com.example.demo.service.AttendanceManagementService;
 import com.example.demo.service.CommonActivityService;
+import com.example.demo.service.GoogleCalendarService;
 import com.example.demo.service.MonthlyAttendanceReqService;
+import com.google.api.services.calendar.model.Events;
 
 @Controller
 @RequestMapping("/attendance")
@@ -32,14 +35,16 @@ public class AttendanceManagementController {
 	private final MonthlyAttendanceReqService monthlyAttendanceReqService;
 	private final CommonActivityService commonActivityService;
 	private final MessageOutput messageOutput;
+	private final GoogleCalendarService googleCalendarService;
 
 	public AttendanceManagementController(AttendanceManagementService attendanceManagementService,
 			MonthlyAttendanceReqService monthlyAttendanceReqService, CommonActivityService commonActivityService,
-			MessageOutput messageOutput) {
+			MessageOutput messageOutput,GoogleCalendarService googleCalendarService) {
 		this.attendanceManagementService = attendanceManagementService;
 		this.monthlyAttendanceReqService = monthlyAttendanceReqService;
 		this.commonActivityService = commonActivityService;
 		this.messageOutput = messageOutput;
+		this.googleCalendarService=googleCalendarService;
 	}
 
 	@RequestMapping("/index") //9/30if文にelseを追加し初期カレンダー表示のメソッドを移動。マネージャークラスでデータのない表が表示される問題の解消
@@ -67,8 +72,10 @@ public class AttendanceManagementController {
 
 		Integer years = Integer.parseInt(stringYearsMonth.substring(0, 4));
 		Integer month = Integer.parseInt(stringYearsMonth.substring(5, 7));
+		//祝日表示用のカレンダー取得
+		Events events = googleCalendarService.getHolidaysEvents(years, month);
 		//勤怠詳細と勤怠データをそれぞれ取得。モデルに追加
-		List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month);
+		List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month,Optional.of(events));
 		AttendanceFormList attendanceFormList = attendanceManagementService.setInAttendance(attendance, years, month,
 				stringYearsMonth);
 		model.addAttribute("attendanceFormList", attendanceFormList);
@@ -78,6 +85,10 @@ public class AttendanceManagementController {
 				session);
 		//承認申請ボタンのOnOff切り替え設定
 		attendanceManagementService.requestActivityCheck(attendanceFormList);
+		
+		
+		List<String> holidays = googleCalendarService.listEvents(events);
+		model.addAttribute("holidays",holidays);
 
 		return "attendance/registration";
 	}
@@ -99,6 +110,11 @@ public class AttendanceManagementController {
 		//新しいデータに修正してデータベースに登録
 		AttendanceFormList updateAttendanceFormEntity = attendanceManagementService.updateAttendanceFormCreate(attendanceFormList, users.getUserId());
 		attendanceManagementService.attendanceUpsert(updateAttendanceFormEntity);
+		
+		Integer years = Integer.parseInt(attendanceFormList.getStringYearsMonth().substring(0, 4));
+		Integer month = Integer.parseInt(attendanceFormList.getStringYearsMonth().substring(5, 7));
+		List<String> holidays = googleCalendarService.getListHolidays(years,month);
+		model.addAttribute("holidays",holidays);
 
 		model.addAttribute("attendanceMessage", messageOutput.message("attendanceSuccess"));
 		model.addAttribute("attendanceFormList", attendanceFormList);
@@ -127,6 +143,13 @@ public class AttendanceManagementController {
 				monthlyAttendanceReq, attendanceFormList);
 		//ステータスの更新処理
 		monthlyAttendanceReqService.submissionStatusCheck(firstAttendanceDate, users.getUserId(), model, session);
+		
+		//祝日リスト取得
+		Integer years = Integer.parseInt(attendanceFormList.getStringYearsMonth().substring(0, 4));
+		Integer month = Integer.parseInt(attendanceFormList.getStringYearsMonth().substring(5, 7));
+		List<String> holidays = googleCalendarService.getListHolidays(years,month);
+		model.addAttribute("holidays",holidays);
+		
 		model.addAttribute("attendanceFormList", attendanceFormList);
 		return "attendance/registration";
 	}
@@ -138,7 +161,7 @@ public class AttendanceManagementController {
 			RedirectAttributes redirectAttributes, HttpSession session) {
 		commonActivityService.usersModelSession(model, session);
 
-		List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month);
+		List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month, Optional.<Events>empty());
 
 		//勤怠詳細があるとき
 		if (attendance != null) {
@@ -157,6 +180,9 @@ public class AttendanceManagementController {
 		}
 		List<MonthlyAttendanceReq> ApprovalPending = monthlyAttendanceReqService.selectApprovalPending();
 		model.addAttribute("ApprovalPending", ApprovalPending);
+		
+		List<String> holidays = googleCalendarService.getListHolidays(years,month);
+		model.addAttribute("holidays",holidays);
 
 		return "attendance/registration";
 	}
@@ -194,5 +220,7 @@ public class AttendanceManagementController {
 	public String reload(Model model,HttpSession session,RedirectAttributes redirectAttributes) {
 		return "redirect:/attendance/index";
 	}
+	
+
 
 }

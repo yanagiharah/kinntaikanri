@@ -128,7 +128,7 @@
 											</th:block>
 
 											<td th:text="|${#strings.substring(attendance.attendanceDateS,5,10)}|"></td>
-											<td th:text="${attendance.dayOfWeek}"></td>
+											<td th:text="${attendance.dayOfWeek}"  th:id="'dayOfWeek-'+${start.index}"></td>
 											<td>
 												<select th:id="'status-'+${start.index}" th:field="*{attendanceList[__${start.index}__].status}" class="noneBox"
 												th:disabled="${(Users.role == 'Regular' and (Users.status == 1 or Users.status == 2)) or (Users.role == 'UnitManager' and (Users.status == 1 or Users.status == 2)) or (Users.role == 'Manager')}">
@@ -149,7 +149,7 @@
 											</td>
 											<td>
 												<input type="time" th:id="'startTime-'+${start.index}" th:field="*{attendanceList[__${start.index}__].startTime}"
-													th:value="${attendance.startTime}" class="noneBox"
+													th:value="${attendance.startTime}" class="noneBox timeImput"
 													th:disabled="${(Users.role == 'Regular' and (Users.status == 1 or Users.status == 2)) or (Users.role == 'UnitManager' and (Users.status == 1 or Users.status == 2)) or (Users.role == 'Manager')}">
 												<div th:if="${#fields.hasErrors('attendanceList[__${start.index}__].startTime')}" class="text-danger"
 													th:errors="*{attendanceList[__${start.index}__].startTime}">
@@ -157,7 +157,7 @@
 											</td>
 											<td>
 												<input type="time"th:id="'endTime-'+${start.index}" th:field="*{attendanceList[__${start.index}__].endTime}"
-													th:value="${attendance.endTime}" class="noneBox"
+													th:value="${attendance.endTime}" class="noneBox timeImput"
 													th:disabled="${(Users.role == 'Regular' and (Users.status == 1 or Users.status == 2)) or (Users.role == 'UnitManager' and (Users.status == 1 or Users.status == 2)) or (Users.role == 'Manager')}">
 												<div th:if="${#fields.hasErrors('attendanceList[__${start.index}__].endTime')}" class="text-danger"
 													th:errors="*{attendanceList[__${start.index}__].endTime}">
@@ -182,8 +182,9 @@
 		</div>
 		<script th:inline="javascript">
 		    /*<![CDATA[*/
-			const userRole=/*[[${Users.role}]]*/[];
-			const attendanceList = /*[[${attendanceFormList.attendanceList}]]*/[];
+		    let attendanceList = /*[[${attendanceFormList != null ? attendanceFormList.attendanceList : '[]'}]]*/[];
+		    var holidays = /*[[${holidays}]]*/[];
+		    const userRole = /*[[${Users.role}]]*/[];
 		    /*]]>*/
 		</script>
 		<script th:src="@{/js/Attendance.js}">
@@ -268,7 +269,7 @@
 <!--												</div>-->
 <!--											</td>-->
 											
-<!--											<td>-->
+<!--											<td> -->
 <!--												<input type="text" id="endTime" th:field="*{attendanceList[__${start.index}__].endTime}"th:value="${attendance.endTime}" class="noneBox">-->
 <!--												<div class="text-danger">-->
 <!--													<div th:if="${#fields.hasErrors('attendanceList[__${start.index}__].endTime')}"-->
