@@ -160,7 +160,7 @@
 												</th:block>
 		
 												<td th:text="|${#strings.substring(attendance.attendanceDateS,5,10)}|"></td>
-												<td th:text="${attendance.dayOfWeek}"></td>
+												<td th:text="${attendance.dayOfWeek}" th:id="'dayOfWeek-'+${start.index}"></td>
 												<td>
 													<select th:id="'status-'+${start.index}" th:field="*{attendanceList[__${start.index}__].status}" class="noneBox" disabled>
 														<option th:value="12" th:selected="${attendance.status} == '12'" >選択してください</option>
@@ -204,6 +204,8 @@
 			</div>
 			<script th:inline="javascript">
 			    /*<![CDATA[*/
+				let attendanceList = /*[[${attendanceFormList != null ? attendanceFormList.attendanceList : '[]'}]]*/[];
+				var holidays = /*[[${holidays}]]*/[];
 			    const approvedMonths = /*[[${approvedMonths}]]*/ [];
 				const userRole=/*[[${Users.role}]]*/[];
 			    /*]]>*/

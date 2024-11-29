@@ -8,17 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.demo.service.CommonActivityService;
-
 @Controller
 @RequestMapping("/header")
 public class HeaderController {
-	
-	private final CommonActivityService commonActivityService;
-	
-	public HeaderController(CommonActivityService commonActivityService) {
-		this.commonActivityService = commonActivityService;
-	}
 
 	@RequestMapping(value = "/goMenu", params = "back", method = RequestMethod.POST)
 	public String back(Model model, HttpSession session,RedirectAttributes redirectAttributes) {

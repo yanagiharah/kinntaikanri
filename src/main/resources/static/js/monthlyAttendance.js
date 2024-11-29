@@ -1,46 +1,69 @@
 document.addEventListener("DOMContentLoaded", function() {
-	//訂正申請理由の見出し表示メソッド表示準備
-	const shortReason = document.querySelectorAll(".shortChangeReason");
-	const maxLength = 10;
+    // 訂正申請理由の見出し表示メソッド表示準備
+    const shortReason = document.querySelectorAll(".shortChangeReason");
+    const maxLength = 10;
 
-	shortReason.forEach(function(element) {
-		const fullReason = element.innerText;
-		const truncatedText = truncateText(fullReason, maxLength);
-		element.innerText = truncatedText;
-	});
+    shortReason.forEach(function(element) {
+        const fullReason = element.innerText;
+        const truncatedText = truncateText(fullReason, maxLength);
+        element.innerText = truncatedText;
+    });
 
-	//	一般用カレンダー限定表示用メソッド
-	if (userRole !== 'Manager') {
-		const approvedMonthStrings = approvedMonths.map(req => req.stringTargetYearMonth).filter(month => month != null);
+    // 曜日と祝日に色を付けるメソッド
+    // attendanceListの中でattendanceDateSがholidayと一致するものをフィルタリング
+    if (!Array.isArray(attendanceList)) {
+        attendanceList = []; // デフォルト値として空の配列を設定
+    }
 
-		const monthInput = document.getElementById('approvedMonths');
-		const messageDiv = document.getElementById('message');
-		const displayInput = document.getElementById('display');
-		
+    // 勤怠リスト分indexをあたえて繰り返す
+    attendanceList.forEach((attendance, index) => {
+        const dayOfWeek = attendance.dayOfWeek; // '土' または '日' を取得 dayOfWeek['月'、'火'、'水'、'木'、'金'、'土'、'日']
+        const attendanceElement = document.getElementById(`dayOfWeek-${index}`);
 
-		function updateMonthStyles() {
-			const selectedMonth = monthInput.value;
-			if (approvedMonthStrings.includes(selectedMonth)) {
-				//選択した月がデータに入っていた場合
-				monthInput.classList.add('highlight');
-				monthInput.classList.remove('dim');
-				messageDiv.style.display = 'none';
-				displayInput.disabled = false;//表示ボタン使用可
-			} else {
-				monthInput.classList.add('dim');
-				monthInput.classList.remove('highlight');
-				messageDiv.style.display = 'block';//メッセージ表示
-				displayInput.disabled = true;//表示ボタン使用不可
-			}
-		}
-	
+        if (dayOfWeek === '土') {
+            attendanceElement.classList.add('saturday');
+        } else if (dayOfWeek === '日') {
+            attendanceElement.classList.add('sunday');
+        }
+        // attendanceDateSがholidayと一致するものにクラスを付与
+        if (holidays.includes(attendance.attendanceDateS)) {
+            if (attendanceElement) {
+                attendanceElement.classList.add('holiday');
+            }
+        }
+    }); 
 
-	// 初期表示の設定
-	updateMonthStyles();
+    // 一般用カレンダー限定表示用メソッド
+    if (userRole !== 'Manager') {
+		console.log("approvedMonths:", approvedMonths);
+        const approvedMonthStrings = approvedMonths.map(req => req.stringTargetYearMonth).filter(month => month != null);
 
-	// 選択が変更されたときの処理
-	monthInput.addEventListener('input', updateMonthStyles);
-	}
+        const monthInput = document.getElementById('approvedMonths');
+        const messageDiv = document.getElementById('message');
+        const displayInput = document.getElementById('display');
+
+        function updateMonthStyles() {
+            const selectedMonth = monthInput.value;
+            if (approvedMonthStrings.includes(selectedMonth)) {
+                // 選択した月がデータに入っていた場合
+                monthInput.classList.add('highlight');
+                monthInput.classList.remove('dim');
+                messageDiv.style.display = 'none';
+                displayInput.disabled = false; // 表示ボタン使用可
+            } else {
+                monthInput.classList.add('dim');
+                monthInput.classList.remove('highlight');
+                messageDiv.style.display = 'block'; // メッセージ表示
+                displayInput.disabled = true; // 表示ボタン使用不可
+            }
+        }
+
+        // 初期表示の設定
+        updateMonthStyles();
+
+        // 選択が変更されたときの処理
+        monthInput.addEventListener('input', updateMonthStyles);
+    }
 });
 
 //承認ボタンオンオフのメソッド

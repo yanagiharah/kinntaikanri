@@ -8338,7 +8338,7 @@ progress {
   left: 0;
   background-color: #999999;
   opacity: 0.92;
-  color: #fff;
+  color: #fff !important;
   text-align: center;
   z-index: 2000;
 }
@@ -8389,6 +8389,18 @@ progress {
 
 .mt-6 {
   margin-top: calc(1rem * 4.5);
+}
+
+.saturday {
+  color: rgb(61.4, 139, 253.4) !important;
+}
+
+.sunday {
+  color: #dc3545 !important;
+}
+
+.holiday {
+  color: rgb(227, 93.4, 106.2) !important;
 }
 
 .menuButtonSize {
@@ -8476,23 +8488,23 @@ progress {
 
 .highlight {
   font-weight: bold;
-  color: #000;
+  color: #000 !important;
 }
 
 .dim {
-  color: #adb5bd;
+  color: #adb5bd !important;
 }
 
 #approve {
-  color: rgb(10.4, 88, 202.4);
+  color: rgb(10.4, 88, 202.4) !important;
 }
 
 #reject {
-  color: #dc3545;
+  color: #dc3545 !important;
 }
 
 #message {
-  color: #dc3545;
+  color: #dc3545 !important;
   display: none;
 }
 

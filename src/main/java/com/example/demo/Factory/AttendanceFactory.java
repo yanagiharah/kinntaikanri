@@ -6,16 +6,24 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.model.Attendance;
 import com.example.demo.model.AttendanceFormList;
+import com.example.demo.service.GoogleCalendarService;
+import com.google.api.services.calendar.model.Events;
 
 @Component
 public class AttendanceFactory {
+	
+	@Autowired
+	private GoogleCalendarService googleCalendarService;
 	
 	//検索ボタン時attendanceFormListに詰めなおし
 	public AttendanceFormList setInAttendance(List<Attendance> attendance,Integer stringYears,Integer years,String month) {
@@ -39,32 +47,55 @@ public class AttendanceFactory {
 		  }
 		return attendanceFormList;
 	}
-	
-	//空のmonthlyAttendanceListの生成
-	public List<Attendance> emptyAttendanceCreate(int lastMonthAndDay, Integer years, Integer month) {
-		Calendar calendar = Calendar.getInstance();
-		List<Attendance> emptyAttendanceList = new ArrayList<Attendance>();
-		for (int i = 0; i < lastMonthAndDay; i++) {
-			Attendance emptyAttendance = new Attendance();
-			emptyAttendance.setStatus(12);
-			emptyAttendance.setStartTime(null);
-			emptyAttendance.setEndTime(null);
-			emptyAttendance.setAttendanceRemarks(null);//備考
-			emptyAttendance.setDays(i + 1);
-			//曜日の設定
-			LocalDate englishDayOfweek = LocalDate.of(years, month, i + 1);
-			DateTimeFormatter JapaneseFormatter = DateTimeFormatter.ofPattern("E", Locale.JAPANESE);//曜日を日本語に変換
-			emptyAttendance.setDayOfWeek(String.valueOf(englishDayOfweek.format(JapaneseFormatter)));
-			//日付の設定
-			calendar.set(years, month - 1, emptyAttendance.getDays());
-			Date newDate = calendar.getTime();
-			emptyAttendance.setAttendanceDate(newDate);
-			String newDateS = new SimpleDateFormat("yyyy/MM/dd").format(newDate);//日付をString型に変換
-			emptyAttendance.setAttendanceDateS(String.valueOf(newDateS));
-			emptyAttendanceList.add(emptyAttendance);
-		}
-		return emptyAttendanceList;
+	//勤怠管理一般表示用
+	public List<Attendance> emptyAttendanceCreate(int lastMonthAndDay, Integer years, Integer month, Events events) {
+	    // 祝日データの取得
+	    Map<String, String> formattedHolidaysWithNames = googleCalendarService.listEventsName(events);
+	    return createAttendanceList(lastMonthAndDay, years, month, formattedHolidaysWithNames);
 	}
+	//勤怠管理や修正用（オーバーロードする理由として上記メソッドはAPIを通すゆえにかなり重いことから避けたいため）
+	public List<Attendance> emptyAttendanceCreate(int lastMonthAndDay, Integer years, Integer month) {
+	    // 空の祝日データを渡す
+	    Map<String, String> emptyHolidays = new HashMap<>();
+	    return createAttendanceList(lastMonthAndDay, years, month, emptyHolidays);
+	}
+
+	private List<Attendance> createAttendanceList(int lastMonthAndDay, Integer years, Integer month, Map<String, String> holidays) {
+	    Calendar calendar = Calendar.getInstance();
+	    List<Attendance> emptyAttendanceList = new ArrayList<>();
+	    DateTimeFormatter JapaneseFormatter = DateTimeFormatter.ofPattern("E", Locale.JAPANESE); // 曜日を日本語に変換
+
+	    for (int i = 0; i < lastMonthAndDay; i++) {
+	        Attendance emptyAttendance = new Attendance();
+	        emptyAttendance.setStatus(12);
+	        emptyAttendance.setStartTime(null);
+	        emptyAttendance.setEndTime(null);
+	        emptyAttendance.setAttendanceRemarks(null); // 備考
+	        emptyAttendance.setDays(i + 1);
+
+	        // 曜日の設定
+	        LocalDate englishDayOfweek = LocalDate.of(years, month, i + 1);
+	        emptyAttendance.setDayOfWeek(String.valueOf(englishDayOfweek.format(JapaneseFormatter)));
+
+	        // 日付の設定
+	        calendar.set(years, month - 1, emptyAttendance.getDays());
+	        Date newDate = calendar.getTime();
+	        emptyAttendance.setAttendanceDate(newDate);
+	        String newDateS = new SimpleDateFormat("yyyy/MM/dd").format(newDate); // 日付をString型に変換
+	        emptyAttendance.setAttendanceDateS(String.valueOf(newDateS));
+
+	        // 祝日名の設定 holidaysにnewDateSと同じ値があるとき
+	        if (holidays.containsKey(newDateS)) {
+	        	//その値をkeyとして取得できる祝日名を備考欄に格納
+	            emptyAttendance.setAttendanceRemarks(holidays.get(newDateS));
+	        }
+
+	        emptyAttendanceList.add(emptyAttendance);
+	    }
+
+	    return emptyAttendanceList;
+	}
+
 	//dbAttendanceListにString型の月日をセットする
 	public List<Attendance> dbAttendanceSetYear(List<Attendance> dbAttendanceList){
 		//DBに存在する勤怠表の日付を月、日、string型日付で取得する
@@ -108,4 +139,38 @@ public class AttendanceFactory {
 	}
 	
 }
+//空のmonthlyAttendanceListの生成(一般勤怠登録用)
+//public List<Attendance> emptyAttendanceCreate(int lastMonthAndDay, Integer years, Integer month,Events events) {
+//	Calendar calendar = Calendar.getInstance();
+//	List<Attendance> emptyAttendanceList = new ArrayList<Attendance>();		
+//	// 祝日データの取得
+//	Map<String, String> formattedHolidaysWithNames = googleCalendarService.listEventsName(events);
+//	DateTimeFormatter JapaneseFormatter = DateTimeFormatter.ofPattern("E", Locale.JAPANESE);//曜日を日本語に変換
+//	for (int i = 0; i < lastMonthAndDay; i++) {
+//		Attendance emptyAttendance = new Attendance();
+//		emptyAttendance.setStatus(12);
+//		emptyAttendance.setStartTime(null);
+//		emptyAttendance.setEndTime(null);
+//		emptyAttendance.setAttendanceRemarks(null);//備考
+//		emptyAttendance.setDays(i + 1);
+//		//曜日の設定
+//		LocalDate englishDayOfweek = LocalDate.of(years, month, i + 1);
+//		
+//		emptyAttendance.setDayOfWeek(String.valueOf(englishDayOfweek.format(JapaneseFormatter)));
+//		//日付の設定
+//		calendar.set(years, month - 1, emptyAttendance.getDays());
+//		Date newDate = calendar.getTime();
+//		emptyAttendance.setAttendanceDate(newDate);
+//		String newDateS = new SimpleDateFormat("yyyy/MM/dd").format(newDate);//日付をString型に変換
+//		emptyAttendance.setAttendanceDateS(String.valueOf(newDateS));
+//		// 祝日名の設定
+//        if (formattedHolidaysWithNames.containsKey(newDateS)) {
+//            emptyAttendance.setAttendanceRemarks(formattedHolidaysWithNames.get(newDateS));
+//        }
+//		
+//		emptyAttendanceList.add(emptyAttendance);
+//	}
+//	return emptyAttendanceList;
+//}
+
 	

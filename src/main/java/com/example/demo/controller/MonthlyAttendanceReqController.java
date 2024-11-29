@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -21,8 +22,10 @@ import com.example.demo.model.MonthlyAttendanceReq;
 import com.example.demo.model.Users;
 import com.example.demo.service.AttendanceManagementService;
 import com.example.demo.service.CommonActivityService;
+import com.example.demo.service.GoogleCalendarService;
 import com.example.demo.service.ModelService;
 import com.example.demo.service.MonthlyAttendanceReqService;
+import com.google.api.services.calendar.model.Events;
 
 
 @Controller
@@ -34,15 +37,17 @@ public class MonthlyAttendanceReqController {
 	private final AttendanceManagementService attendanceManagementService;
 	private final MessageOutput messageOutput;
 	private final ModelService modelService;
+	private final GoogleCalendarService googleCalendarService;
 
 	public MonthlyAttendanceReqController(CommonActivityService commonActivityService,
 			MonthlyAttendanceReqService monthlyAttendanceReqService,
-			AttendanceManagementService attendanceManagementService, MessageOutput messageOutput,ModelService modelService) {
+			AttendanceManagementService attendanceManagementService, MessageOutput messageOutput,ModelService modelService,GoogleCalendarService googleCalendarService) {
 		this.commonActivityService = commonActivityService;
 		this.monthlyAttendanceReqService = monthlyAttendanceReqService;
 		this.attendanceManagementService = attendanceManagementService;
 		this.messageOutput = messageOutput;
 		this.modelService = modelService;
+		this.googleCalendarService=googleCalendarService;
 	}
 
 	@RequestMapping("/correction")
@@ -80,8 +85,9 @@ public class MonthlyAttendanceReqController {
 		//yearとmonthの作成
 		Integer years = Integer.parseInt(stringYearsMonth.substring(0, 4));
 		Integer month = Integer.parseInt(stringYearsMonth.substring(5, 7));
+
 		//yearとmonthに該当する勤怠表を探してAttendanceFormListに詰める処理
-		List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month);
+		List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month, Optional.<Events>empty());
 		AttendanceFormList attendanceFormList = attendanceManagementService.setInAttendance(attendance, years, month,
 				stringYearsMonth);
 		
@@ -99,6 +105,9 @@ public class MonthlyAttendanceReqController {
 			//カレンダーを初期化しないために返す
 			model.addAttribute("stringYearsMonth",stringYearsMonth);
 		}
+		
+		List<String> holidays = googleCalendarService. getListHolidays(years,month);
+		model.addAttribute("holidays",holidays);
 		return "monthlyAttendanceReq/monthlyAttendance";
 	}
 
@@ -116,7 +125,9 @@ public class MonthlyAttendanceReqController {
 		//再度同じ月の勤怠表を表示するための処理
 		Integer years = Integer.parseInt(stringYearsMonth.substring(0, 4));
 		Integer month = Integer.parseInt(stringYearsMonth.substring(5, 7));
-		List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month);
+		List<String> holidays = googleCalendarService.getListHolidays(years,month);
+		model.addAttribute("holidays",holidays);
+		List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month,Optional.<Events>empty());
 		AttendanceFormList attendanceFormList = attendanceManagementService.setInAttendance(attendance, years, month,
 				stringYearsMonth);
 		//ステータス変更処理
@@ -138,8 +149,11 @@ public class MonthlyAttendanceReqController {
 		//monthをMMの形に再成型
 		String monthString = String.format("%02d", month);
 		String stringYearsMonth = years + "-" + monthString;
+		
+		List<String> holidays = googleCalendarService.getListHolidays(years,month);
+		model.addAttribute("holidays",holidays);
 
-		List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month);
+		List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month,Optional.<Events>empty());
 
 		if (attendance != null) {
 			// formに詰めなおす

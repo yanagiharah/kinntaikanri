@@ -48,7 +48,7 @@ $spacers: (
 }
 
 @mixin txt-color($color){
-	color:$color;
+	color:$color !important;
 }
 
 body{
@@ -142,7 +142,15 @@ main{
 	margin-top: calc(#{$spacer}*4.5);
 }
 
-
+.saturday{
+	@include txt-color($blue-400);
+	}
+.sunday{
+	@include txt-color($red);
+	}
+.holiday{
+	@include txt-color($red-400);
+}
 //************************処理メニュー画面↓************************************************
 .menuButtonSize {
 		width: 260px;
