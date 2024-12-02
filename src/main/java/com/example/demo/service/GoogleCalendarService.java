@@ -33,7 +33,7 @@ public class GoogleCalendarService {
 
     private static final String APPLICATION_NAME = "Google Calendar API Java Spring Boot";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
-    private static final String CREDENTIALS_FILE_PATH = "iwantholiday-f0994d4b6fbe.json";
+    private static final String CREDENTIALS_FILE_PATH = "iwantholiday-d8c7401a6a5b.json";
     private Calendar cachedService;
 
     //初回カレンダー取得
@@ -72,6 +72,7 @@ public class GoogleCalendarService {
                      .setFields("items(start,end,summary)")//必要なものだけ取得
                      .execute();
          } catch (IOException e) {
+        	 System.out.println("error has occured");
              e.printStackTrace();
          }
          return events;
