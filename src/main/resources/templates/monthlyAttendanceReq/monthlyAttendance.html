@@ -17,8 +17,32 @@
 								<input type="hidden" name="userName" th:value="${Users.userName}">
 							</div>
 							<div class="row m-1">
-								<div class="col-3">
-									<div th:if="${Users.role=='Manager'}"></div>
+								<div class="col">
+									表示年月：
+									<span th:unless="${Users.role=='Manager'}">
+										<input type="month" name="stringYearsMonth" id="approvedMonths"
+											th:value="${attendanceFormList != null? attendanceFormList.stringYearsMonth: stringYearsMonth}" 
+											 required min="1800-01"max="2400-12">
+									</span>
+									<span th:if="${Users.role=='Manager'}">
+										<input type="month" name="stringYearsMonth" id="stringYearsMonth"
+											th:value="${attendanceFormList != null? stringYearsMonth:stringYearsMonth}" 
+											required min="1800-01"max="2400-12">
+									</span>
+									<input type="submit" id="display" value="表示" name="search" class="d-none">
+									<span th:unless="${Users.role=='Manager'}">
+										<div id="message">勤怠が承認されていない月です。</div>
+									</span>
+								</div>
+								<div class="col">
+									<div class = "row" th:if="${Users.role=='Manager' && attendanceFormList != null}">
+										<div class="col" th:each="CurrentChangeReq: ${CurrentChangeReq}"> 
+											選択中ユーザー名:<span th:text="${CurrentChangeReq.userName}"></span>
+										</div>
+										<div class="col" th:each="CurrentChangeReq : ${CurrentChangeReq}">
+											選択中ユーザーID:<span th:text="${CurrentChangeReq.userId}"></span>
+										</div>
+									</div>
 									<div th:unless="${Users.role=='Manager'}">
 										<th:block th:switch="${Users.status}">
 											ステータス:
@@ -31,24 +55,7 @@
 										</th:block>
 									</div>
 								</div>	
-								<div class="col-5">
-									表示年月：
-									<span th:unless="${Users.role=='Manager'}">
-										<input type="month" name="stringYearsMonth" id="approvedMonths"
-											th:value="${attendanceFormList != null? attendanceFormList.stringYearsMonth: stringYearsMonth}" 
-											 required min="1800-01"max="2400-12">
-									</span>
-									<span th:if="${Users.role=='Manager'}">
-										<input type="month" name="stringYearsMonth" id="stringYearsMonth"
-											th:value="${attendanceFormList != null? stringYearsMonth:stringYearsMonth}" 
-											required min="1800-01"max="2400-12">
-									</span>
-									<input type="submit" id="display" value="表示" name="search" class="buttonSize" oninput="disabledSearch()">
-									<span th:unless="${Users.role=='Manager'}">
-										<div id="message">勤怠が承認されていない月です。</div>
-									</span>
-								</div>
-								<div class="col-4">
+								<div class="col">
 									<div th:unless="${Users.role=='Manager'}">
 										<input type="submit" id="willCorrect" value="訂正申請" name="willCorrect" class="buttonSize" disabled>
 									</div>
@@ -58,14 +65,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="row m-3" th:if="${Users.role=='Manager' && attendanceFormList != null}">
-								<div class="col" th:each="CurrentChangeReq: ${CurrentChangeReq}"> 
-									選択中ユーザー名:<span th:text="${CurrentChangeReq.userName}"></span>
-								</div>
-								<div class="col" th:each="CurrentChangeReq : ${CurrentChangeReq}">
-									選択中ユーザーID:<span th:text="${CurrentChangeReq.userId}"></span>
-								</div>
-							</div>
+							
 						</div>
 						<div th:class="${Users.role != 'Manager' ? 'row mt-3' : 'row managers'}">
 							<div class="col-xl-6 managers-xl">
@@ -210,8 +210,8 @@
 				const userRole=/*[[${Users.role}]]*/[];
 			    /*]]>*/
 			</script>
-			<script th:src="@{/js/monthlyAttendance.js}"></script>
-			<script th:src="@{/js/common.js}"></script>
+			<script th:src="@{/js/monthlyAttendance.js}" defer></script>
+			<script th:src="@{/js/common.js}" async></script>
 		</main>
 	</body>
 </html>

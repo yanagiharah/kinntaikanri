@@ -64,7 +64,20 @@ document.addEventListener("DOMContentLoaded", function() {
         // 選択が変更されたときの処理
         monthInput.addEventListener('input', updateMonthStyles);
     }
+	
+	var calendarElements = document.querySelectorAll('#approvedMonths,#stringYearsMonth');
+	calendarElements.forEach(function(element){
+		element.addEventListener('change',function(){
+			var dateSubmitButton = document.getElementById('display');
+			if(dateSubmitButton){
+                dateSubmitButton.click();
+            } else {
+                console.error('dateSubmit button not found');
+            }
+		});
+	});
 });
+
 
 //承認ボタンオンオフのメソッド
 function disabledApprove() {

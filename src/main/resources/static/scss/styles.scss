@@ -151,6 +151,17 @@ main{
 .holiday{
 	@include txt-color($red-400);
 }
+
+input[type='time'] {
+  padding-left: 1rem;
+  display:flex;
+   justify-content:center;
+		  &::-webkit-calendar-picker-indicator {
+		  position:relative;
+		  transform: translateX(100%); /* アイコンを中央に配置 */
+		  z-index: 1; /* アイコンを前面に表示 */
+		  }
+}
 //************************処理メニュー画面↓************************************************
 .menuButtonSize {
 		width: 260px;
