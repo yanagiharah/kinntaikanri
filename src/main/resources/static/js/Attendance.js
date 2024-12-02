@@ -16,6 +16,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		if (document.getElementById('stringYearsMonth').value === "" ) {
 			setYearsMonth();
 		}
+		
+		var calendarElement = document.querySelector('#stringYearsMonth');
+		calendarElement.addEventListener('change',function(){
+		document.getElementById('display').click();
+		});
 	}
 	
 	// attendanceListが配列であることを確認

@@ -55,7 +55,6 @@ function setTodayDate() {
 //    });
 //}
 
-//修正必須↓（冤罪の可能性はあり）
 
  if(userRole != "Manager"){
 document.addEventListener('DOMContentLoaded', function() {
