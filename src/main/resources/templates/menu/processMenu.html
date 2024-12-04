@@ -100,22 +100,22 @@
 				<div th:unless="${Users.role=='Admin'}">
 					<div class="attendance">
 						<form th:action="@{/menu/index}" method="get">
-							<input type="submit" value="勤怠登録" class="menuButtonSize">
+							<input type="submit" value="勤怠登録" class="menuButtonSize"  onclick="disableSubmit(this)">
 						</form>
 						<form th:action="@{/menu/correction}" method="get">
-							<input type="submit" value="勤怠修正" class="menuButtonSize">
+							<input type="submit" value="勤怠修正" class="menuButtonSize"  onclick="disableSubmit(this)">
 						</form>
 					</div>
 					<div class="dailyRep">
 						<form th:action="@{/menu/daily/detail}" method="get">
-							<input type="submit" value="日報登録" class="menuButtonSize">
+							<input type="submit" value="日報登録" class="menuButtonSize"  onclick="disableSubmit(this)">
 						</form>
 					</div>
 					<!--					マネージャー用-->
 					<div th:if="${Users.role=='Manager'}">
 						<div class="department">
 							<form th:action="@{/menu/department}" method="get">
-								<input type="submit" value="部署登録" class="menuButtonSize">
+								<input type="submit" value="部署登録" class="menuButtonSize"  onclick="disableSubmit(this)">
 							</form>
 						</div>
 					</div>
@@ -126,7 +126,7 @@
 <!--						ユーザー情報登録-->
 					<div class="management">
 						<form th:action="@{/menu/usermanagement}" method="get">
-							<input type="submit" value="ユーザー情報登録" class="menuButtonSize">
+							<input type="submit" value="ユーザー情報登録" class="menuButtonSize" onclick="disableSubmit(this)">
 						</form>
 					</div>
 				</div>

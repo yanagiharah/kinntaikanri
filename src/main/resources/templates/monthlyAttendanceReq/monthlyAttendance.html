@@ -57,11 +57,11 @@
 								</div>	
 								<div class="col">
 									<div th:unless="${Users.role=='Manager'}">
-										<input type="submit" id="willCorrect" value="訂正申請" name="willCorrect" class="buttonSize" disabled>
+										<input type="submit" id="willCorrect" value="訂正申請" name="willCorrect" class="buttonSize" disabled  onclick="disableSubmit(this)">
 									</div>
 									<div th:if="${Users.role=='Manager'}">
-										<input type="submit" id="approve" value="承認" name="approval"class="buttonSize" th:attr="disabled=${attendanceFormList == null}">
-										<input type="submit" id="reject" value="却下" name="rejected"class="buttonSize"  disabled>
+										<input type="submit" id="approve" value="承認" name="approval"class="buttonSize" th:attr="disabled=${attendanceFormList == null}"  onclick="disableSubmit(this)">
+										<input type="submit" id="reject" value="却下" name="rejected"class="buttonSize"  disabled  onclick="disableSubmit(this)">
 									</div>
 								</div>
 							</div>
@@ -162,7 +162,7 @@
 												<td th:text="|${#strings.substring(attendance.attendanceDateS,5,10)}|"></td>
 												<td th:text="${attendance.dayOfWeek}" th:id="'dayOfWeek-'+${start.index}"></td>
 												<td>
-													<select th:id="'status-'+${start.index}" th:field="*{attendanceList[__${start.index}__].status}" class="noneBox" disabled>
+													<select th:id="'status-'+${start.index}" th:field="*{attendanceList[__${start.index}__].status}"disabled>
 														<option th:value="12" th:selected="${attendance.status} == '12'" >選択してください</option>
 														<option th:value="0" th:selected="${attendance.status} == '0'" >通常出勤</option>
 														<option th:value="1" th:selected="${attendance.status} == '1'" >休日</option>
@@ -179,18 +179,18 @@
 													</select>
 												</td>
 												<td>
-													<input type="text" th:id="'startTime-'+${start.index}" th:field="*{attendanceList[__${start.index}__].startTime}"
-														th:value="${attendance.startTime}" class="noneBox"
+													<input type="time" th:id="'startTime-'+${start.index}" th:field="*{attendanceList[__${start.index}__].startTime}"
+														th:value="${attendance.startTime}"
 														disabled>
 												</td>
 												<td>
-													<input type="text" th:id="'endTime-'+${start.index}" th:field="*{attendanceList[__${start.index}__].endTime}"
-														th:value="${attendance.endTime}" class="noneBox"
+													<input type="time" th:id="'endTime-'+${start.index}" th:field="*{attendanceList[__${start.index}__].endTime}"
+														th:value="${attendance.endTime}" 
 														disabled>
 												</td>
 												<td>
 													<input type="text" th:id="'attendanceRemarks-'+${start.index}" th:field="*{attendanceList[__${start.index}__].attendanceRemarks}"
-														th:value="${attendance.attendanceRemarks}" class="noneBox"
+														th:value="${attendance.attendanceRemarks}" class="text-start"
 														disabled>
 												</td>
 											</tr>
