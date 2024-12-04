@@ -29,6 +29,12 @@ $menuColors:(
 	department:$department-color,
 );
 
+$daysColors:(
+	saturday:$blue-400,
+	sunday:$red,
+	holiday:$red-400,
+);
+
 $spacers: (
     6: 3.5rem // mt-6のための新しい値を追加
 );
@@ -142,14 +148,11 @@ main{
 	margin-top: calc(#{$spacer}*4.5);
 }
 
-.saturday{
-	@include txt-color($blue-400);
+
+@each $type,$color in $daysColors{
+	.#{$type}{
+		@include txt-color($color);
 	}
-.sunday{
-	@include txt-color($red);
-	}
-.holiday{
-	@include txt-color($red-400);
 }
 
 input[type='time'] {
@@ -279,6 +282,20 @@ input[type='time'] {
 	#message {
 		@include txt-color($red);
 		display: none;
+	}
+	
+	tbody{
+		tr{
+			td{@extend .text-center;
+				select ,input{
+					@extend .noneBox;
+					@extend .text-center;
+				}
+				div{
+					@extend .text-danger;
+				}
+			}
+		}
 	}
 
 //***************************日報***********************************************

@@ -60,7 +60,7 @@
 									</span>
 									<span>
 										<input type="submit" id="register" value="登録" name="insert" class="buttonSize"
-											th:attr="disabled=${Users.status} != 3 and ${Users.status} != 0">
+											th:attr="disabled=${Users.status} != 3 and ${Users.status} != 0" onclick="disableSubmit(this)">
 									</span>
 								</div>
 							</div>
@@ -130,7 +130,7 @@
 											<td th:text="|${#strings.substring(attendance.attendanceDateS,5,10)}|"></td>
 											<td th:text="${attendance.dayOfWeek}"  th:id="'dayOfWeek-'+${start.index}"></td>
 											<td>
-												<select th:id="'status-'+${start.index}" th:field="*{attendanceList[__${start.index}__].status}" class="noneBox"
+												<select th:id="'status-'+${start.index}" th:field="*{attendanceList[__${start.index}__].status}" 
 												th:disabled="${(Users.role == 'Regular' and (Users.status == 1 or Users.status == 2)) or (Users.role == 'UnitManager' and (Users.status == 1 or Users.status == 2)) or (Users.role == 'Manager')}">
 													<option th:value="12" th:selected="${attendance.status} == '12'" >選択してください</option>
 													<option th:value="0" th:selected="${attendance.status} == '0'" >通常出勤</option>
@@ -149,25 +149,25 @@
 											</td>
 											<td>
 												<input type="time" th:id="'startTime-'+${start.index}" th:field="*{attendanceList[__${start.index}__].startTime}"
-													th:value="${attendance.startTime}" class="noneBox timeImput"
+													th:value="${attendance.startTime}" class="timeImput"
 													th:disabled="${(Users.role == 'Regular' and (Users.status == 1 or Users.status == 2)) or (Users.role == 'UnitManager' and (Users.status == 1 or Users.status == 2)) or (Users.role == 'Manager')}">
-												<div th:if="${#fields.hasErrors('attendanceList[__${start.index}__].startTime')}" class="text-danger"
+												<div th:if="${#fields.hasErrors('attendanceList[__${start.index}__].startTime')}" 
 													th:errors="*{attendanceList[__${start.index}__].startTime}">
 												</div>
 											</td>
 											<td>
 												<input type="time"th:id="'endTime-'+${start.index}" th:field="*{attendanceList[__${start.index}__].endTime}"
-													th:value="${attendance.endTime}" class="noneBox timeImput"
+													th:value="${attendance.endTime}" class="timeImput"
 													th:disabled="${(Users.role == 'Regular' and (Users.status == 1 or Users.status == 2)) or (Users.role == 'UnitManager' and (Users.status == 1 or Users.status == 2)) or (Users.role == 'Manager')}">
-												<div th:if="${#fields.hasErrors('attendanceList[__${start.index}__].endTime')}" class="text-danger"
+												<div th:if="${#fields.hasErrors('attendanceList[__${start.index}__].endTime')}" 
 													th:errors="*{attendanceList[__${start.index}__].endTime}">
 												</div>
 											</td>
 											<td>
 												<input type="text" th:id="'attendanceRemarks-'+${start.index}" th:field="*{attendanceList[__${start.index}__].attendanceRemarks}"
-													th:value="${attendance.attendanceRemarks}" class="noneBox"
+													th:value="${attendance.attendanceRemarks}"
 													th:disabled="${(Users.role == 'Regular' and (Users.status == 1 or Users.status == 2)) or (Users.role == 'UnitManager' and (Users.status == 1 or Users.status == 2)) or (Users.role == 'Manager')}">
-												<div th:if="${#fields.hasErrors('attendanceList[__${start.index}__].attendanceRemarks')}" class="text-danger"
+												<div th:if="${#fields.hasErrors('attendanceList[__${start.index}__].attendanceRemarks')}"
 													th:errors="*{attendanceList[__${start.index}__].attendanceRemarks}">
 												</div>
 											</td>

@@ -6,10 +6,10 @@
 	<link th:href="@{/css/styles.css}" rel="stylesheet"/>
     <link th:href="@{/css/create.css}" rel="stylesheet" />
 	<link th:href="@{/css/index.css}" rel="stylesheet" />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!--    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>-->
    <meta name="viewport" content="width=device-width,initial-scale=1.0">
 </head>
-<body>
+<body class="pt-0">
 	<div th:if="${param.error}">
 		<div class="alert alert-danger fixed-top">
 			<span th:text="${session.SPRING_SECURITY_LAST_EXCEPTION?.message ?: 'ユーザー情報が存在しません'}"></span>
@@ -23,15 +23,15 @@
 					<form name="LoginForm" th:action="@{/login}" method="post">
 						<div class="loginFontsize">
 							<div class="form-row">
-								<label class="col-3">ユーザーID</label>
-								<input type="text" name="userId" class="m-3 col-7">
+								<label for="userId" class="col-3">ユーザーID</label>
+								<input type="text" id="userId" name="userId" class="m-3 col-7" autocomplete="on">
 							</div>
 							<div class="form-row">
-								<label class="col-3 ">パスワード</label>
-								<input type="password" name="password" class="m-3 col-7">
+								<label for ="userName" class="col-3 ">パスワード</label>
+								<input type="password" id="userName" name="password" class="m-3 col-7" autocomplete="off">
 							</div>
 							<div class="text-center">
-								<input type="submit" id="check" value="ログイン" class="buttonRound">
+								<input type="submit" id="check" value="ログイン" class="buttonRound"  onclick="disableSubmit(this)">
 							</div>
 							<div class="text-center mt-3">
 								<a th:href="@{/forgotpassword}">パスワードを忘れた方はこちら</a>
@@ -42,6 +42,6 @@
 			</div>
 		</div>
 	</div>
-	<script th:src="@{/js/common.js}"></script>
+	<script th:src="@{/js/common.js}" defer></script>
 </body>
 </html>

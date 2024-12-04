@@ -984,7 +984,7 @@
   width: 75% !important;
 }
 
-.w-100, .reasonTitle, .collapsedTable tr th::before, .collapsedTable, .noneBox, .commonHeader, .header {
+.w-100, .reasonTitle, .collapsedTable tr th::before, .collapsedTable, .noneBox, tbody tr td select, tbody tr td input, .commonHeader, .header {
   width: 100% !important;
 }
 
@@ -1758,7 +1758,7 @@
   text-align: right !important;
 }
 
-.text-center, .weatherInfo li span:first-child {
+.text-center, tbody tr td select, tbody tr td input, tbody tr td, .weatherInfo li span:first-child {
   text-align: center !important;
 }
 
@@ -1826,7 +1826,7 @@
   color: rgba(var(--bs-warning-rgb), var(--bs-text-opacity)) !important;
 }
 
-.text-danger {
+.text-danger, tbody tr td div {
   --bs-text-opacity: 1;
   color: rgba(var(--bs-danger-rgb), var(--bs-text-opacity)) !important;
 }
@@ -8359,7 +8359,7 @@ progress {
   background-color: #ffc107;
 }
 
-.noneBox {
+.noneBox, tbody tr td select, tbody tr td input {
   border: none;
 }
 

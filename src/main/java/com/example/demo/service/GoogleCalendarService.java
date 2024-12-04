@@ -112,7 +112,14 @@ public class GoogleCalendarService {
             holidaysMap.put(localDate, holidayName);
         });
 
-        
+        System.out.println(holidaysMap.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .collect(Collectors.toMap(
+                        entry -> entry.getKey().format(dateFormatter),
+                        Map.Entry::getValue,
+                        (oldValue, newValue) -> oldValue, // マージ関数
+                        LinkedHashMap::new // 順序を保持するためにLinkedHashMapを使用
+                )));
         // フォーマットされたMapの生成
         return holidaysMap.entrySet().stream()
                 .sorted(Map.Entry.comparingByKey())
