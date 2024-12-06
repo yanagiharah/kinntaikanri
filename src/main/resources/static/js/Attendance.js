@@ -1,14 +1,3 @@
-
-//if (document.getElementById('stringYearsMonth').value === '') {
-//        document.getElementById('stringYearsMonth').value = `${year}-${month}`;
-//    }
-
-// 表示年月のキーボード入力を無効にする(うまく動作していない)
-//monthInput.addEventListener('keydown', function(event) {
-//    event.preventDefault();
-//});
-//managerでないとき
-
 //pageが読み込み終わってからすぐに
 document.addEventListener('DOMContentLoaded', function() {
 	// 初期値が空の場合、setYearMonthを呼び出す
@@ -28,30 +17,29 @@ document.addEventListener('DOMContentLoaded', function() {
 	       attendanceList = []; // デフォルト値として空の配列を設定
 	   }
 
-//	// attendanceListの中でattendanceDateSがholidayと一致するものをフィルタリング
-//	const matchingAttendances = attendanceList.filter(attendance => {
-//		return holidays.includes(attendance.attendanceDateS);
-//	});
+
+
 	//勤怠リスト分indexをあたえて繰り返す
 	attendanceList.forEach((attendance, index) => {
-		const dayOfWeek = attendance.dayOfWeek; // '土' または '日' を取得 dayOfWeek['月'、'火'、'水'、'木'、'金'、'土'、'日']
+		const dayOfWeek = attendance.dayOfWeek; // dayOfWeek['月'、'火'、'水'、'木'、'金'、'土'、'日']
 		const statusSelect = document.getElementById(`status-${index}`);//各indexに応じて値を取得
 		const attendanceElement = document.getElementById(`dayOfWeek-${index}`);
-
+	//cssスタイル適用のため  '土' または '日' を取得
 		if (dayOfWeek === '土') {
 			attendanceElement.classList.add('saturday');
 		} else if (dayOfWeek === '日') {
 			attendanceElement.classList.add('sunday');
 		}
-		//		 土日なら「休日」を選択
+		//		 土日なら「休日」を選択（オートフィル）
 		if ((dayOfWeek === '土' || dayOfWeek === '日') && (statusSelect.value === '12' && userRole !== "Manager")) {
 			statusSelect.value = '1'; // '1'は休日の値
 		}
-		// attendanceDateSがholidayと一致するものにクラスを付与
+		// attendanceDateSがholidayと一致するものにクラスを付与（cssスタイルオーバーライド）
 		if (holidays.includes(attendance.attendanceDateS)) {
 			if (attendanceElement) {
 				attendanceElement.classList.add('holiday');
 				if ((statusSelect.value === '12' || statusSelect.value === '1') && userRole !== "Manager") {
+					//祝日オートフィル
 					statusSelect.value = '2';
 				}
 			}
@@ -102,15 +90,9 @@ function confirmSubmission(event) {
 	}
 }
 
-// input typeがtimeの要素に対して適用し、各inputにindexを与えて処理を行う
-document.querySelectorAll('input[type="time"]').forEach((input, index) => {
-	// indexの2倍のinputが存在するため、indexを2で割ることでstatusIndexを決定します。
-	// これにより、statusIndexは2回ごとに増加し、合計30までのinputに対応します（例：30日分）。
-	const statusIndex = Math.trunc(index / 2);
-	//status-(statusIndex番目)のIDから情報を取得(status[0,1,2,3,4,5,6,7,8,9,10,11,12]のいずれか)
-	const statusSelect = document.getElementById(`status-${statusIndex}`);
 	//出勤に値するstatusはこれ
 	const workdayStatuses = ['0', '3', '6', '7', '8', '10'];
+	
 	//未選択に値するstatusはこれ
 	const noSelected = ['12'];
 
@@ -118,9 +100,20 @@ document.querySelectorAll('input[type="time"]').forEach((input, index) => {
 	const now = new Date();
 	const hours = String(now.getHours()).padStart(2, '0'); // 時間を2桁に
 	const minutes = String(now.getMinutes()).padStart(2, '0'); // 分を2桁に
-
+	
+// input typeがtimeの要素に対して適用し、各inputとindexをもとに処理を行う
+document.querySelectorAll('input[type="time"]').forEach((input, index) => {
+	
+	// indexの2倍のinputが存在するため、indexを2で割ることでstatusIndexを決定します。
+		// これにより、statusIndexは2回ごとに増加し、合計30までのinputに対応します（例：30日分）。
+		const statusIndex = Math.trunc(index / 2);
+		
+		//status-(statusIndex番目)のIDから情報を取得(status[0,1,2,3,4,5,6,7,8,9,10,11,12]のいずれか)
+		const statusSelect = document.getElementById(`status-${statusIndex}`);
+	
 	// フォーカス時に休日に値しないものであればデフォルト値を設定
 	input.addEventListener('focus', () => {
+		
 		//すでに値が入力されていないinputで、かつ休日に該当しない場合
 		if (input.value === '' && (workdayStatuses.includes(statusSelect.value) || noSelected.includes(statusSelect.value))) {
 			input.value = `${hours}:${minutes}`; // デフォルト値として現在時刻を設定

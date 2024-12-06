@@ -110,9 +110,6 @@ public class DailyReportService {
 			} else {
 				dailyReportMapper.updateDailyReport(dailyReportForm);
 			}
-
-			//更新用（マネージャーが承認済みにするときに使う）
-			//dailyReportMapper.updateDailyReport(dailyReportForm);
 			
 			//日報登録をしてからf5を押したときに出るエクセプション
 		} catch (DuplicateKeyException e) {
