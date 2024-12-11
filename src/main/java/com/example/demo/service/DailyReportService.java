@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -25,8 +26,11 @@ public class DailyReportService {
 	private DailyReportDetailMapper dailyReportDetailMapper;
 
 	//昨日の日報のステータス取得
-	public Integer checkYesterdayDailyReport(Integer userId, LocalDate yesterday) {
-		Integer checkDailyReport = dailyReportMapper.selectYesterdayCheck(userId, yesterday);
+	public String checkYesterdayDailyReport(Integer userId, LocalDate yesterday) {
+		LocalDate oneWeekAgoDate = yesterday.minusDays(7);
+		List<String> listCheckDailyReport = dailyReportMapper.selectYesterdayCheck(userId, yesterday,oneWeekAgoDate);
+		String checkDailyReport = listCheckDailyReport.stream().collect(Collectors.joining(", "));
+		System.out.println(checkDailyReport);
 		return checkDailyReport;
 	}
 	
