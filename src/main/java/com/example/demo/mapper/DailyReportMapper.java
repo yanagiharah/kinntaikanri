@@ -27,7 +27,7 @@ public interface DailyReportMapper {
 	public void updateConfirmDailyReport(DailyReportForm dailyReportForm);
 	
 	//昨日の日報存在確認
-	public Integer selectYesterdayCheck(Integer userId, LocalDate yesterday);
+	public List<String> selectYesterdayCheck(Integer userId, LocalDate yesterday,LocalDate oneWeekAgoDate);
 	
 	//確認待ちユーザー情報の取得
 	public List<DailyReportForm> selectConfirmPending(@Param("dailyReportDate")String dailyReportDate);

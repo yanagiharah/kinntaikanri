@@ -62,11 +62,12 @@ public class CommonActivityService {
 			//メソッドの位置をそれぞれ変えたほうがいい。あるいはヘルパークラスを作成してそこに入れる
 			LocalDate today = LocalDate.now();
 			LocalDate yesterday = today.minusDays(1);
-			Integer checkDailyReport = dailyReportService.checkYesterdayDailyReport(users.getUserId(), yesterday);
+			String checkDailyReport = dailyReportService.checkYesterdayDailyReport(users.getUserId(), yesterday);
 			Integer checkAttendance = attendanceManagementService.checkYesterdayAttendance(users.getUserId(),
 					yesterday);
-			if (checkDailyReport == 0) {
+			if (checkDailyReport != null) {
 				model.addAttribute("CheckDailyReport", messageOutput.message("checkDailyReport"));
+				model.addAttribute("MissingSubmitDReport",checkDailyReport);
 			}
 			if (checkAttendance == 0) {
 				model.addAttribute("CheckAttendance", messageOutput.message("checkAttendance"));

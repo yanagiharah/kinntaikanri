@@ -6,14 +6,15 @@
         history.pushState(null, null, location.href);
     };
 })();
-//ボタン連打防止機能　懸念点常に二重送信になっているのでは？という可能性はある。可能性だけ
-function disableSubmit(button){
-	//ボタンを無効化
-	 button.disabled = true;
-	 //ボタンに紐づいたform送信
-	 button.form.submit();
-	 //5秒後にボタン有効化・5秒はパスワードリセットのメール送信ボタンにマージンを取った値
-	    setTimeout(function() {
-	        button.disabled = false;
-	    }, 5000);
-	}
+
+	document.querySelectorAll('input[type="submit"]').forEach(function(button) {
+		button.addEventListener('mouseup', function(event) {
+		            // ボタンから手を離したときにボタンを無効化
+		            setTimeout(function() {
+		                button.disabled = true;
+		                setTimeout(function() {
+		                    button.disabled = false; // 5秒後にボタンを有効化
+		                }, 5000);
+		            }, 0); // フォーム送信後にボタンを無効化
+		        });
+		    });

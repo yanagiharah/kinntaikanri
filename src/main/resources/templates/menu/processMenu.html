@@ -43,7 +43,7 @@
 				</div>
 				<div th:if="${CheckDailyReport}"  role="alert">
 					<i class="fa-solid fa-circle-exclamation"></i>
-					<p class="mb-0" th:text="${CheckDailyReport}"></p>
+					<p class="mb-0" th:text="${CheckDailyReport}+ ''+ ${MissingSubmitDReport}"></p>
 				</div>
 				<div th:if="${monthlyAttendanceStatusIsThree}"  role="alert">
 					<i class="fa-solid fa-bell"></i>

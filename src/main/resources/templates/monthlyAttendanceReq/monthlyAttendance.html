@@ -57,11 +57,11 @@
 								</div>	
 								<div class="col">
 									<div th:unless="${Users.role=='Manager'}">
-										<input type="submit" id="willCorrect" value="訂正申請" name="willCorrect" class="buttonSize" disabled  onclick="disableSubmit(this)">
+										<input type="submit" id="willCorrect" value="訂正申請" name="willCorrect" class="buttonSize" disabled>
 									</div>
 									<div th:if="${Users.role=='Manager'}">
-										<input type="submit" id="approve" value="承認" name="approval"class="buttonSize" th:attr="disabled=${attendanceFormList == null}"  onclick="disableSubmit(this)">
-										<input type="submit" id="reject" value="却下" name="rejected"class="buttonSize"  disabled  onclick="disableSubmit(this)">
+										<input type="submit" id="approve" value="承認" name="approval"class="buttonSize" th:attr="disabled=${attendanceFormList == null}">
+										<input type="submit" id="reject" value="却下" name="rejected"class="buttonSize"  disabled  >
 									</div>
 								</div>
 							</div>
@@ -211,7 +211,7 @@
 			    /*]]>*/
 			</script>
 			<script th:src="@{/js/monthlyAttendance.js}" defer></script>
-			<script th:src="@{/js/common.js}" async></script>
+			<script th:src="@{/js/common.js}"></script>
 		</main>
 	</body>
 </html>
