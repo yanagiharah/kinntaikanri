@@ -32,4 +32,9 @@ public interface DailyReportMapper {
 	//確認待ちユーザー情報の取得
 	public List<DailyReportForm> selectConfirmPending(@Param("dailyReportDate")String dailyReportDate);
 	
+	//マネージャーアラート用日報未確認存在日表示（直近一週間）
+	public List<String> selectAlertForConfirm(@Param("yesterday")LocalDate yesterday);
+	
+	//マネージャー日報画面用最古十件の日報未確認用
+	public List<String>  selectComfimPendingStatus1OrderByOlder();
 }

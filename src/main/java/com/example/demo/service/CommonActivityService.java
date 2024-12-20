@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -57,11 +58,11 @@ public class CommonActivityService {
 	public Model backMenu(Model model, HttpSession session) {
 		usersModelSession(model, session);
 		Users users = (Users) model.getAttribute("Users");
+		LocalDate today = LocalDate.now();
+		LocalDate yesterday = today.minusDays(1);
 //		model.addAttribute("Users", users);
 		if ("Regular".equals(users.getRole()) || "UnitManager".equals(users.getRole())) {
 			//メソッドの位置をそれぞれ変えたほうがいい。あるいはヘルパークラスを作成してそこに入れる
-			LocalDate today = LocalDate.now();
-			LocalDate yesterday = today.minusDays(1);
 			String checkDailyReport = dailyReportService.checkYesterdayDailyReport(users.getUserId(), yesterday);
 			Integer checkAttendance = attendanceManagementService.checkYesterdayAttendance(users.getUserId(),
 					yesterday);
@@ -98,6 +99,11 @@ public class CommonActivityService {
 			// データベースから月次出席情報を取得
 			Integer attendanceReq = monthlyAttendanceReqMapper.selectMonthlyAttendanceReq(lastMonth);
 			modelService.monthlyAttendanceIsSentInsertModel(attendanceReq, model);
+			List<String> dailyRepExists=dailyReportService.selectAlertForConfirm(yesterday);
+			if(dailyRepExists != null) {
+				model.addAttribute("dailyReportArrival", messageOutput.message("dailyReportArrival"));
+				model.addAttribute("dailyRepExists",dailyRepExists);
+			}
 			
 			monthlyAttendanceReqService.selectMonthlyAttendanceReqAnyHasChangeReq(model);
 		}
@@ -134,10 +140,6 @@ public class CommonActivityService {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");//年月の形式に変換
 		String lastYearsMonth = firstDayOfLastMonth.format(formatter);//String型に変換
 		return lastYearsMonth;
-	}
-
-	public String logInBack() {
-		return "index";
 	}
 
 	//現在の日にちを"yyyy-MM"の型で取得するメソッド

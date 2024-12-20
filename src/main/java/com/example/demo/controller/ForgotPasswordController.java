@@ -40,9 +40,4 @@ public class ForgotPasswordController {
         modelService.emailSent(model);
         return "forgot/forgotpassword";
     }
-    
-    @GetMapping("/index")
-    public String logInBack(){
-    	return commonActivityService.logInBack();
-    };
 }

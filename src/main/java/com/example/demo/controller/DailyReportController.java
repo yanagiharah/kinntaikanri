@@ -45,7 +45,7 @@ public class DailyReportController {
 
 	//日報の初期表示画面（今日時点のものを表示）
 	@RequestMapping("/detail")
-	public String dailyReportDetail(String date, HttpSession session, Model model) {
+	public String dailyReportDetail(@RequestParam(value = "date", required = false) String date, HttpSession session, Model model) {
 		commonActivityService.usersModelSession(model, session);
 		Users users = (Users) model.getAttribute("Users");
 
@@ -62,8 +62,7 @@ public class DailyReportController {
 			//日報取得 
 			DailyReportForm dailyReportForm = dailyReportService.getDailyReport(userId, calendarDate);
 			// 日報詳細を取得
-			List<DailyReportDetailForm> dailyReportDetailForm = dailyReportService.getDailyReportDetail(userId,
-					calendarDate);
+			List<DailyReportDetailForm> dailyReportDetailForm = dailyReportService.getDailyReportDetail(userId, calendarDate);
 			//空のリストを10行まで追加で作成
 			dailyReportService.populateEmptyDailyReportDetails(dailyReportDetailForm,userId,calendarDate);
 			//（今日の日付とユーザーIDをセット）
@@ -127,6 +126,30 @@ public class DailyReportController {
 		String calendarDateS = calendarDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		return dailyReportDetail(calendarDateS, session, model);
 	}
+	
+	//検索ボタン押下処理
+	@RequestMapping(value="/detailUpdate", params ="searchConfirmPending",method = RequestMethod.POST)
+	public String searchConfirmPendingStatusOne(Model model,HttpSession session,String date){
+		Users users = (Users) session.getAttribute("Users");
+		model.addAttribute("Users", users);
+		
+		LocalDate calendarDate;
+		
+		if (date == null) {
+			calendarDate = LocalDate.now();
+		} else {
+			calendarDate = LocalDate.parse(date);
+		}
+		
+		List<String> confirmPendingStatus1 = dailyReportService.selectConfirmPendingStatus1();
+		if(confirmPendingStatus1.isEmpty()) {
+			return null;
+		}
+		model.addAttribute("confirmPendingStatus1",confirmPendingStatus1);
+		model.addAttribute("calendarDate",calendarDate);
+		
+		return "DailyReport/dailyReport";
+	}
 
 	//確認ボタン押下処理
 	@RequestMapping(value = "/detailUpdate",params ="confirm",method=RequestMethod.POST)
@@ -153,10 +176,15 @@ public class DailyReportController {
 
 
 	//カレンダーコントロール押下後
-	@RequestMapping(value = "/detailUpdate" ,params="date",method = RequestMethod.POST)
-	public ModelAndView handleDateSubmission(@ModelAttribute("dailyReportDate") String dateS, HttpSession session,
+	@RequestMapping(value = "/detailUpdate" ,method = RequestMethod.POST)
+	public ModelAndView handleDateSubmission(@ModelAttribute("dailyReportDate") String dateS, @RequestParam(value="selectedDate",required = false) String selectedDate, HttpSession session,
 			Model model) {
+		if(selectedDate != null && !selectedDate.isEmpty()) {
+			return new ModelAndView(dailyReportDetail(selectedDate,session,model));
+		}
+		
 		return new ModelAndView(dailyReportDetail(dateS, session, model));
+
 	}
 	
 	//更新ボタンが押された場合の処理
