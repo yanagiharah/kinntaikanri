@@ -313,7 +313,7 @@
   box-shadow: var(--bs-focus-ring-x, 0) var(--bs-focus-ring-y, 0) var(--bs-focus-ring-blur, 0) var(--bs-focus-ring-width) var(--bs-focus-ring-color);
 }
 
-.icon-link, .menuAlert div {
+.icon-link, .menuAlert div div {
   display: inline-flex;
   gap: 0.375rem;
   align-items: center;
@@ -321,7 +321,7 @@
   text-underline-offset: 0.25em;
   backface-visibility: hidden;
 }
-.icon-link > .bi, .menuAlert div > .bi {
+.icon-link > .bi, .menuAlert div div > .bi {
   flex-shrink: 0;
   width: 1em;
   height: 1em;
@@ -329,7 +329,7 @@
   transition: 0.2s ease-in-out transform;
 }
 @media (prefers-reduced-motion: reduce) {
-  .icon-link > .bi, .menuAlert div > .bi {
+  .icon-link > .bi, .menuAlert div div > .bi {
     transition: none;
   }
 }
@@ -1092,7 +1092,7 @@
   justify-content: flex-end !important;
 }
 
-.justify-content-center, .dflex-content_center-item_center, .indexBox, .indexContainer, .weatherInfo li, .menuAlert div {
+.justify-content-center, .dflex-content_center-item_center, .indexBox, .indexContainer, .weatherInfo li {
   justify-content: center !important;
 }
 
@@ -1310,7 +1310,7 @@
   margin-top: 0 !important;
 }
 
-.mt-1, .menuButtonSize {
+.mt-1, .menuButtonSize, .linklike {
   margin-top: 0.25rem !important;
 }
 
@@ -6633,7 +6633,7 @@
     --bs-gutter-y: 3rem;
   }
 }
-.alert, .menuAlert div {
+.alert, .menuAlert {
   --bs-alert-bg: transparent;
   --bs-alert-padding-x: 1rem;
   --bs-alert-padding-y: 1rem;
@@ -6700,7 +6700,7 @@
   --bs-alert-link-color: var(--bs-info-text-emphasis);
 }
 
-.alert-warning, .menuAlert div {
+.alert-warning, .menuAlert {
   --bs-alert-color: var(--bs-warning-text-emphasis);
   --bs-alert-bg: var(--bs-warning-bg-subtle);
   --bs-alert-border-color: var(--bs-warning-border-subtle);
@@ -8334,6 +8334,11 @@ progress {
   display: none !important;
 }
 
+.list-unstyled, .weatherInfo {
+  padding-left: 0;
+  list-style: none;
+}
+
 .commonHeader, .header {
   top: 0;
   left: 0;
@@ -8345,7 +8350,7 @@ progress {
 }
 
 .header {
-  top: 46px;
+  top: 45px;
   z-index: 1000;
 }
 
@@ -8421,6 +8426,10 @@ input[type=time]::-webkit-calendar-picker-indicator {
   background-color: #fff;
 }
 
+.menuAlert div div div {
+  --bs-alert-border-color: none;
+}
+
 .management .menuButtonSize {
   background-color: rgb(131, 118, 137);
 }
@@ -8441,9 +8450,6 @@ input[type=time]::-webkit-calendar-picker-indicator {
   background-color: #f0fff0;
 }
 
-.weatherInfo {
-  list-style: none;
-}
 .weatherInfo li {
   margin-left: 10px;
   margin-bottom: 10px;

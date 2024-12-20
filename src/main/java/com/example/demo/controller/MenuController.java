@@ -5,6 +5,8 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.model.Users;
 import com.example.demo.service.CommonActivityService;
@@ -66,6 +68,14 @@ public class MenuController {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
 		return "redirect:/daily/detail";
+	}
+	
+	@RequestMapping(value="/daily/detail",params="date", method = RequestMethod.GET)
+	public String dailyReport(HttpSession session, Model model, @RequestParam("dailyReportDate") String date) {
+		Users users = (Users) session.getAttribute("Users");
+		model.addAttribute("Users", users);
+		model.addAttribute("date",date);
+		return "redirect:/daily/detail?date=" + date;
 	}
 
 	//ユーザー情報登録画面に遷移

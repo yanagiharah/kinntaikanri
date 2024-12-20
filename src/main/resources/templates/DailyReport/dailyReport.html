@@ -43,6 +43,11 @@
 											</span>
 										</th:block>
 									</span>
+									<span  th:if = "${Users.role =='Manager'}">
+										<div th:if="${Users.role == 'Manager'}">
+											未確認日報： 
+											<input type="submit" id="searchConfirmPending" value="検索" name="searchConfirmPending" class="buttonSize">
+										</div>
 								</div>
 								<div class="col-3">
 									<div th:if="${Users.role == 'Manager'}">
@@ -62,15 +67,14 @@
 							</div>
 						</span>
 						
-						
 						<div class="row m-3">
 							<div class="alert alert-success text-center" th:if="${message}">
 								<p th:text="${message}"></p>
 							</div>
-							<div th:if="${ConfirmPending} != null">
+							<div >
 		<!--						マネージャー画面でない限りnull-->
 								<div class="row m-0">
-									<div class="col-7 mt-3">
+									<div class="col-7 mt-3" th:if="${ConfirmPending} != null">
 										<table class="default-table" id="dailyReportList">
 											<thead>
 												<tr>
@@ -98,6 +102,22 @@
 											</tbody>
 										</table>
 									</div>
+									<div class="col-5" th:if="${confirmPendingStatus1} != null">
+										<table class="collapsedTable">
+										<thead>
+											<tr>
+												<th>対象日</th>
+											</tr>
+										</thead>
+										<tbody th:each="listNotConfirm, start : ${confirmPendingStatus1}">
+											<tr>
+												<th:block>
+												</th:block>
+												<td>
+													<button type="submit" name="selectedDate" class="linklike pb-1" th:value="${listNotConfirm}" >[[${listNotConfirm}]]</button>
+											</tr>
+										</tbody>
+									</table>
 								</div>
 							</div>
 							

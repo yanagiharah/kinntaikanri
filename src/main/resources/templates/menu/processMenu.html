@@ -25,38 +25,57 @@
 			</form>
 <!--			一般用アラート-->
 			<div class="menuAlert row">
-				<div th:if="${monthlyAttendanceReqApproved}" role="alert">
-					<i class="fa-solid fa-bell"></i>
-					<p class="mb-0" th:text="${monthlyAttendanceReqApproved}"></p>
-				</div>
-				<div th:if="${combinedMessageAndReason}" role="alert">
-					<i class="fa-solid fa-bell"></i>
-					<pre class="mb-0" th:text="${combinedMessageAndReason}"></pre>
-					<form th:action="@{/attendanceCorrect/updateData}" method="post" class="dflex-content_center-item_center">
-						<input type="hidden" name="userId" th:value="${Users.userId}">
-						<input type="submit" name="confirmReason" value="確認" class="buttonSize">
-					</form>
-				</div>
-				<div th:if="${CheckAttendance}"role="alert">
-					<i class="fa-solid fa-circle-exclamation"></i>
-					<p class="mb-0" th:text="${CheckAttendance}"></p>
-				</div>
-				<div th:if="${CheckDailyReport}"  role="alert">
-					<i class="fa-solid fa-circle-exclamation"></i>
-					<p class="mb-0" th:text="${CheckDailyReport}+ ''+ ${MissingSubmitDReport}"></p>
-				</div>
-				<div th:if="${monthlyAttendanceStatusIsThree}"  role="alert">
-					<i class="fa-solid fa-bell"></i>
-					<p class="mb-0" th:text="${monthlyAttendanceStatusIsThree}"></p>
-				</div>
-				<!--			マネージャー用アラート-->
-				<div th:if="${monthlyAttendanceStatusIsSent}" role="alert">
-					<i class="fa-solid fa-bell"></i>
-					<p class="mb-0" th:text="${monthlyAttendanceStatusIsSent}"></p>
-				</div>
-				<div th:if="${monthlyAttendanceReqArrival}" role="alert">
-					<i class="fa-solid fa-bell"></i>
-					<p class="mb-0" th:text="${monthlyAttendanceReqArrival}"></p>
+				<div class="d-flex flex-column">
+					<div th:if="${monthlyAttendanceReqApproved}" >
+						<i class="fa-solid fa-bell"></i>
+						<p class="mb-0" th:text="${monthlyAttendanceReqApproved}"></p>
+					</div>
+					<div th:if="${combinedMessageAndReason}" role="alert">
+						<i class="fa-solid fa-bell  me-2"></i>
+						<pre class="mb-0" th:text="${combinedMessageAndReason}"></pre>
+						<form th:action="@{/attendanceCorrect/updateData}" method="post" class="dflex-content_center-item_center">
+							<input type="hidden" name="userId" th:value="${Users.userId}">
+							<input type="submit" name="confirmReason" value="確認" class="buttonSize">
+						</form>
+					</div>
+					<div th:if="${CheckAttendance}"role="alert">
+						<i class="fa-solid fa-circle-exclamation  me-2"></i>
+						<p class="mb-0" th:text="${CheckAttendance}"></p>
+					</div>
+					<div th:if="${CheckDailyReport}"  role="alert">
+						<i class="fa-solid fa-circle-exclamation  me-2"></i>
+						<p class="mb-0" th:text="${CheckDailyReport}+ ''+ ${MissingSubmitDReport}"></p>
+					</div>
+					<div th:if="${monthlyAttendanceStatusIsThree}"  role="alert">
+						<i class="fa-solid fa-bell  me-2"></i>
+						<p class="mb-0" th:text="${monthlyAttendanceStatusIsThree}"></p>
+					</div>
+					<!--			マネージャー用アラート-->
+					<div th:if="${monthlyAttendanceStatusIsSent}" role="alert" class="flex-row">
+						<i class="fa-solid fa-bell  me-2"></i>
+						<p class="mb-0" th:text="${monthlyAttendanceStatusIsSent}"></p>
+					</div>
+					<div th:if="${monthlyAttendanceReqArrival}" role="alert" class="flex-row">
+						<i class="fa-solid fa-bell me-2"></i>
+						<p class="mb-0" th:text="${monthlyAttendanceReqArrival}"></p>
+					</div>
+					<div th:if="${dailyReportArrival}">
+						<div>
+							<i class="fa-solid fa-bell  me-2"></i>
+							<p class="mb-0" th:text="${dailyReportArrival}" ></p>
+						</div>
+					</div>
+					<div th:if="${dailyReportArrival}" class="mt-0">
+						<i class="fa-solid fa-forward"></i>
+						<ul class="list-unstyled d-flex m-0">
+				            <li th:each="dailyRepExists : ${dailyRepExists}">
+								<form th:action="@{/menu/daily/detail}" method="get" >
+									<input type="hidden" name="dailyReportDate" th:value="${dailyRepExists}"/>
+				                    <button type="submit" name="date" class="linklike pb-1">[[${dailyRepExists}]]</button>
+				                </form>
+				            </li>
+				        </ul>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -100,22 +119,22 @@
 				<div th:unless="${Users.role=='Admin'}">
 					<div class="attendance">
 						<form th:action="@{/menu/index}" method="get">
-							<input type="submit" value="勤怠登録" class="menuButtonSize"  onclick="disableSubmit(this)">
+							<input type="submit" value="勤怠登録" class="menuButtonSize">
 						</form>
 						<form th:action="@{/menu/correction}" method="get">
-							<input type="submit" value="勤怠修正" class="menuButtonSize"  onclick="disableSubmit(this)">
+							<input type="submit" value="勤怠修正" class="menuButtonSize" >
 						</form>
 					</div>
 					<div class="dailyRep">
 						<form th:action="@{/menu/daily/detail}" method="get">
-							<input type="submit" value="日報登録" class="menuButtonSize"  onclick="disableSubmit(this)">
+							<input type="submit" value="日報登録" class="menuButtonSize" >
 						</form>
 					</div>
 					<!--					マネージャー用-->
 					<div th:if="${Users.role=='Manager'}">
 						<div class="department">
 							<form th:action="@{/menu/department}" method="get">
-								<input type="submit" value="部署登録" class="menuButtonSize"  onclick="disableSubmit(this)">
+								<input type="submit" value="部署登録" class="menuButtonSize" >
 							</form>
 						</div>
 					</div>
@@ -126,13 +145,12 @@
 <!--						ユーザー情報登録-->
 					<div class="management">
 						<form th:action="@{/menu/usermanagement}" method="get">
-							<input type="submit" value="ユーザー情報登録" class="menuButtonSize" onclick="disableSubmit(this)">
+							<input type="submit" value="ユーザー情報登録" class="menuButtonSize">
 						</form>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
 	<script th:inline="javascript">
 	    /*<![CDATA[*/
 		 const todayWeatherType = /*[[${weatherData.todayWeatherType}]]*/[];

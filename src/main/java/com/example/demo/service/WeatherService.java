@@ -56,12 +56,16 @@ public class WeatherService {
         weatherData.setTodayTemp(today.getJSONObject("main").getDouble("temp"));
         weatherData.setTodayHumidity(today.getJSONObject("main").getInt("humidity"));
         weatherData.setTodayPressure(today.getJSONObject("main").getInt("pressure"));
+//        weatherData.setTodayPressure(today.getJSONObject("main").getInt("temp_max"));
+//        weatherData.setTodayPressure(today.getJSONObject("main").getInt("temp_min"));
 
         weatherData.setTomorrowDescription(tomorrow.getJSONArray("weather").getJSONObject(0).getString("description"));
         weatherData.setTomorrowWeatherType(tomorrow.getJSONArray("weather").getJSONObject(0).getString("main")); // 天気の種類を取得
         weatherData.setTomorrowTemp(tomorrow.getJSONObject("main").getDouble("temp"));
         weatherData.setTomorrowHumidity(tomorrow.getJSONObject("main").getInt("humidity"));
         weatherData.setTomorrowPressure(tomorrow.getJSONObject("main").getInt("pressure"));
+//        weatherData.setTomorrowPressure(tomorrow.getJSONObject("main").getInt("temp_max"));
+//        weatherData.setTomorrowPressure(tomorrow.getJSONObject("main").getInt("temp_min"));最大気温最低気温表示用
 
         return weatherData;
     }

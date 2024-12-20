@@ -66,6 +66,11 @@ main{
 	@extend .mt-5;
 }
 
+.list-unstyled{
+	padding-left: 0;
+	list-style:none;
+}
+
 .commonHeader {
 		@extend .position-fixed;
 		top: 0;
@@ -83,11 +88,12 @@ main{
 	
 .header {
 		@extend .commonHeader;
-		top: 46px;
+		top: 45px;
 		z-index: 1000;  
 		}
 
 .linklike{
+	@extend .mt-1;
 	@extend .link-primary;//ホバーと青色
 	text-decoration: underline;
 	border: none;
@@ -174,12 +180,15 @@ input[type='time'] {
 }
 
 .menuAlert{
-	div{
-	@extend .icon-link;
 	@extend .alert; 
 	@extend .alert-warning;
-	@extend .justify-content-center;
-	}
+	div{
+		div{
+		@extend .icon-link;
+			div{
+				--bs-alert-border-color: none;}
+			}
+		}
 }
 
 @each $type,$color in $menuColors{
@@ -198,7 +207,7 @@ input[type='time'] {
 	}
 	
 	.weatherInfo {
-		list-style: none;
+		@extend .list-unstyled;
 		@extend .m-0;
 		@extend .p-0;
 		li {

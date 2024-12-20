@@ -128,6 +128,20 @@ public class DailyReportService {
 		return dailyReportMapper.selectConfirmPending(dailyReportDate);
 	}
 	
+	//マネージャーアラート用確認待ち存在確認
+	public List<String> selectAlertForConfirm(LocalDate yesterday) {
+		List<String> existsForAlert= dailyReportMapper.selectAlertForConfirm(yesterday);
+		if(existsForAlert == null || existsForAlert.isEmpty()) {
+			return null;
+		}
+		return  existsForAlert;
+	};
+	
+	//未確認検索ボタン押したとき用
+	public List<String> selectConfirmPendingStatus1(){
+		List<String> confirmPendingIsStatus1 = dailyReportMapper.selectComfimPendingStatus1OrderByOlder();
+		return confirmPendingIsStatus1;
+	}
 	//日報確認
 	public void updateConfirmDailyReport(DailyReportForm dailyReportForm) {
 		dailyReportMapper.updateConfirmDailyReport(dailyReportForm);

@@ -58,6 +58,43 @@ WHERE
 	WHERE t1.status = 1 and daily_report_date = #{dailyReportDate}
 </select>
 
+<!--一週間分の未確認日報リスト表示用-->
+<select id ="selectAlertForConfirm">
+	SELECT 
+	DISTINCT
+	t1.daily_report_date 
+	FROM 
+	daily_report t1 
+	INNER JOIN 
+	users t2 
+	ON t1.user_id = t2.user_id 
+	WHERE t1.status = 1 
+	AND daily_report_date 
+	BETWEEN 
+	DATE_SUB(#{yesterday} , INTERVAL 7 DAY)
+	AND #{yesterday}
+	ORDER BY t1.daily_report_date ASC;
+</select>
+
+<!--未確認日報存在日検索機能（最古10件）-->
+<select id = "selectComfimPendingStatus1OrderByOlder">
+	SELECT 
+	DISTINCT
+	t1.daily_report_date 
+	FROM 
+	daily_report t1 
+	INNER JOIN 
+	users t2 
+	ON 
+	t1.user_id = t2.user_id 
+	WHERE 
+	t1.status = 1 
+	ORDER BY 
+	t1.daily_report_date 
+	ASC 
+	LIMIT 10;
+</select>
+
 <!-- 日報追加 index追加候補（daily_report_date）-->
 <insert id="insertDailyReport">
 	INSERT INTO
