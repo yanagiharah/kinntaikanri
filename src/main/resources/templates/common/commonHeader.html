@@ -8,22 +8,46 @@
 	<body>
 		<header>
 			<div class="container" th:fragment="common-header" th:object="${Users}">
-				<form id="mainForm" th:action="@{/header/goMenu}" method="post">
-					<div class ="commonHeader">
-						<div class ="row d-flex justify-content-evenly">
-							<div class="col-3">
-								ユーザー名:<span th:text="${Users.userName}"></span>
-								<input type="hidden" name="userName" th:value="${Users.userName}">
-							</div>
-							<div class="col-3">
-								ユーザーID:<span th:text="${Users.userId}"></span>
-								<input type="hidden" name="userId" th:value="${Users.userId}">
-							</div>
-							<div class="col-3">
-								<input type="submit" id="back" value="戻る" name="back" class="buttonSize "></input>
-							</div>
-						</div>
-					</div>
+				<form th:if="${isMenuPage == null}" th:action="@{/logOff}" method="post">
+				    <div class="commonHeader">
+				        <div class="row d-flex justify-content-evenly">
+				            <div class="col-3">
+				                <button id="theme-change" class="btn btn-primary" type="button">テーマ変更</button>
+				            </div>
+				            <div class="col-3">
+				                ユーザー名:<span th:text="${Users.userName}"></span>
+				                <input type="hidden" name="userName" th:value="${Users.userName}">
+				            </div>
+				            <div class="col-3">
+				                ユーザーID:<span th:text="${Users.userId}"></span>
+				                <input type="hidden" name="userId" th:value="${Users.userId}">
+				            </div>
+				            <div class="col-3">
+				                <input type="submit" id="logOff" name="logOff" value="ログオフ" class="buttonSize">
+				            </div>
+				        </div>
+				    </div>
+				</form>
+
+				<form th:unless="${isMenuPage == null}" th:action="@{/header/goMenu}" method="post">
+				    <div class="commonHeader">
+				        <div class="row d-flex justify-content-evenly">
+				            <div class="col-3">
+				                <button id="theme-change" class="btn btn-primary" type="button">テーマ変更</button>
+				            </div>
+				            <div class="col-3">
+				                ユーザー名:<span th:text="${Users.userName}"></span>
+				                <input type="hidden" name="userName" th:value="${Users.userName}">
+				            </div>
+				            <div class="col-3">
+				                ユーザーID:<span th:text="${Users.userId}"></span>
+				                <input type="hidden" name="userId" th:value="${Users.userId}">
+				            </div>
+				            <div class="col-3">
+				                <input type="submit" id="back" name="back" value="戻る" class="buttonSize">
+				            </div>
+				        </div>
+				    </div>
 				</form>
 			</div>
 		</header>

@@ -48,6 +48,9 @@
 											未確認日報： 
 											<input type="submit" id="searchConfirmPending" value="検索" name="searchConfirmPending" class="buttonSize">
 										</div>
+										<div th:if="${dailyReportAllSubmitted}">
+											<div th:text="${dailyReportAllSubmitted}" class="fs-6"></div>
+										</div>
 								</div>
 								<div class="col-3">
 									<div th:if="${Users.role == 'Manager'}">

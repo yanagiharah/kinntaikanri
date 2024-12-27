@@ -206,6 +206,12 @@ input[type='time'] {
 		@extend .shadow-sm;
 	}
 	
+	@include color-mode(dark,true){
+		.weatherContainer{
+				background-color: #1e3a5f;
+			}
+			}
+	
 	.weatherInfo {
 		@extend .list-unstyled;
 		@extend .m-0;

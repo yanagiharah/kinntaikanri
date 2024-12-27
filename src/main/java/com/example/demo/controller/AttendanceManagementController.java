@@ -50,7 +50,7 @@ public class AttendanceManagementController {
 	@RequestMapping("/index") //9/30if文にelseを追加し初期カレンダー表示のメソッドを移動。マネージャークラスでデータのない表が表示される問題の解消
 	public String start(HttpSession session, MonthlyAttendanceReq monthlyAttendanceReq, Model model) {
 		commonActivityService.usersModelSession(model, session);
-		Users users = (Users) model.getAttribute("Users");
+		Users users=commonActivityService.getByUsers(model);
 		//Serviceへ。AttendanceManagementService見込み。メソッド名HandleUserAttendance
 		//Managerなら
 		if (users.getRole().equalsIgnoreCase("Manager")) {
@@ -62,6 +62,9 @@ public class AttendanceManagementController {
 			String stringYearsMonth = commonActivityService.yearsMonth();
 			attendanceSearch(users.getUserId(), stringYearsMonth, model, session);	
 		}
+		
+		commonActivityService.getForNotMenuPage(model);
+		
 		return "attendance/registration";
 	}
 
@@ -157,8 +160,7 @@ public class AttendanceManagementController {
 	//マネージャー承認申請者の勤怠表表示ボタン
 	@RequestMapping(value = "/management", params = "ApprovalApplicantDisplay", method = RequestMethod.POST)
 	public String attendance(@RequestParam("approvalUserId") Integer userId, @RequestParam("Years") Integer years,
-			@RequestParam("Month") Integer month, Model model,
-			RedirectAttributes redirectAttributes, HttpSession session) {
+		@RequestParam("Month") Integer month, Model model,RedirectAttributes redirectAttributes, HttpSession session) {
 		commonActivityService.usersModelSession(model, session);
 
 		List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month, Optional.<Events>empty());

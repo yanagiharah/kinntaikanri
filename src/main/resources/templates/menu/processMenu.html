@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"  data-bs-theme="dark">
 <head>
 <meta charset="UTF-8">
 <title>処理メニュー</title>
@@ -8,21 +8,22 @@
 
 </head>
 <body>
+	<div th:replace="~{common/commonHeader :: common-header}"></div>
 	<div class="container" th:object="${Users}">
 		<div class="row"> 
-			<form id="mainForm" th:action="@{/logOff}" method="post" class="commonHeader dflex-content_center-item_center" >
-				<div class="col-4">
-					ユーザー名: <span th:text="${Users.userName}"></span>
-					<input type="hidden" name="userName" th:value="${Users.userName}">
-				</div>
-				<div class="col-4">
-					ユーザーID: <span th:text="${Users.userId}"></span>
-					<input type="hidden" name="userId" th:value="${Users.userId}">
-				</div>
-				<div class="col-4">
-					<input type="submit" id="logOff" value="ログオフ" name="logOff" class="buttonSize">
-				</div>
-			</form>
+<!--			<form id="mainForm" th:action="@{/logOff}" method="post" class="commonHeader dflex-content_center-item_center" >-->
+<!--				<div class="col-4">-->
+<!--					ユーザー名: <span th:text="${Users.userName}"></span>-->
+<!--					<input type="hidden" name="userName" th:value="${Users.userName}">-->
+<!--				</div>-->
+<!--				<div class="col-4">-->
+<!--					ユーザーID: <span th:text="${Users.userId}"></span>-->
+<!--					<input type="hidden" name="userId" th:value="${Users.userId}">-->
+<!--				</div>-->
+<!--				<div class="col-4">-->
+<!--					<input type="submit" id="logOff" value="ログオフ" name="logOff" class="buttonSize">-->
+<!--				</div>-->
+<!--			</form>-->
 <!--			一般用アラート-->
 			<div class="menuAlert row">
 				<div class="d-flex flex-column">
@@ -33,9 +34,9 @@
 					<div th:if="${combinedMessageAndReason}" role="alert">
 						<i class="fa-solid fa-bell  me-2"></i>
 						<pre class="mb-0" th:text="${combinedMessageAndReason}"></pre>
-						<form th:action="@{/attendanceCorrect/updateData}" method="post" class="dflex-content_center-item_center">
+						<form th:action="@{/attendanceCorrect/updateData}" method="post" class="dflex-content_center-item_center ms-auto">
 							<input type="hidden" name="userId" th:value="${Users.userId}">
-							<input type="submit" name="confirmReason" value="確認" class="buttonSize">
+							<input type="submit" name="confirmReason" value="確認" class="buttonSize ">
 						</form>
 					</div>
 					<div th:if="${CheckAttendance}"role="alert">
@@ -44,7 +45,18 @@
 					</div>
 					<div th:if="${CheckDailyReport}"  role="alert">
 						<i class="fa-solid fa-circle-exclamation  me-2"></i>
-						<p class="mb-0" th:text="${CheckDailyReport}+ ''+ ${MissingSubmitDReport}"></p>
+						<p class="mb-0" th:text="${CheckDailyReport}"></p>
+					</div>
+					<div th:if="${MissingSubmitDReport}" class="mt-0">
+						<i class="fa-solid fa-forward"></i>
+						<ul class="list-unstyled d-flex m-0">
+				            <li th:each="MissingSubmitDReport : ${MissingSubmitDReport}">
+								<form th:action="@{/menu/daily/detail}" method="get" >
+									<input type="hidden" name="dailyReportDate" th:value="${MissingSubmitDReport}"/>
+				                    <button type="submit" name="date" class="linklike pb-1">[[${MissingSubmitDReport}]]</button>
+				                </form>
+				            </li>
+				        </ul>
 					</div>
 					<div th:if="${monthlyAttendanceStatusIsThree}"  role="alert">
 						<i class="fa-solid fa-bell  me-2"></i>

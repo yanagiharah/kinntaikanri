@@ -54,6 +54,7 @@ public class UserManagementController {
 		commonActivityService.usersModelSession(model,session);
 		managementForm.setDepartment(departmentService.departmentSearchListUp());
 		model.addAttribute("managementForm", managementForm);
+		commonActivityService.getForNotMenuPage(model);
 		return "User/manegement";
 	}
 	/**
