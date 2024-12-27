@@ -100,9 +100,7 @@ public class AttendanceManagementController {
 	@RequestMapping(value = "/management", params = "insert", method = RequestMethod.POST)
 	public String insert(@ModelAttribute AttendanceFormList attendanceFormList, BindingResult result, Model model,
 			HttpSession session) {
-		commonActivityService.usersModelSession(model, session);
-		Users users = (Users) model.getAttribute("Users");
-
+		Users users = commonActivityService.getCommonInfoAddUsers(model,session,null);
 		//承認申請ボタンのONOffきりかえと書式のエラーチェック
 		attendanceManagementService.requestActivityCheck(attendanceFormList);
 		attendanceManagementService.errorCheck(attendanceFormList, result);
@@ -128,8 +126,7 @@ public class AttendanceManagementController {
 	@RequestMapping(value = "/management", params = "approvalApplicationRegistration", method = RequestMethod.POST)
 	public String monthlyAttendanceReqCreate(MonthlyAttendanceReq monthlyAttendanceReq,
 			AttendanceFormList attendanceFormList, Model model, HttpSession session) {
-		commonActivityService.usersModelSession(model, session);
-		Users users = (Users) model.getAttribute("Users");
+		Users users = commonActivityService.getCommonInfoAddUsers(model,session,null);
 
 		//サービス層へ。monthlyAttendanceService見込み
 		//勤怠リストのサイズを取得し、そのサイズだけ回す
@@ -161,7 +158,7 @@ public class AttendanceManagementController {
 	@RequestMapping(value = "/management", params = "ApprovalApplicantDisplay", method = RequestMethod.POST)
 	public String attendance(@RequestParam("approvalUserId") Integer userId, @RequestParam("Years") Integer years,
 		@RequestParam("Month") Integer month, Model model,RedirectAttributes redirectAttributes, HttpSession session) {
-		commonActivityService.usersModelSession(model, session);
+		commonActivityService.getCommonInfo(model,session,null);
 
 		List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month, Optional.<Events>empty());
 

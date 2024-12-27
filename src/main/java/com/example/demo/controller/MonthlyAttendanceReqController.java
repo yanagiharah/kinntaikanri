@@ -53,8 +53,7 @@ public class MonthlyAttendanceReqController {
 	@RequestMapping("/correction")
 	public String start(HttpSession session, MonthlyAttendanceReq monthlyAttendanceReq, Model model) {
 		
-		commonActivityService.usersModelSession(model, session);
-		Users users = (Users) model.getAttribute("Users");
+		Users users = commonActivityService.getCommonInfoAddUsers(model,session,null);
 		
 		String stringYearsMonth;
 		stringYearsMonth = (String) model.asMap().get("stringYearsMonth");
@@ -81,8 +80,7 @@ public class MonthlyAttendanceReqController {
 	@RequestMapping(value = "/management", params = "search", method = RequestMethod.POST)
 	public String attendanceSearch(Integer userId, String stringYearsMonth, Model model,
 			HttpSession session) {
-		commonActivityService.usersModelSession(model, session);
-		Users users = (Users) model.getAttribute("Users");
+		Users users = commonActivityService.getCommonInfoAddUsers(model,session,null);
 		//yearとmonthの作成
 		Integer years = Integer.parseInt(stringYearsMonth.substring(0, 4));
 		Integer month = Integer.parseInt(stringYearsMonth.substring(5, 7));
@@ -117,7 +115,7 @@ public class MonthlyAttendanceReqController {
 	public String monthlyAttendanceReqCorrect(Model model, HttpSession session,
 			@RequestParam("willCorrectReason") String changeReason, @RequestParam("userId") Integer userId,
 			@RequestParam("stringYearsMonth") String stringYearsMonth) {
-		commonActivityService.usersModelSession(model, session);
+		commonActivityService.getCommonInfo(model,session,null);
 		//	has_change_reqを１に変更する処理のためにLocalDateに変更して処理
 		LocalDate targetYearMonth = monthlyAttendanceReqService.convertStringToLocalDate(stringYearsMonth);
 		if (targetYearMonth != null) {
@@ -146,7 +144,7 @@ public class MonthlyAttendanceReqController {
 	public String attendance(@RequestParam("approvalUserId") Integer userId, @RequestParam("Years") Integer years,
 			@RequestParam("Month") Integer month, @RequestParam("approvalUserName") String userName, Model model,
 			HttpSession session) {
-		commonActivityService.usersModelSession(model, session);
+		commonActivityService.getCommonInfo(model,session,null);
 		//monthをMMの形に再成型
 		String monthString = String.format("%02d", month);
 		String stringYearsMonth = years + "-" + monthString;
