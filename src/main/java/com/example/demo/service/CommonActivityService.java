@@ -46,7 +46,23 @@ public class CommonActivityService {
 		this.weatherService = weatherService;
 		this.monthlyAttendanceReqService = monthlyAttendanceReqService;
 	}
-
+	public void getCommonInfo(Model model,HttpSession session,Boolean infoAboutMenu) {
+		usersModelSession(model,session);
+		if(infoAboutMenu == null) {
+			infoAboutMenu = false;
+		}
+		if(infoAboutMenu == false) {
+		getForNotMenuPage(model);
+		}else {
+		getForMenuPage(model);
+		}
+	}
+	
+	public Users getCommonInfoAddUsers(Model model,HttpSession session,Boolean infoAboutMenu) {
+		getCommonInfo(model,session,infoAboutMenu);
+		Users users = getByUsers(model);
+		return users;
+	}
 	//Users情報をセッションから取得し、モデルに追加する
 	public void usersModelSession(Model model, HttpSession session) {
 		Users users = (Users) session.getAttribute("Users");
@@ -70,8 +86,8 @@ public class CommonActivityService {
 
 	//メニュー画面に戻る挙動(アカウント情報をmodelに詰めてメニュー画面へ遷移)
 	public void backMenu(Model model, HttpSession session) {
-		usersModelSession(model, session);
-		Users users = getByUsers(model);
+		Boolean infoAboutMenu = true;
+		Users users = getCommonInfoAddUsers(model,session,infoAboutMenu);
 		LocalDate today = LocalDate.now();
 		LocalDate yesterday = today.minusDays(1);
 //		model.addAttribute("Users", users);
@@ -88,7 +104,7 @@ public class CommonActivityService {
 				model.addAttribute("CheckAttendance", messageOutput.message("checkAttendance"));
 			}
 			
-			//勤怠訂正結果表示アラート
+			//)勤怠訂正結果表示アラート
 			Integer userId = users.getUserId();
 			monthlyAttendanceReqService.checkMonthlyAttendanceReqStatus(userId,model);
 
@@ -125,7 +141,6 @@ public class CommonActivityService {
 		//        model.addAttribute("todayWeather", weatherResponse.getDaily().get(0));
 		//        model.addAttribute("tomorrowWeather", weatherResponse.getDaily().get(1));
 		
-		getForMenuPage(model);
 		//天気情報をmodelに詰める
 		WeatherData weatherData = weatherService.getWeather("Tokyo");
 		model.addAttribute("weatherData", weatherData);

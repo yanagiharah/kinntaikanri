@@ -51,7 +51,7 @@ public class UserManagementController {
 	 */
 	@RequestMapping("/")
 	public String user(HttpSession session, Model model) {
-		commonActivityService.usersModelSession(model,session);
+		commonActivityService.getCommonInfo(model,session,null);
 		managementForm.setDepartment(departmentService.departmentSearchListUp());
 		model.addAttribute("managementForm", managementForm);
 		commonActivityService.getForNotMenuPage(model);

@@ -50,9 +50,7 @@ public class DailyReportController {
 	//日報の初期表示画面（今日時点のものを表示）
 	@RequestMapping("/detail")
 	public String dailyReportDetail(@RequestParam(value = "date", required = false) String date, HttpSession session, Model model) {
-		commonActivityService.usersModelSession(model, session);
-		Users users = (Users) model.getAttribute("Users");
-		commonActivityService.getForNotMenuPage(model);
+		Users users = commonActivityService.getCommonInfoAddUsers(model,session,null);
 
 		LocalDate calendarDate;
 		
@@ -90,7 +88,7 @@ public class DailyReportController {
 	@RequestMapping(value = "/detailUpdate", params = "DailyReportSubmitterDisplay", method = RequestMethod.POST)
 	public String dailyRepManagement(@RequestParam("dailyReportDate") LocalDate dailyReportDate,
 			@RequestParam("confirmationUserId") Integer confirmaitionUserId, @RequestParam("confirmationUserName") String confirmaitionUserName,Model model,HttpSession session) {
-		commonActivityService.usersModelSession(model, session);
+		commonActivityService.getCommonInfo(model,session,null);
 		
 		//日報取得 
 		DailyReportForm dailyReportForm = dailyReportService.getDailyReport(confirmaitionUserId, dailyReportDate);
@@ -114,9 +112,7 @@ public class DailyReportController {
 	@RequestMapping(value = "/detailUpdate", params = "submission", method = RequestMethod.POST)
 	public String updateDailyReportDetail(@ModelAttribute DailyReportForm dailyReportForm,
 			BindingResult result, HttpSession session, Model model, Locale locale) {
-
-		Users users = (Users) session.getAttribute("Users");
-		model.addAttribute("Users", users);
+		commonActivityService.getCommonInfo(model,session,null);
 
 		if (result.hasErrors()) {
 			return "DailyReport/dailyReport";
@@ -135,7 +131,7 @@ public class DailyReportController {
 	//検索ボタン押下処理
 	@RequestMapping(value="/detailUpdate", params ="searchConfirmPending",method = RequestMethod.POST)
 	public String searchConfirmPendingStatusOne(Model model,HttpSession session,String date){
-		Users users = (Users) session.getAttribute("Users");
+		Users users = commonActivityService.getCommonInfoAddUsers(model,session,null);
 		model.addAttribute("Users", users);
 		
 		LocalDate calendarDate;
@@ -163,7 +159,7 @@ public class DailyReportController {
 	@RequestMapping(value = "/detailUpdate",params ="confirm",method=RequestMethod.POST)
 	public String updateStatusConfirm(@Valid @ModelAttribute("dailyReportForm") DailyReportForm dailyReportForm,
 			BindingResult result, HttpSession session, Model model, Locale locale){
-		commonActivityService.usersModelSession(model, session);
+		commonActivityService.getCommonInfo(model,session,null);
 		
 		if (result.hasErrors()) {
 			return "DailyReport/dailyReport";
