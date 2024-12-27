@@ -8450,6 +8450,10 @@ input[type=time]::-webkit-calendar-picker-indicator {
   background-color: #f0fff0;
 }
 
+[data-bs-theme=dark] .weatherContainer {
+  background-color: #1e3a5f;
+}
+
 .weatherInfo li {
   margin-left: 10px;
   margin-bottom: 10px;

@@ -72,6 +72,7 @@ public class MonthlyAttendanceReqController {
 			attendanceSearch(users.getUserId(), stringYearsMonth, model, session);
 		}
 		model.addAttribute("stringYearsMonth",stringYearsMonth);
+		commonActivityService.getForNotMenuPage(model);
 		
 		return "monthlyAttendanceReq/monthlyAttendance";
 	}

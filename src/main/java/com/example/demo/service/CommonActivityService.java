@@ -48,22 +48,36 @@ public class CommonActivityService {
 	}
 
 	//Users情報をセッションから取得し、モデルに追加する
-	public Model usersModelSession(Model model, HttpSession session) {
+	public void usersModelSession(Model model, HttpSession session) {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
-		return model;
+	}
+	
+	public Users getByUsers(Model model) {
+		Users users = (Users) model.getAttribute("Users");
+		return users;
+	}
+	
+	public void getForMenuPage(Model model) {
+		String isMenuPage = null;
+        model.addAttribute("isMenuPage", isMenuPage);
+    }
+	
+	public void getForNotMenuPage(Model model) {
+		String isMenuPage = "notMenuPage";
+		model.addAttribute("isMenuPage", isMenuPage);
 	}
 
 	//メニュー画面に戻る挙動(アカウント情報をmodelに詰めてメニュー画面へ遷移)
-	public Model backMenu(Model model, HttpSession session) {
+	public void backMenu(Model model, HttpSession session) {
 		usersModelSession(model, session);
-		Users users = (Users) model.getAttribute("Users");
+		Users users = getByUsers(model);
 		LocalDate today = LocalDate.now();
 		LocalDate yesterday = today.minusDays(1);
 //		model.addAttribute("Users", users);
 		if ("Regular".equals(users.getRole()) || "UnitManager".equals(users.getRole())) {
 			//メソッドの位置をそれぞれ変えたほうがいい。あるいはヘルパークラスを作成してそこに入れる
-			String checkDailyReport = dailyReportService.checkYesterdayDailyReport(users.getUserId(), yesterday);
+			List<String> checkDailyReport = dailyReportService.checkYesterdayDailyReport(users.getUserId(), yesterday);
 			Integer checkAttendance = attendanceManagementService.checkYesterdayAttendance(users.getUserId(),
 					yesterday);
 			if (checkDailyReport != null) {
@@ -87,11 +101,6 @@ public class CommonActivityService {
 			if (monthlyAttendanceReq != null && monthlyAttendanceReq.getStatus() == 3) {
 				model.addAttribute("monthlyAttendanceStatusIsThree", messageOutput.message("monthlyAttendanceStatusIsThree"));
 			}
-			
-			//勤怠修正アラート
-//			if(hasChangeReq! = null && monthlyAttendanceReq.getStatus() == 0){
-//				MonthlyAttendanceReq monthlyAttendanceReq = monthlyAttendanceReqMapper
-//			}
 		}
 
 		if ("Manager".equals(users.getRole())) {
@@ -115,12 +124,11 @@ public class CommonActivityService {
 		//        model.addAttribute("currentWeather", weatherResponse.getCurrent());
 		//        model.addAttribute("todayWeather", weatherResponse.getDaily().get(0));
 		//        model.addAttribute("tomorrowWeather", weatherResponse.getDaily().get(1));
-
+		
+		getForMenuPage(model);
 		//天気情報をmodelに詰める
 		WeatherData weatherData = weatherService.getWeather("Tokyo");
 		model.addAttribute("weatherData", weatherData);
-
-		return model;
 	}
 
 	public Date oneDayLastMonth() {

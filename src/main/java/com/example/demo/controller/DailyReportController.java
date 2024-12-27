@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.demo.inter.MessageOutput;
 import com.example.demo.model.DailyReportDetailForm;
 import com.example.demo.model.DailyReportForm;
 import com.example.demo.model.Users;
@@ -33,14 +34,17 @@ public class DailyReportController {
 	private final DailyReportService dailyReportService;
 
 	private final MessageSource messageSource;
+	
+	private final MessageOutput messageOutput;
 
 	private final CommonActivityService commonActivityService;
 
-	public DailyReportController(DailyReportService dailyReportService, MessageSource messageSource,
+	public DailyReportController(DailyReportService dailyReportService, MessageSource messageSource,MessageOutput messageOutput,
 			CommonActivityService commonActivityService) {
 		this.dailyReportService = dailyReportService;
 		this.messageSource = messageSource;
 		this.commonActivityService = commonActivityService;
+		this.messageOutput = messageOutput;
 	}
 
 	//日報の初期表示画面（今日時点のものを表示）
@@ -48,6 +52,7 @@ public class DailyReportController {
 	public String dailyReportDetail(@RequestParam(value = "date", required = false) String date, HttpSession session, Model model) {
 		commonActivityService.usersModelSession(model, session);
 		Users users = (Users) model.getAttribute("Users");
+		commonActivityService.getForNotMenuPage(model);
 
 		LocalDate calendarDate;
 		
@@ -142,12 +147,15 @@ public class DailyReportController {
 		}
 		
 		List<String> confirmPendingStatus1 = dailyReportService.selectConfirmPendingStatus1();
-		if(confirmPendingStatus1.isEmpty()) {
-			return null;
+		if(!confirmPendingStatus1.isEmpty()) {
+			model.addAttribute("confirmPendingStatus1",confirmPendingStatus1);
+		} else {
+			model.addAttribute("dailyReportAllSubmitted",messageOutput.message("dailyReportAllSubmitted"));
 		}
-		model.addAttribute("confirmPendingStatus1",confirmPendingStatus1);
-		model.addAttribute("calendarDate",calendarDate);
+		//もしデータがない場合はそのメッセージも送らないといけないかも
 		
+	    
+		model.addAttribute("calendarDate",calendarDate);
 		return "DailyReport/dailyReport";
 	}
 
@@ -175,7 +183,7 @@ public class DailyReportController {
 	}
 
 
-	//カレンダーコントロール押下後
+	//カレンダーコントロール押下後、検索ボタンで表示されるリンク押下後
 	@RequestMapping(value = "/detailUpdate" ,method = RequestMethod.POST)
 	public ModelAndView handleDateSubmission(@ModelAttribute("dailyReportDate") String dateS, @RequestParam(value="selectedDate",required = false) String selectedDate, HttpSession session,
 			Model model) {

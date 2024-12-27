@@ -49,6 +49,7 @@ public class DepartmentController {
 		departmentForm.setDeactiveDepartment(departmentService.deleteDepartmentSearchListUp());
 		
 		model.addAttribute("departmentForm", departmentForm);
+		commonActivityService.getForNotMenuPage(model);
 		return "department/department";
 	}
 	
