@@ -46,6 +46,7 @@ public class CommonActivityService {
 		this.weatherService = weatherService;
 		this.monthlyAttendanceReqService = monthlyAttendanceReqService;
 	}
+	//Usersをセッションから取得、Usersとmenupage情報をモデルに追加、
 	public void getCommonInfo(Model model,HttpSession session,Boolean infoAboutMenu) {
 		usersModelSession(model,session);
 		if(infoAboutMenu == null) {
@@ -57,7 +58,7 @@ public class CommonActivityService {
 		getForMenuPage(model);
 		}
 	}
-	
+	//Usersをセッションから取得、Usersとmenupage情報をモデルに追加、Usersを返す。
 	public Users getCommonInfoAddUsers(Model model,HttpSession session,Boolean infoAboutMenu) {
 		getCommonInfo(model,session,infoAboutMenu);
 		Users users = getByUsers(model);
@@ -68,17 +69,17 @@ public class CommonActivityService {
 		Users users = (Users) session.getAttribute("Users");
 		model.addAttribute("Users", users);
 	}
-	
+	//usersをモデルから確保
 	public Users getByUsers(Model model) {
 		Users users = (Users) model.getAttribute("Users");
 		return users;
 	}
-	
+	//メニューページである情報を持たせる。
 	public void getForMenuPage(Model model) {
 		String isMenuPage = null;
         model.addAttribute("isMenuPage", isMenuPage);
     }
-	
+	//メニューページではない情報を持たせる。
 	public void getForNotMenuPage(Model model) {
 		String isMenuPage = "notMenuPage";
 		model.addAttribute("isMenuPage", isMenuPage);
@@ -90,24 +91,36 @@ public class CommonActivityService {
 		Users users = getCommonInfoAddUsers(model,session,infoAboutMenu);
 		LocalDate today = LocalDate.now();
 		LocalDate yesterday = today.minusDays(1);
-//		model.addAttribute("Users", users);
+		Boolean menuInfoExists = false;
 		if ("Regular".equals(users.getRole()) || "UnitManager".equals(users.getRole())) {
 			//メソッドの位置をそれぞれ変えたほうがいい。あるいはヘルパークラスを作成してそこに入れる
+			//機能から一週間前までの日報ステータスを取得
 			List<String> checkDailyReport = dailyReportService.checkYesterdayDailyReport(users.getUserId(), yesterday);
-			Integer checkAttendance = attendanceManagementService.checkYesterdayAttendance(users.getUserId(),
-					yesterday);
-			if (checkDailyReport != null) {
+			//昨日の勤怠ステータスを取得
+			Integer checkAttendance = attendanceManagementService.checkYesterdayAttendance(users.getUserId(),yesterday);
+			if (checkDailyReport != null && !checkDailyReport.isEmpty()) {
+				//出勤日でありながら日報を提出していない場合IFに入る
 				model.addAttribute("CheckDailyReport", messageOutput.message("checkDailyReport"));
 				model.addAttribute("MissingSubmitDReport",checkDailyReport);
+				menuInfoExists=true;
 			}
 			if (checkAttendance == 0) {
+				//単純に一日前の日報未登録の時ifに入る
 				model.addAttribute("CheckAttendance", messageOutput.message("checkAttendance"));
+				if (menuInfoExists == false) {
+					menuInfoExists = true;
+				}
 			}
 			
-			//)勤怠訂正結果表示アラート
+			//勤怠訂正結果表示アラート
 			Integer userId = users.getUserId();
+			//勤怠訂正の結果が来ていた時にhasChangeReq!=null
 			monthlyAttendanceReqService.checkMonthlyAttendanceReqStatus(userId,model);
-
+			if(model.containsAttribute("monthlyAttendanceReqApproved") || model.containsAttribute("combinedMessageAndReason")) {
+				if (menuInfoExists == false) {
+					menuInfoExists = true;
+				}
+			}
 			//勤怠管理アラート
 			//先月の一日をDate型で取得
 			Date firstDayOfLastMonthDate = oneDayLastMonth();
@@ -116,6 +129,9 @@ public class CommonActivityService {
 			//先月のmonthlyAttendanceReqが存在し、かつ月次勤怠承認状況をあらわすstatusが３（却下）のとき、処理メニュー画面にメッセージを表示させる。
 			if (monthlyAttendanceReq != null && monthlyAttendanceReq.getStatus() == 3) {
 				model.addAttribute("monthlyAttendanceStatusIsThree", messageOutput.message("monthlyAttendanceStatusIsThree"));
+				if (menuInfoExists == false) {
+					menuInfoExists = true;
+				}
 			}
 		}
 
@@ -128,9 +144,17 @@ public class CommonActivityService {
 			if(dailyRepExists != null) {
 				model.addAttribute("dailyReportArrival", messageOutput.message("dailyReportArrival"));
 				model.addAttribute("dailyRepExists",dailyRepExists);
+				if (menuInfoExists == false) {
+					menuInfoExists = true;
+				}
 			}
 			
 			monthlyAttendanceReqService.selectMonthlyAttendanceReqAnyHasChangeReq(model);
+			if(model.containsAttribute("monthlyAttendanceReqArrival")) {
+				if (menuInfoExists == false) {
+					menuInfoExists = true;
+				}
+			}
 		}
 		//天気予報API課金で使用可能
 		//天気情報をmodelに詰める
@@ -140,7 +164,9 @@ public class CommonActivityService {
 		//        model.addAttribute("currentWeather", weatherResponse.getCurrent());
 		//        model.addAttribute("todayWeather", weatherResponse.getDaily().get(0));
 		//        model.addAttribute("tomorrowWeather", weatherResponse.getDaily().get(1));
-		
+		if(menuInfoExists == true) {
+			model.addAttribute("menuInfoExists",menuInfoExists);
+		}
 		//天気情報をmodelに詰める
 		WeatherData weatherData = weatherService.getWeather("Tokyo");
 		model.addAttribute("weatherData", weatherData);

@@ -24,12 +24,12 @@ public class DailyReportService {
 	@Autowired
 	private DailyReportDetailMapper dailyReportDetailMapper;
 
-	//昨日の日報のステータス取得
+	//昨日から一週間前までの日報のステータス取得
 	public List<String> checkYesterdayDailyReport(Integer userId, LocalDate yesterday) {
 		LocalDate oneWeekAgoDate = yesterday.minusDays(7);
 		List<String> listCheckDailyReport = dailyReportMapper.selectYesterdayCheck(userId, yesterday,oneWeekAgoDate);
 //		String checkDailyReport = listCheckDailyReport.stream().collect(Collectors.joining(", "));
-//		System.out.println(checkDailyReport);
+//		System.out.println(listCheckDailyReport);
 		return listCheckDailyReport;
 	}
 	

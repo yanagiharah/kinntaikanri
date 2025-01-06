@@ -92,6 +92,8 @@ public class AttendanceManagementController {
 		
 		List<String> holidays = googleCalendarService.listEvents(events);
 		model.addAttribute("holidays",holidays);
+		
+		commonActivityService.getForNotMenuPage(model);
 
 		return "attendance/registration";
 	}
