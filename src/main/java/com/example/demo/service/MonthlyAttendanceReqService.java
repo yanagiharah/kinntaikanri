@@ -176,16 +176,18 @@ public class MonthlyAttendanceReqService {
 				String combinedMessageAndReason = monthlyAttendanceReqRejected + "\n"+ rejectionReason;
 				model.addAttribute("combinedMessageAndReason",combinedMessageAndReason);
 			}
+			return model;
 		}
-		return model;
+		return null;
 	}
 	
 	public Model selectMonthlyAttendanceReqAnyHasChangeReq(Model model) {
 		Integer existHasChangeReq = monthlyAttendanceReqMapper.selectMonthlyAttendanceReqAnyHasChangeReq();
 		if(existHasChangeReq == 1) {
 			model.addAttribute("monthlyAttendanceReqArrival",messageOutput.message("monthlyAttendanceReqArrival"));
+			return model;
 		}
-		return model;
+		return null;
 	}
 
 	//月次勤怠訂正依頼の更新文

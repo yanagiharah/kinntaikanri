@@ -2,10 +2,11 @@
 
 //bootstrapのデフォルト変数を操作したい場合ここで行う
 $header-color:#999999;
+$header-dark-color: #666666;
 $weather-color:#f0fff0;
 $attendance-color:rgb(255, 128, 64);
 $dailyRep-color: rgb(128, 128, 64);
-$department-color: rgb(128, 255, 255);
+$department-color: rgb(128, 179, 255);
 $management-color: rgb(131, 118, 137);
 
 @import "../../../../../node_modules/bootstrap/scss/containers"; 
@@ -88,7 +89,7 @@ main{
 	
 .header {
 		@extend .commonHeader;
-		top: 45px;
+		top: 46px;
 		z-index: 1000;  
 		}
 
@@ -180,6 +181,7 @@ input[type='time'] {
 }
 
 .menuAlert{
+	top:10px;
 	@extend .alert; 
 	@extend .alert-warning;
 	div{
@@ -206,11 +208,7 @@ input[type='time'] {
 		@extend .shadow-sm;
 	}
 	
-	@include color-mode(dark,true){
-		.weatherContainer{
-				background-color: #1e3a5f;
-			}
-			}
+
 	
 	.weatherInfo {
 		@extend .list-unstyled;
@@ -411,4 +409,39 @@ hr{
     @extend .border-dark;
 }
 
+//******************dark-mode*****************************
 
+@include color-mode(dark,true){
+	.weatherContainer{
+			background-color: #1e3a5f;
+		}
+	.buttonRound ,.buttonSize,.menuButtonSize{
+		border : none;
+	}
+	.buttonRound ,.buttonSize{
+			@include bg-color($yellow-600);
+	}
+	.commonHeader{
+		@include bg-color($header-dark-color);
+	}
+	.default-table{
+		td,th{
+			border:1px solid #aaa;
+		}
+	}
+	.attendanceList{
+		td,th{
+		border:1px solid #aaa;
+		}
+	}
+	.collapsedTable{
+		tr{
+		th::before{
+			@include bg-color($body-tertiary-color-dark);
+		}
+		}
+	}
+	.highlight{
+		@include txt-color($light-text-emphasis-dark);
+	}
+}

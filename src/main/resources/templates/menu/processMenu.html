@@ -10,9 +10,9 @@
 <body>
 	<div th:replace="~{common/commonHeader :: common-header}"></div>
 	<div class="container" th:object="${Users}">
-		<div class="row"> 
+<!--		<div class="row"> -->
 <!--			一般用アラート-->
-			<div class="menuAlert row">
+			<div class="menuAlert" th:if=${menuInfoExists}>
 				<div class="d-flex flex-column">
 					<div th:if="${monthlyAttendanceReqApproved}" >
 						<i class="fa-solid fa-bell"></i>
@@ -77,7 +77,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
+<!--		</div>-->
 <!--			天気予報API課金で使用可能-->
 <!--			<h2>現在の天気</h2>-->
 <!--			    <p>温度: <span th:text="${currentWeather.temp}"></span>°C</p>-->

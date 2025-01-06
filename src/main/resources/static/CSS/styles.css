@@ -8350,7 +8350,7 @@ progress {
 }
 
 .header {
-  top: 45px;
+  top: 46px;
   z-index: 1000;
 }
 
@@ -8426,6 +8426,9 @@ input[type=time]::-webkit-calendar-picker-indicator {
   background-color: #fff;
 }
 
+.menuAlert {
+  top: 10px;
+}
 .menuAlert div div div {
   --bs-alert-border-color: none;
 }
@@ -8443,15 +8446,11 @@ input[type=time]::-webkit-calendar-picker-indicator {
 }
 
 .department .menuButtonSize {
-  background-color: rgb(128, 255, 255);
+  background-color: rgb(128, 179, 255);
 }
 
 .weatherContainer {
   background-color: #f0fff0;
-}
-
-[data-bs-theme=dark] .weatherContainer {
-  background-color: #1e3a5f;
 }
 
 .weatherInfo li {
@@ -8615,6 +8614,31 @@ hr {
 .managementBox {
   padding: 40px 30px !important;
   font-size: x-large !important;
+}
+
+[data-bs-theme=dark] .weatherContainer {
+  background-color: #1e3a5f;
+}
+[data-bs-theme=dark] .buttonRound, [data-bs-theme=dark] .buttonSize, [data-bs-theme=dark] .menuButtonSize {
+  border: none;
+}
+[data-bs-theme=dark] .buttonRound, [data-bs-theme=dark] .buttonSize {
+  background-color: rgb(204, 154.4, 5.6);
+}
+[data-bs-theme=dark] .commonHeader, [data-bs-theme=dark] .header {
+  background-color: #666666;
+}
+[data-bs-theme=dark] .default-table td, [data-bs-theme=dark] .collapsedTable td, [data-bs-theme=dark] .default-table th, [data-bs-theme=dark] .collapsedTable th {
+  border: 1px solid #aaa;
+}
+[data-bs-theme=dark] .attendanceList td, [data-bs-theme=dark] .attendanceList th {
+  border: 1px solid #aaa;
+}
+[data-bs-theme=dark] .collapsedTable tr th::before {
+  background-color: rgba(222, 226, 230, 0.5);
+}
+[data-bs-theme=dark] .highlight {
+  color: #f8f9fa !important;
 }
 
 /*# sourceMappingURL=styles.css.map */
