@@ -42,6 +42,14 @@ document.querySelectorAll('input[type="submit"]').forEach(function(button) {
 
 //読み込み時起動
 document.addEventListener('DOMContentLoaded',() =>{	
+	
+	//各ページにfontAwesomeのスタイルシート読み込みを張るjs
+	const link = document.createElement('link');
+	  link.rel = 'stylesheet';
+	  link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css';
+	  // ヘッダーにスタイルシートを追加
+	  document.head.appendChild(link);
+	  
 	//darkmode機能
 	const changeButton = document.getElementById('theme-change');
 	const htmlElement = document.documentElement;//＜html＞要素を指すためページ全体のレイアウトを操作
@@ -53,11 +61,13 @@ document.addEventListener('DOMContentLoaded',() =>{
 		localStorage.setItem('theme',savedTheme);//"light"をローカルストレージに格納…jsのローカルストレージはウェブブラウザにデータを保存します。ブラウザ再起動後も保持
 	}
 	htmlElement.setAttribute('data-bs-theme',savedTheme);//savedThemeをdata-bs-themeに適用
+	changeButton.innerHTML  = savedTheme === 'light' ? '<i class="fas fa-moon"></i>' : '<i class="fa-solid fa-sun"></i>';
 		
 	//changeButton押下後起動
 	changeButton.addEventListener('click',() => {
 		const currentTheme = htmlElement.getAttribute('data-bs-theme');
 		const newTheme = currentTheme === 'light' ? 'dark' :'light';//currentThemeがlightならdark（?以下True時）darkならlight(:以下False時)
+		changeButton.innerHTML  = newTheme === 'light' ? '<i class="fas fa-moon"></i>' : '<i class="fa-solid fa-sun"></i>';
 	
 		htmlElement.setAttribute('data-bs-theme',newTheme);//mode切り替え
 		localStorage.setItem('theme',newTheme);//modeを保存

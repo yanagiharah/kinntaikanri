@@ -4,8 +4,13 @@ const content = Array.from(document.querySelectorAll('input[name^="dailyReportDe
 
 $(document).ready(function() {
     $('#today').change(function() {
+		if($('#today').val()!==''){
         // フォームを自動的に送信
         $('#dateSubmit').click();
+		}else{
+		setTodayDate();
+		$('#dateSubmit').click();
+		}
     });
 });
  

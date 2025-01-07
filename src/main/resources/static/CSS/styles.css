@@ -8585,7 +8585,7 @@ input[type=time]::-webkit-calendar-picker-indicator {
   padding: 10px 20px;
   cursor: pointer;
   background-color: #ffc107;
-  font-size: 20px;
+  font-size: 16px;
 }
 
 hr {
