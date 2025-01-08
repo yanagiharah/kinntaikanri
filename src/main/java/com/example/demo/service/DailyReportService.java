@@ -5,10 +5,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 
 import com.example.demo.mapper.DailyReportDetailMapper;
 import com.example.demo.mapper.DailyReportMapper;
@@ -18,19 +18,27 @@ import com.example.demo.model.DailyReportForm;
 @Service
 public class DailyReportService {
 
-	@Autowired
 	private DailyReportMapper dailyReportMapper;
 
-	@Autowired
 	private DailyReportDetailMapper dailyReportDetailMapper;
+	
+	private ModelService modelService;
+	
+	DailyReportService(DailyReportMapper dailyReportMapper,DailyReportDetailMapper dailyReportDetailMapper,ModelService modelService){
+		this.dailyReportMapper = dailyReportMapper;
+		this.dailyReportDetailMapper = dailyReportDetailMapper;
+		this.modelService = modelService;
+	}
 
 	//昨日から一週間前までの日報のステータス取得
-	public List<String> checkYesterdayDailyReport(Integer userId, LocalDate yesterday) {
+	public Model checkYesterdayDailyReport(Integer userId, LocalDate yesterday,Model model) {
 		LocalDate oneWeekAgoDate = yesterday.minusDays(7);
 		List<String> listCheckDailyReport = dailyReportMapper.selectYesterdayCheck(userId, yesterday,oneWeekAgoDate);
-//		String checkDailyReport = listCheckDailyReport.stream().collect(Collectors.joining(", "));
-//		System.out.println(listCheckDailyReport);
-		return listCheckDailyReport;
+		if (listCheckDailyReport != null && !listCheckDailyReport.isEmpty()) {
+			//出勤日でありながら日報を提出していない場合IFに入る
+			return modelService.CheckDailyReport(model,listCheckDailyReport);
+		}
+		return null;
 	}
 	
 	//日報取得
@@ -128,12 +136,12 @@ public class DailyReportService {
 	}
 	
 	//マネージャーアラート用確認待ち存在確認
-	public List<String> selectAlertForConfirm(LocalDate yesterday) {
+	public Model selectAlertForConfirm(LocalDate yesterday,Model model) {
 		List<String> existsForAlert= dailyReportMapper.selectAlertForConfirm(yesterday);
 		if(existsForAlert == null || existsForAlert.isEmpty()) {
 			return null;
 		}
-		return  existsForAlert;
+		return  modelService.dailyReportArrival(model, existsForAlert);
 	};
 	
 	//未確認検索ボタン押したとき用

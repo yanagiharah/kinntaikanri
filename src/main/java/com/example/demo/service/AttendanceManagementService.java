@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
 import com.example.demo.Factory.AttendanceFactory;
@@ -25,17 +26,23 @@ public class AttendanceManagementService {
   private final AttendanceSearchMapper attendanceSearchMapper;
   private final AttendanceValidation attendanceValidation; 
   private final AttendanceFactory attendanceFactory;
+  private final ModelService modelService;
   
-  public AttendanceManagementService(AttendanceSearchMapper attendanceSearchMapper,AttendanceValidation attendanceValidation,AttendanceFactory attendanceFactory){
+  public AttendanceManagementService(AttendanceSearchMapper attendanceSearchMapper,AttendanceValidation attendanceValidation,
+		  AttendanceFactory attendanceFactory,ModelService modelService){
 	  this.attendanceSearchMapper = attendanceSearchMapper;
 	  this.attendanceValidation = attendanceValidation;
 	  this.attendanceFactory = attendanceFactory;
+	  this.modelService = modelService;
   }
   
   	//昨日の勤怠登録状況を取得
-	public Integer checkYesterdayAttendance(Integer userId, LocalDate yesterday) {
+	public Model checkYesterdayAttendance(Integer userId, LocalDate yesterday,Model model) {
 		Integer checkAttendance = attendanceSearchMapper.selectYesterdayCheck(userId, yesterday);
-		return checkAttendance;
+		if(checkAttendance == 0) {
+			return modelService.CheckAttendance(model);
+		}
+		return null;
 	}
 	
   	//勤怠表の取得 

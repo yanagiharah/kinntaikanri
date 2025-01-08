@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -47,10 +49,8 @@ public class ModelService {
 		return redirectAttributes;
 	}
 	//先月の月次勤怠があればモデルに詰めてマネージャーの処理メニュー画面に表示
-	public Model monthlyAttendanceIsSentInsertModel(Integer attendanceReq, Model model) {
-		if (attendanceReq == 1) {
-			model.addAttribute("monthlyAttendanceStatusIsSent", messageOutput.message("monthlyAttendanceStatusIsSent"));
-        }
+	public Model monthlyAttendanceIsSentInsertModel(Model model) {
+		model.addAttribute("monthlyAttendanceStatusIsSent", messageOutput.message("monthlyAttendanceStatusIsSent"));
 		return model;
 	}
 	//パスワードを忘れた際にユーザーIDとメールアドレスを入力してボタン押下した際の表示
@@ -97,6 +97,53 @@ public class ModelService {
 	
 	public Model newPasswordErrorCheck(Model model) {
 		model.addAttribute("requiredHannkaku", messageOutput.message("requiredHannkaku"));
+		return model;
+	}
+	
+	public Model CheckDailyReport(Model model,List<String> checkDailyReport) {
+		model.addAttribute("CheckDailyReport", messageOutput.message("checkDailyReport"));
+		model.addAttribute("MissingSubmitDReport",checkDailyReport);
+		return model;
+	}
+	
+	public Model CheckAttendance(Model model) {
+		model.addAttribute("CheckAttendance", messageOutput.message("checkAttendance"));
+		return model;
+	}
+	
+	public Model monthlyAttendanceStatusIsThree(Model model) {
+		model.addAttribute("monthlyAttendanceStatusIsThree", messageOutput.message("monthlyAttendanceStatusIsThree"));
+		return model;
+	}
+	
+	public Model dailyReportArrival(Model model,List<String> dailyRepExists) {
+		model.addAttribute("dailyReportArrival", messageOutput.message("dailyReportArrival"));
+		model.addAttribute("dailyRepExists",dailyRepExists);
+		return model;
+	}
+	
+	public Model monthlyAttendanceReqArrival(Model model) {
+		model.addAttribute("monthlyAttendanceReqArrival",messageOutput.message("monthlyAttendanceReqArrival"));
+		return model;
+	}
+	
+	public Model monthlyAttendanceReqApproved(Model model) {
+		model.addAttribute("monthlyAttendanceReqApproved",messageOutput.message("monthlyAttendanceReqApproved"));
+		return model;
+	}
+	
+	public Model checkAddModel(Model model,String userName) {
+		model.addAttribute("check", messageOutput.message("update",userName));
+		return model;
+	}
+	
+	public Model combinedMessageAndReason(Model model,String message) {
+		model.addAttribute("combinedMessageAndReason",message);
+		return model;
+	}
+	
+	public Model menuInfoExists(Model model,Boolean menuInfoExists) {
+		model.addAttribute("menuInfoExists",menuInfoExists);
 		return model;
 	}
 }

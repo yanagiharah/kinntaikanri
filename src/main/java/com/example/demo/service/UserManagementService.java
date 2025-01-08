@@ -9,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
 import com.example.demo.Factory.UserManagementFactory;
-import com.example.demo.inter.MessageOutput;
 import com.example.demo.mapper.UsersMapper;
 import com.example.demo.model.ManagementForm;
 import com.example.demo.model.Users;
@@ -19,16 +18,14 @@ import com.example.demo.validation.UserManagementValidation;
 public class UserManagementService {
 	
 	private final UsersMapper usersMapper;
-	private final MessageOutput messageOutput;
 	private final DepartmentService departmentService;
 	private final UserManagementFactory usersFactory;
 	private final UserManagementValidation userManagementValidation;
 	private final PasswordEncoder passwordEncoder;
 	private final ModelService modelService;
 	
-	UserManagementService(UsersMapper usersMapper, MessageOutput messageOutput,DepartmentService departmentService,UserManagementFactory usersFactory,UserManagementValidation userManagementValidation, ModelService modelService){
+	UserManagementService(UsersMapper usersMapper,DepartmentService departmentService,UserManagementFactory usersFactory,UserManagementValidation userManagementValidation, ModelService modelService){
 		this.usersMapper = usersMapper;
-		this.messageOutput = messageOutput;
 		this.departmentService = departmentService;
 		this.usersFactory = usersFactory;
 		this.userManagementValidation = userManagementValidation;
@@ -91,7 +88,8 @@ public class UserManagementService {
 		} else {
 			usersMapper.userCreate(usersFactory.usersCreate(managementForm));
 		}
-		return model.addAttribute("check", messageOutput.message("update", managementForm.getUserName()));
+//		return model.addAttribute("check", messageOutput.message("update", managementForm.getUserName()));
+		return modelService.checkAddModel(model, managementForm.getUserName());
 	}
 	/**
 	 * ユーザー名の検索時に入力チェックを行い、エラーがある場合は

@@ -24,7 +24,7 @@ public interface MonthlyAttendanceReqMapper {
 	//指定された年月とユーザーIDで月次勤怠テーブルからデータを取得（statusチェックのため）
 	MonthlyAttendanceReq selectTargetYearMonthStatus(@Param("targetYearMonth")Date targetYearMonth, @Param("userId")Integer userId);
 	
-	//先月の月次勤怠テーブルで承認待ち(status=1)の有無を取得
+	//先月の月次勤怠テーブルで承認待ち(status=1)の有無(exist文)を取得
 	Integer selectMonthlyAttendanceReq(Date lastMonth); 
 	
 	//登録
