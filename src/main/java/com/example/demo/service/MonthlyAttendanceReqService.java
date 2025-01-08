@@ -30,11 +30,14 @@ public class MonthlyAttendanceReqService {
 	private final AttendanceManagementService attendanceManagementService;
 	
 	private final MessageOutput messageOutput;
+	
+	private final ModelService modelService;
 
-	MonthlyAttendanceReqService(MonthlyAttendanceReqMapper monthlyAttendanceReqMapper, AttendanceManagementService attendanceManagementService,MessageOutput messageOutput) {
+	MonthlyAttendanceReqService(MonthlyAttendanceReqMapper monthlyAttendanceReqMapper, AttendanceManagementService attendanceManagementService,MessageOutput messageOutput,ModelService modelService) {
 		this.monthlyAttendanceReqMapper = monthlyAttendanceReqMapper;
 		this.attendanceManagementService = attendanceManagementService;
 		this.messageOutput = messageOutput;
+		this.modelService = modelService;
 	}
 
 	public List<MonthlyAttendanceReq> selectApprovalPending() {
@@ -168,24 +171,39 @@ public class MonthlyAttendanceReqService {
 		//もし上記があれば
 		if(!checkGeneralUsersHasChangeReq.isEmpty()) {
 			if(checkGeneralUsersHasChangeReq.contains(0)) {
-				model.addAttribute("monthlyAttendanceReqApproved",messageOutput.message("monthlyAttendanceReqApproved"));
+				modelService.monthlyAttendanceReqApproved(model);
 			}
 			if(checkGeneralUsersHasChangeReq.contains(2)) {
 				String monthlyAttendanceReqRejected = messageOutput.message("monthlyAttendanceReqRejected");
 				String rejectionReason = monthlyAttendanceReqMapper.selectRejectionReason(userId);
 				String combinedMessageAndReason = monthlyAttendanceReqRejected + "\n"+ rejectionReason;
-				model.addAttribute("combinedMessageAndReason",combinedMessageAndReason);
+				modelService.combinedMessageAndReason(model,combinedMessageAndReason);
 			}
 			return model;
 		}
 		return null;
 	}
 	
+	public Model checkForAlertStatusThree(Model model,Date date,Integer userId) {
+		 MonthlyAttendanceReq monthlyAttendanceReq = monthlyAttendanceReqMapper.selectTargetYearMonthStatus(date, userId);
+		 if (monthlyAttendanceReq != null && monthlyAttendanceReq.getStatus() == 3) {
+				return modelService.monthlyAttendanceStatusIsThree(model);
+			}
+		return null;
+	}
+	
+	public Model checkForAlertMonthlyAttendanceReq(Date date, Model model) {
+		 Integer alertFlag = monthlyAttendanceReqMapper.selectMonthlyAttendanceReq(date);
+		 if(alertFlag == 1) {
+			 return modelService.monthlyAttendanceIsSentInsertModel(model);
+		 }
+		 return null;
+	}
+	
 	public Model selectMonthlyAttendanceReqAnyHasChangeReq(Model model) {
 		Integer existHasChangeReq = monthlyAttendanceReqMapper.selectMonthlyAttendanceReqAnyHasChangeReq();
 		if(existHasChangeReq == 1) {
-			model.addAttribute("monthlyAttendanceReqArrival",messageOutput.message("monthlyAttendanceReqArrival"));
-			return model;
+			return modelService.monthlyAttendanceReqArrival(model);
 		}
 		return null;
 	}

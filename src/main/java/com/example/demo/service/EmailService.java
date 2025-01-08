@@ -46,7 +46,7 @@ public class EmailService {
 
     //月初の3日と5日に月次勤怠申請がされていないユーザーへメール送信
     public void monthlyAttendanceNotApplied() {
-    	Date firstDayOfLastMonthDate = commonActivityService.oneDayLastMonth();
+    	Date firstDayOfLastMonthDate = commonActivityService.firstDayLastMonth();
         List<Users> usersList = usersMapper.selectMonthlyAttendanceNotSubmittedUsers(firstDayOfLastMonthDate);
         String regularAndUnitManagerUserNames = concatenateRegularAndUnitManagerUserNames(usersList);
         // 現在の日付を取得
@@ -98,7 +98,7 @@ public class EmailService {
 	
 	public void monthlyAttendanceReq() {
 		//先月の1日を取ってくるメソッド
-		Date firstDayOfLastMonthDate = commonActivityService.oneDayLastMonth();
+		Date firstDayOfLastMonthDate = commonActivityService.firstDayLastMonth();
 		// 先月の月次勤怠に承認待ちがあるかを確認（0 or 1）
         Integer approvalStatus = monthlyAttendanceReqMapper.selectMonthlyAttendanceReq(firstDayOfLastMonthDate); 
         if (approvalStatus != null && approvalStatus == 1) {
