@@ -20,12 +20,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.demo.inter.MessageOutput;
 import com.example.demo.model.DailyReportDetailForm;
 import com.example.demo.model.DailyReportForm;
 import com.example.demo.model.Users;
 import com.example.demo.service.CommonActivityService;
 import com.example.demo.service.DailyReportService;
+import com.example.demo.service.ModelService;
 
 @Controller
 @RequestMapping("/daily")
@@ -34,17 +34,17 @@ public class DailyReportController {
 	private final DailyReportService dailyReportService;
 
 	private final MessageSource messageSource;
-	
-	private final MessageOutput messageOutput;
 
 	private final CommonActivityService commonActivityService;
+	
+	private final ModelService modelService;
 
-	public DailyReportController(DailyReportService dailyReportService, MessageSource messageSource,MessageOutput messageOutput,
-			CommonActivityService commonActivityService) {
+	public DailyReportController(DailyReportService dailyReportService, MessageSource messageSource,
+			CommonActivityService commonActivityService, ModelService modelService) {
 		this.dailyReportService = dailyReportService;
 		this.messageSource = messageSource;
 		this.commonActivityService = commonActivityService;
-		this.messageOutput = messageOutput;
+		this.modelService = modelService;
 	}
 
 	//日報の初期表示画面（今日時点のものを表示）
@@ -72,12 +72,12 @@ public class DailyReportController {
 			dailyReportForm.setDailyReportDetailForm(dailyReportDetailForm);
 			dailyReportForm.setUserId(userId);
 
-			model.addAttribute("dailyReportForm", dailyReportForm);
+			modelService.addDailyReportForm(model,dailyReportForm);
 
 		} else {
 			List<DailyReportForm> confirmPending = dailyReportService.selectConfirmPending(calendarDate);
-			model.addAttribute("ConfirmPending", confirmPending);
-			model.addAttribute("calendarDate",calendarDate);
+			modelService.addConfirmPending(model,confirmPending);
+			modelService.addCalendarDate(model,calendarDate);
 
 		}
 		return "DailyReport/dailyReport";
@@ -101,10 +101,10 @@ public class DailyReportController {
 		dailyReportForm.setDailyReportDetailForm(dailyReportDetailForm);
 		dailyReportForm.setUserId(confirmaitionUserId);
 		dailyReportForm.setUserName(confirmaitionUserName);
-		model.addAttribute("dailyReportForm", dailyReportForm);
+		modelService.addDailyReportForm(model,dailyReportForm);
 		
 		List<DailyReportForm> confirmPending= dailyReportService.selectConfirmPending(dailyReportDate);
-		model.addAttribute("ConfirmPending", confirmPending);
+		modelService.addConfirmPending(model,confirmPending);
 		return "DailyReport/dailyReport";
 	}
 
@@ -121,7 +121,7 @@ public class DailyReportController {
 		dailyReportService.updateDailyReportDetail(dailyReportForm);
 		
 		String successMessage = messageSource.getMessage("dailyReport.update.success", null, locale);
-		model.addAttribute("message", successMessage);
+		modelService.addMessage(model,successMessage);
 
 		LocalDate calendarDate = dailyReportForm.getDailyReportDetailForm().get(0).getDailyReportDetailDate();
 		String calendarDateS = calendarDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -144,14 +144,13 @@ public class DailyReportController {
 		
 		List<String> confirmPendingStatus1 = dailyReportService.selectConfirmPendingStatus1();
 		if(!confirmPendingStatus1.isEmpty()) {
-			model.addAttribute("confirmPendingStatus1",confirmPendingStatus1);
+			modelService.addConfirmPendingStatus1(model,confirmPendingStatus1);
 		} else {
-			model.addAttribute("dailyReportAllSubmitted",messageOutput.message("dailyReportAllSubmitted"));
+			modelService.dailyReportAllSubmitted(model);
 		}
 		//もしデータがない場合はそのメッセージも送らないといけないかも
-		
 	    
-		model.addAttribute("calendarDate",calendarDate);
+		modelService.addCalendarDate(model,calendarDate);
 		return "DailyReport/dailyReport";
 	}
 
@@ -169,11 +168,11 @@ public class DailyReportController {
 		
 		LocalDate calendarDate = dailyReportForm.getDailyReportDate();
 		List<DailyReportForm> confirmPending = dailyReportService.selectConfirmPending(calendarDate);
-		model.addAttribute("ConfirmPending", confirmPending);
-		model.addAttribute("calendarDate",dailyReportForm.getDailyReportDate());
+		modelService.addConfirmPending(model,confirmPending);
+		modelService.addCalendarDate(model,dailyReportForm.getDailyReportDate());
 		
-		 dailyReportForm = null;
-		 model.addAttribute("dailyReportForm", dailyReportForm);
+		dailyReportForm = null;
+		modelService.addDailyReportForm(model,dailyReportForm);
 		
 		return "DailyReport/dailyReport";
 	}

@@ -44,7 +44,7 @@ public class ChangeForgotPasswordController {
         if (!user.getTokenExpirationDateCheck()) {
             modelService.tokenTimeOut(model);
         } else {
-            model.addAttribute("user", user);
+        	modelService.addUserToken(model,user);
         }
 
         return "changeforgot/changeforgotpassword";
@@ -63,12 +63,12 @@ public class ChangeForgotPasswordController {
     	Pattern pattern = Pattern.compile("^[a-zA-Z0-9]+$");
     	 if(!pattern.matcher(newPassword).matches()) {
     		 modelService.newPasswordErrorCheck(model);
-    		 model.addAttribute("user", user);
+    		 modelService.addUserToken(model,user);
     		 return "changeforgot/changeforgotpassword";
     	 }
         if (!newPassword.equals(checkNewPassword)) {
             modelService.passwordNearMiss(model);
-            model.addAttribute("user", user);
+            modelService.addUserToken(model,user);
             return "changeforgot/changeforgotpassword";
         } else {
             userManagementService.tokenExpirationDateCheck(user);

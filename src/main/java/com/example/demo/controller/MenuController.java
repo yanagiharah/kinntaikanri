@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.model.Users;
 import com.example.demo.service.CommonActivityService;
+import com.example.demo.service.ModelService;
 
 @Controller
 @RequestMapping("/menu")
@@ -17,8 +18,11 @@ public class MenuController {
 
 	private final CommonActivityService commonActivityService;
 	
-	MenuController(CommonActivityService commonActivityService) {
+	private final ModelService modelService;
+	
+	MenuController(CommonActivityService commonActivityService,ModelService modelService) {
 		this.commonActivityService = commonActivityService;
+		this.modelService = modelService;
 		}
 
 //	@RequestMapping("")
@@ -56,41 +60,36 @@ public class MenuController {
 	
 	//勤怠修正画面に遷移
 	@RequestMapping("/correction")
-		public String monthlyAttenddance(HttpSession session, Model model) {
-			Users users = (Users) session.getAttribute("Users");
-			model.addAttribute("Users", users);
-			return "redirect:/attendanceCorrect/correction";
+	public String monthlyAttenddance(HttpSession session, Model model) {
+		commonActivityService.usersModelSession(model,session);
+		return "redirect:/attendanceCorrect/correction";
 	}
 
 	//日報登録画面に遷移
 	@RequestMapping("/daily/detail")
 	public String dailyReport(HttpSession session, Model model) {
-		Users users = (Users) session.getAttribute("Users");
-		model.addAttribute("Users", users);
+		commonActivityService.usersModelSession(model,session);
 		return "redirect:/daily/detail";
 	}
 	
 	@RequestMapping(value="/daily/detail",params="date", method = RequestMethod.GET)
 	public String dailyReport(HttpSession session, Model model, @RequestParam("dailyReportDate") String date) {
-		Users users = (Users) session.getAttribute("Users");
-		model.addAttribute("Users", users);
-		model.addAttribute("date",date);
+		commonActivityService.usersModelSession(model,session);
+		modelService.addDate(model,date);
 		return "redirect:/daily/detail?date=" + date;
 	}
 
 	//ユーザー情報登録画面に遷移
 	@RequestMapping("/usermanagement")
 	public String userManagement(HttpSession session, Model model) {
-		Users users = (Users) session.getAttribute("Users");
-		model.addAttribute("Users", users);
+		commonActivityService.usersModelSession(model,session);
 		return "redirect:/user/";
 	}
 
 	//部署登録画面に遷移 
 	@RequestMapping("/department")
 	public String department(HttpSession session, Model model) {
-		Users users = (Users) session.getAttribute("Users");
-		model.addAttribute("Users", users);
+		commonActivityService.usersModelSession(model,session);
 		return "redirect:/department/";
 	}
 }

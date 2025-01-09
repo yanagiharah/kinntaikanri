@@ -16,7 +16,6 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import com.example.demo.inter.MessageOutput;
 import com.example.demo.mapper.MonthlyAttendanceReqMapper;
 import com.example.demo.model.AttendanceFormList;
 import com.example.demo.model.MonthlyAttendanceReq;
@@ -29,14 +28,11 @@ public class MonthlyAttendanceReqService {
 
 	private final AttendanceManagementService attendanceManagementService;
 	
-	private final MessageOutput messageOutput;
-	
 	private final ModelService modelService;
 
-	MonthlyAttendanceReqService(MonthlyAttendanceReqMapper monthlyAttendanceReqMapper, AttendanceManagementService attendanceManagementService,MessageOutput messageOutput,ModelService modelService) {
+	MonthlyAttendanceReqService(MonthlyAttendanceReqMapper monthlyAttendanceReqMapper, AttendanceManagementService attendanceManagementService,ModelService modelService) {
 		this.monthlyAttendanceReqMapper = monthlyAttendanceReqMapper;
 		this.attendanceManagementService = attendanceManagementService;
-		this.messageOutput = messageOutput;
 		this.modelService = modelService;
 	}
 
@@ -106,7 +102,7 @@ public class MonthlyAttendanceReqService {
 		} else {
 			users.setStatus(0);
 		}
-		model.addAttribute("Users", users);
+		modelService.addUsers(model,users);
 		return model;
 	}
 
@@ -174,17 +170,15 @@ public class MonthlyAttendanceReqService {
 				modelService.monthlyAttendanceReqApproved(model);
 			}
 			if(checkGeneralUsersHasChangeReq.contains(2)) {
-				String monthlyAttendanceReqRejected = messageOutput.message("monthlyAttendanceReqRejected");
 				String rejectionReason = monthlyAttendanceReqMapper.selectRejectionReason(userId);
-				String combinedMessageAndReason = monthlyAttendanceReqRejected + "\n"+ rejectionReason;
-				modelService.combinedMessageAndReason(model,combinedMessageAndReason);
+				modelService.combinedMessageAndReason(model,rejectionReason);
 			}
 			return model;
 		}
 		return null;
 	}
 	
-	public Model checkForAlertStatusThree(Model model,Date date,Integer userId) {
+	public Model checkForAlertStatusThree(Integer userId,Date date,Model model) {
 		 MonthlyAttendanceReq monthlyAttendanceReq = monthlyAttendanceReqMapper.selectTargetYearMonthStatus(date, userId);
 		 if (monthlyAttendanceReq != null && monthlyAttendanceReq.getStatus() == 3) {
 				return modelService.monthlyAttendanceStatusIsThree(model);

@@ -10,9 +10,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import com.example.demo.mapper.MonthlyAttendanceReqMapper;
 import com.example.demo.model.Users;
-import com.example.demo.model.WeatherData;
 
 @Service
 public class CommonActivityService {
@@ -21,9 +19,6 @@ public class CommonActivityService {
 
 	private final AttendanceManagementService attendanceManagementService;
 
-
-	private final MonthlyAttendanceReqMapper monthlyAttendanceReqMapper;
-
 	private final ModelService modelService;
 
 	private final WeatherService weatherService;
@@ -31,12 +26,10 @@ public class CommonActivityService {
 	private final MonthlyAttendanceReqService monthlyAttendanceReqService;
 
 	CommonActivityService(DailyReportService dailyReportService,
-			AttendanceManagementService attendanceManagementService,
-			MonthlyAttendanceReqMapper monthlyAttendanceReqMapper, ModelService modelService,
+			AttendanceManagementService attendanceManagementService, ModelService modelService,
 			WeatherService weatherService,MonthlyAttendanceReqService monthlyAttendanceReqService) {
 		this.dailyReportService = dailyReportService;
 		this.attendanceManagementService = attendanceManagementService;
-		this.monthlyAttendanceReqMapper = monthlyAttendanceReqMapper;
 		this.modelService = modelService;
 		this.weatherService = weatherService;
 		this.monthlyAttendanceReqService = monthlyAttendanceReqService;
@@ -65,7 +58,8 @@ public class CommonActivityService {
 	//Users情報をセッションから取得し、モデルに追加する
 	public void usersModelSession(Model model, HttpSession session) {
 		Users users = (Users) session.getAttribute("Users");
-		model.addAttribute("Users", users);
+		modelService.addUsers(model,users);
+		//commonActivityService.usersModelSession(model,session);
 	}
 	
 	//usersをモデルから確保
@@ -76,14 +70,14 @@ public class CommonActivityService {
 	
 	//メニューページである情報を持たせる。
 	public void getForMenuPage(Model model) {
-		String isMenuPage = null;
-        model.addAttribute("isMenuPage", isMenuPage);
+		String menuPageFlag = null;
+		modelService.addFlagOfMenuPage(model,menuPageFlag);
     }
 	
 	//メニューページではない情報を持たせる。
 	public void getForNotMenuPage(Model model) {
-		String isNotMenuPage = "notMenuPage";
-		model.addAttribute("isMenuPage", isNotMenuPage);
+		String menuPageFlag = "notMenuPage";
+		modelService.addFlagOfMenuPage(model,menuPageFlag);;
 	}
 
 	//メニュー画面に戻る挙動(アカウント情報をmodelに詰めてメニュー画面へ遷移)
@@ -106,7 +100,7 @@ public class CommonActivityService {
 			//勤怠訂正結果表示アラート　（勤怠訂正の結果が来ていた場合、hasChangeReq!=null）
 			monthlyAttendanceReqService.checkMonthlyAttendanceReqStatus(userId,model);
 			//勤怠申請を却下されたか確認
-			monthlyAttendanceReqService.checkForAlertStatusThree(model,lastMonthFirstDay,userId);
+			monthlyAttendanceReqService.checkForAlertStatusThree(userId,lastMonthFirstDay,model);
 		}
 
 		if ("Manager".equals(userRole)) {
@@ -120,8 +114,7 @@ public class CommonActivityService {
 		//アラート欄表示可否を返す
 		outcomeForAlert(model,userRole);
 		//天気情報をmodelに詰める
-		WeatherData weatherData = weatherService.getWeather("Tokyo");
-		model.addAttribute("weatherData", weatherData);
+		modelService.addWeatherData(model,weatherService.getWeather("Tokyo"));
 	}
 	//天気予報API課金で使用可能
 	//天気情報をmodelに詰める
@@ -173,7 +166,7 @@ public class CommonActivityService {
 	}
 	
 	//アラート表示可否判定メソッド
-	private Model  outcomeForAlert(Model model,String userRole) {
+	private Model outcomeForAlert(Model model,String userRole) {
 		Boolean result = checkingExistAnyModel(model, userRole);
 		if(result == true) {
 			return modelService.menuInfoExists(model,result);
