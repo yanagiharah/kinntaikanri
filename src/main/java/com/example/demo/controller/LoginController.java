@@ -8,12 +8,18 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.example.demo.model.Users;
+import com.example.demo.service.CommonActivityService;
 
 
 @Controller
 @RequestMapping("/")
 public class LoginController {
+	
+	private final CommonActivityService commonActivityService;
+	
+	LoginController(CommonActivityService commonActivityService){
+		this.commonActivityService = commonActivityService;
+	}
 	/**
 	 * ログイン処理
 	 * @param model
@@ -22,8 +28,8 @@ public class LoginController {
 	@GetMapping("/login")
 	public String login(Model model, HttpSession session,
 			HttpServletRequest request, HttpServletResponse response) {
-		Users users = (Users) session.getAttribute("Users");
-		model.addAttribute("Users", users);
+		//動かなくなったらインスタンスとコンストラクタはずして下記の処理を元に戻す。メソッドを見て中身をそのまま書けば好。
+		commonActivityService.usersModelSession(model,session);
 		return "Login/index";
 	}
 

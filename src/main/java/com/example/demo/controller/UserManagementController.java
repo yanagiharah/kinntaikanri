@@ -15,6 +15,7 @@ import com.example.demo.model.ManagementForm;
 import com.example.demo.model.Users;
 import com.example.demo.service.CommonActivityService;
 import com.example.demo.service.DepartmentService;
+import com.example.demo.service.ModelService;
 import com.example.demo.service.UserManagementService;
 
 @Controller
@@ -28,15 +29,18 @@ public class UserManagementController {
 	private final ManagementForm managementForm;
 	
 	private final CommonActivityService commonActivityService;
+	
+	private final ModelService modelService; 
 
 
 	UserManagementController(UserManagementService userManagementService,
 			ManagementForm managementForm, MessageOutput messageOutput, DepartmentService departmentService,
-			CommonActivityService commonActivityService) {
+			CommonActivityService commonActivityService, ModelService modelService) {
 		this.userManagementService = userManagementService;
 		this.managementForm = managementForm;
 		this.departmentService = departmentService;
 		this.commonActivityService = commonActivityService;
+		this.modelService = modelService;
 	}
 	
 	/**
@@ -53,7 +57,7 @@ public class UserManagementController {
 	public String user(HttpSession session, Model model) {
 		commonActivityService.getCommonInfo(model,session,null);
 		managementForm.setDepartment(departmentService.departmentSearchListUp());
-		model.addAttribute("managementForm", managementForm);
+		modelService.addManagementForm(model,managementForm);
 		commonActivityService.getForNotMenuPage(model);
 		return "User/manegement";
 	}
@@ -76,7 +80,7 @@ public class UserManagementController {
 		if (result.hasErrors()) {
             return "User/manegement"; 
         }
-		model.addAttribute("managementForm", userManagementService.useAccountChoice(managementForm));
+		modelService.addManagementForm(model,userManagementService.useAccountChoice(managementForm));
 		return "User/manegement";
 	}
 	/**

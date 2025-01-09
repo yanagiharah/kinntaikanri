@@ -62,15 +62,15 @@ public class MonthlyAttendanceReqController {
 	    }
 	    
 		if (users.getRole().equalsIgnoreCase("Manager")) {
-			List<MonthlyAttendanceReq> HasChangeReq = monthlyAttendanceReqService
+			List<MonthlyAttendanceReq> hasChangeReq = monthlyAttendanceReqService
 					.selectHasChangeReq(stringYearsMonth);
-			model.addAttribute("HasChangeReq", HasChangeReq);
+			modelService.addHasChangeReq(model,hasChangeReq);
 		} else {
 			List<MonthlyAttendanceReq> approvedMonths= monthlyAttendanceReqService.selectApproval(users.getUserId());
-			model.addAttribute("approvedMonths",approvedMonths);
+			modelService.addApprovedMonths(model,approvedMonths);
 			attendanceSearch(users.getUserId(), stringYearsMonth, model, session);
 		}
-		model.addAttribute("stringYearsMonth",stringYearsMonth);
+		modelService.addStringYearsMonth(model,stringYearsMonth);
 		commonActivityService.getForNotMenuPage(model);
 		
 		return "monthlyAttendanceReq/monthlyAttendance";
@@ -91,22 +91,22 @@ public class MonthlyAttendanceReqController {
 				stringYearsMonth);
 		
 		if (!users.getRole().equalsIgnoreCase("Manager")) {
-			model.addAttribute("attendanceFormList", attendanceFormList);
+			modelService.addAttendanceFormList(model,attendanceFormList);
 			//月次勤怠テーブルのstatusをユーザー)モデルのstatusに詰める
 			monthlyAttendanceReqService.submissionStatusCheck(attendance.get(0).getAttendanceDate(), userId, model,
 					session);
 			attendanceManagementService.requestActivityCheck(attendanceFormList);
 			List<MonthlyAttendanceReq> approvedMonths= monthlyAttendanceReqService.selectApproval(users.getUserId());
-			model.addAttribute("approvedMonths",approvedMonths);
+			modelService.addApprovedMonths(model,approvedMonths);
 		} else {
-			List<MonthlyAttendanceReq> HasChangeReq = monthlyAttendanceReqService.selectHasChangeReq(stringYearsMonth);
-			model.addAttribute("HasChangeReq", HasChangeReq);
+			List<MonthlyAttendanceReq> hasChangeReq = monthlyAttendanceReqService.selectHasChangeReq(stringYearsMonth);
+			modelService.addHasChangeReq(model,hasChangeReq);
 			//カレンダーを初期化しないために返す
-			model.addAttribute("stringYearsMonth",stringYearsMonth);
+			modelService.addStringYearsMonth(model,stringYearsMonth);
 		}
 		
 		List<String> holidays = googleCalendarService. getListHolidays(years,month);
-		model.addAttribute("holidays",holidays);
+		modelService.addHolidays(model,holidays);
 		return "monthlyAttendanceReq/monthlyAttendance";
 	}
 
@@ -125,7 +125,7 @@ public class MonthlyAttendanceReqController {
 		Integer years = Integer.parseInt(stringYearsMonth.substring(0, 4));
 		Integer month = Integer.parseInt(stringYearsMonth.substring(5, 7));
 		List<String> holidays = googleCalendarService.getListHolidays(years,month);
-		model.addAttribute("holidays",holidays);
+		modelService.addHolidays(model,holidays);
 		List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month,Optional.<Events>empty());
 		AttendanceFormList attendanceFormList = attendanceManagementService.setInAttendance(attendance, years, month,
 				stringYearsMonth);
@@ -133,9 +133,9 @@ public class MonthlyAttendanceReqController {
 		Date firstAttendanceDate = attendanceManagementService.getFirstAttendanceDate(attendanceFormList);
 		monthlyAttendanceReqService.submissionStatusCheck(firstAttendanceDate, userId, model, session);
 		
-		model.addAttribute("sendCorrectionApplication", messageOutput.message("sendCorrectionApplication"));
-		model.addAttribute("attendanceFormList", attendanceFormList);
-		model.addAttribute("stringYearsMonth",stringYearsMonth);
+		modelService.sendCorrectionApplication(model);
+		modelService.addAttendanceFormList(model,attendanceFormList);
+		modelService.addStringYearsMonth(model,stringYearsMonth);
 		return "monthlyAttendanceReq/monthlyAttendance";
 	}
 
@@ -150,7 +150,7 @@ public class MonthlyAttendanceReqController {
 		String stringYearsMonth = years + "-" + monthString;
 		
 		List<String> holidays = googleCalendarService.getListHolidays(years,month);
-		model.addAttribute("holidays",holidays);
+		modelService.addHolidays(model,holidays);
 
 		List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month,Optional.<Events>empty());
 
@@ -165,17 +165,17 @@ public class MonthlyAttendanceReqController {
 			for (int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
 				attendanceFormList.getAttendanceList().get(i).setUserId(userId);
 			}
-			model.addAttribute("attendanceFormList", attendanceFormList);
+			modelService.addAttendanceFormList(model,attendanceFormList);
 		}
 		
 		List<MonthlyAttendanceReq> currentChangeReq=monthlyAttendanceReqService.filteringHasChangeReq(userId, stringYearsMonth);
 		List<MonthlyAttendanceReq> hasChangeReq = monthlyAttendanceReqService.selectHasChangeReq(stringYearsMonth);
 		//選択月該当ユーザー
-		model.addAttribute("HasChangeReq", hasChangeReq);
+		modelService.addHasChangeReq(model,hasChangeReq);
 		//選択した特定ユーザー表記用
-		model.addAttribute("CurrentChangeReq",currentChangeReq);
+		modelService.addCurrentChangeReq(model,currentChangeReq);
 		//カレンダー埋める用
-		model.addAttribute("stringYearsMonth",stringYearsMonth);
+		modelService.addStringYearsMonth(model,stringYearsMonth);
 		
 		return "monthlyAttendanceReq/monthlyAttendance";
 	}

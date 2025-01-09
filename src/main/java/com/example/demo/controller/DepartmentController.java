@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.model.DepartmentForm;
-import com.example.demo.model.Users;
 import com.example.demo.service.CommonActivityService;
 import com.example.demo.service.DepartmentService;
 import com.example.demo.service.ModelService;
@@ -39,8 +38,7 @@ public class DepartmentController {
 
 	@RequestMapping("/")
 	public String department(HttpSession session, Model model) {
-		Users users = (Users) session.getAttribute("Users");
-		model.addAttribute("Users", users);
+		commonActivityService.usersModelSession(model,session);
 		
 		//有効部署一覧取得
 		departmentForm.setActiveDepartment(departmentService.departmentSearchListUp());
@@ -48,7 +46,7 @@ public class DepartmentController {
 		//無効（削除済み）部署一覧取得。
 		departmentForm.setDeactiveDepartment(departmentService.deleteDepartmentSearchListUp());
 		
-		model.addAttribute("departmentForm", departmentForm);
+		modelService.addDepartmentForm(model,departmentForm);
 		commonActivityService.getForNotMenuPage(model);
 		return "department/department";
 	}
