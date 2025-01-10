@@ -7088,7 +7088,7 @@ textarea.form-control-lg {
   clip: rect(0, 0, 0, 0);
   pointer-events: none;
 }
-.btn-check[disabled] + .btn, .btn-check:disabled + .btn {
+.btn-check[disabled] + .btn, .btn-check[disabled] + .menuButtonSize, .btn-check[disabled] + .buttonSize, .btn-check:disabled + .btn, .btn-check:disabled + .menuButtonSize, .btn-check:disabled + .buttonSize {
   pointer-events: none;
   filter: none;
   opacity: 0.65;
@@ -7289,11 +7289,11 @@ textarea.form-control-lg {
 .input-group > .form-floating:focus-within {
   z-index: 5;
 }
-.input-group .btn {
+.input-group .btn, .input-group .menuButtonSize, .input-group .buttonSize {
   position: relative;
   z-index: 2;
 }
-.input-group .btn:focus {
+.input-group .btn:focus, .input-group .menuButtonSize:focus, .input-group .buttonSize:focus {
   z-index: 5;
 }
 
@@ -7315,7 +7315,9 @@ textarea.form-control-lg {
 .input-group-lg > .form-control,
 .input-group-lg > .form-select,
 .input-group-lg > .input-group-text,
-.input-group-lg > .btn {
+.input-group-lg > .btn,
+.input-group-lg > .menuButtonSize,
+.input-group-lg > .buttonSize {
   padding: 0.5rem 1rem;
   font-size: 1.25rem;
   border-radius: var(--bs-border-radius-lg);
@@ -7324,7 +7326,9 @@ textarea.form-control-lg {
 .input-group-sm > .form-control,
 .input-group-sm > .form-select,
 .input-group-sm > .input-group-text,
-.input-group-sm > .btn {
+.input-group-sm > .btn,
+.input-group-sm > .menuButtonSize,
+.input-group-sm > .buttonSize {
   padding: 0.25rem 0.5rem;
   font-size: 0.875rem;
   border-radius: var(--bs-border-radius-sm);
@@ -7540,7 +7544,7 @@ textarea.form-control-lg {
   z-index: 4;
 }
 
-.btn {
+.btn, .menuButtonSize, .buttonSize {
   --bs-btn-padding-x: 0.75rem;
   --bs-btn-padding-y: 0.375rem;
   --bs-btn-font-family: ;
@@ -7574,44 +7578,44 @@ textarea.form-control-lg {
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 @media (prefers-reduced-motion: reduce) {
-  .btn {
+  .btn, .menuButtonSize, .buttonSize {
     transition: none;
   }
 }
-.btn:hover {
+.btn:hover, .menuButtonSize:hover, .buttonSize:hover {
   color: var(--bs-btn-hover-color);
   background-color: var(--bs-btn-hover-bg);
   border-color: var(--bs-btn-hover-border-color);
 }
-.btn-check + .btn:hover {
+.btn-check + .btn:hover, .btn-check + .menuButtonSize:hover, .btn-check + .buttonSize:hover {
   color: var(--bs-btn-color);
   background-color: var(--bs-btn-bg);
   border-color: var(--bs-btn-border-color);
 }
-.btn:focus-visible {
+.btn:focus-visible, .menuButtonSize:focus-visible, .buttonSize:focus-visible {
   color: var(--bs-btn-hover-color);
   background-color: var(--bs-btn-hover-bg);
   border-color: var(--bs-btn-hover-border-color);
   outline: 0;
   box-shadow: var(--bs-btn-focus-box-shadow);
 }
-.btn-check:focus-visible + .btn {
+.btn-check:focus-visible + .btn, .btn-check:focus-visible + .menuButtonSize, .btn-check:focus-visible + .buttonSize {
   border-color: var(--bs-btn-hover-border-color);
   outline: 0;
   box-shadow: var(--bs-btn-focus-box-shadow);
 }
-.btn-check:checked + .btn, :not(.btn-check) + .btn:active, .btn:first-child:active, .btn.active, .btn.show {
+.btn-check:checked + .btn, .btn-check:checked + .menuButtonSize, .btn-check:checked + .buttonSize, :not(.btn-check) + .btn:active, :not(.btn-check) + .menuButtonSize:active, :not(.btn-check) + .buttonSize:active, .btn:first-child:active, .menuButtonSize:first-child:active, .buttonSize:first-child:active, .btn.active, .active.menuButtonSize, .active.buttonSize, .btn.show, .show.menuButtonSize, .show.buttonSize {
   color: var(--bs-btn-active-color);
   background-color: var(--bs-btn-active-bg);
   border-color: var(--bs-btn-active-border-color);
 }
-.btn-check:checked + .btn:focus-visible, :not(.btn-check) + .btn:active:focus-visible, .btn:first-child:active:focus-visible, .btn.active:focus-visible, .btn.show:focus-visible {
+.btn-check:checked + .btn:focus-visible, .btn-check:checked + .menuButtonSize:focus-visible, .btn-check:checked + .buttonSize:focus-visible, :not(.btn-check) + .btn:active:focus-visible, :not(.btn-check) + .menuButtonSize:active:focus-visible, :not(.btn-check) + .buttonSize:active:focus-visible, .btn:first-child:active:focus-visible, .menuButtonSize:first-child:active:focus-visible, .buttonSize:first-child:active:focus-visible, .btn.active:focus-visible, .active.menuButtonSize:focus-visible, .active.buttonSize:focus-visible, .btn.show:focus-visible, .show.menuButtonSize:focus-visible, .show.buttonSize:focus-visible {
   box-shadow: var(--bs-btn-focus-box-shadow);
 }
-.btn-check:checked:focus-visible + .btn {
+.btn-check:checked:focus-visible + .btn, .btn-check:checked:focus-visible + .menuButtonSize, .btn-check:checked:focus-visible + .buttonSize {
   box-shadow: var(--bs-btn-focus-box-shadow);
 }
-.btn:disabled, .btn.disabled, fieldset:disabled .btn {
+.btn:disabled, .menuButtonSize:disabled, .buttonSize:disabled, .btn.disabled, .disabled.menuButtonSize, .disabled.buttonSize, fieldset:disabled .btn, fieldset:disabled .menuButtonSize, fieldset:disabled .buttonSize {
   color: var(--bs-btn-disabled-color);
   pointer-events: none;
   background-color: var(--bs-btn-disabled-bg);
@@ -7920,7 +7924,7 @@ textarea.form-control-lg {
   --bs-btn-border-radius: var(--bs-border-radius-lg);
 }
 
-.btn-sm {
+.btn-sm, .buttonSize {
   --bs-btn-padding-y: 0.25rem;
   --bs-btn-padding-x: 0.5rem;
   --bs-btn-font-size: 0.875rem;
@@ -8361,7 +8365,18 @@ progress {
 
 .buttonSize {
   width: 100px;
+  color: #212529 !important;
   background-color: #ffc107;
+}
+.buttonSize:hover {
+  background-color: rgb(204, 154.4, 5.6);
+  color: #f8f9fa !important;
+}
+.buttonSize:disabled {
+  background-color: #dee2e6;
+  color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.65;
 }
 
 .noneBox, tbody tr td select, tbody tr td input {
@@ -8425,6 +8440,10 @@ input[type=time]::-webkit-calendar-picker-indicator {
   height: 80px;
   background-color: #fff;
 }
+.menuButtonSize:hover {
+  background-color: #666;
+  color: #ccc;
+}
 
 .menuAlert {
   top: 10px;
@@ -8449,6 +8468,22 @@ input[type=time]::-webkit-calendar-picker-indicator {
   background-color: rgb(128, 179, 255);
 }
 
+.management .menuButtonSize:hover {
+  background-color: rgb(153, 138, 160);
+}
+
+.attendance .menuButtonSize:hover {
+  background-color: rgb(255, 153, 102);
+}
+
+.dailyRep .menuButtonSize:hover {
+  background-color: rgb(153, 153, 102);
+}
+
+.department .menuButtonSize:hover {
+  background-color: rgb(153, 204, 255);
+}
+
 .weatherContainer {
   background-color: #f0fff0;
 }
@@ -8463,11 +8498,11 @@ input[type=time]::-webkit-calendar-picker-indicator {
 }
 
 .managers {
-  margin-top: 90px;
+  margin-top: 40px;
 }
 @media screen and (min-width: 1200px) {
   .managers {
-    margin-top: 80px;
+    margin-top: 40px;
   }
   .managers .managers-xl {
     margin-top: 14px;
@@ -8579,6 +8614,10 @@ input[type=time]::-webkit-calendar-picker-indicator {
   height: 60px;
   background-color: #ffc107;
 }
+.buttonRound:hover {
+  background-color: rgb(204, 154.4, 5.6);
+  color: #f8f9fa !important;
+}
 
 .variableButtonSize {
   display: inline-block;
@@ -8586,6 +8625,19 @@ input[type=time]::-webkit-calendar-picker-indicator {
   cursor: pointer;
   background-color: #ffc107;
   font-size: 16px;
+}
+.variableButtonSize:hover {
+  background-color: rgb(204, 154.4, 5.6);
+  color: #f8f9fa !important;
+}
+.variableButtonSize:disabled {
+  background-color: #dee2e6;
+  color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+.variableButtonSize:disabled:hover {
+  color: #6c757d !important;
 }
 
 hr {
@@ -8624,6 +8676,31 @@ hr {
 }
 [data-bs-theme=dark] .buttonRound, [data-bs-theme=dark] .buttonSize {
   background-color: rgb(204, 154.4, 5.6);
+  color: #f8f9fa !important;
+}
+[data-bs-theme=dark] .buttonRound:hover, [data-bs-theme=dark] .buttonSize:hover {
+  background-color: rgb(255, 217.8, 106.2);
+  color: #495057 !important;
+}
+[data-bs-theme=dark] .buttonRound:disabled, [data-bs-theme=dark] .buttonSize:disabled {
+  background-color: #dee2e6;
+  color: #6c757d;
+  color: #343a40 !important;
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+[data-bs-theme=dark] .variableButtonSize:hover {
+  background-color: rgb(204, 154.4, 5.6);
+  color: #f8f9fa !important;
+}
+[data-bs-theme=dark] .variableButtonSize:disabled {
+  background-color: #dee2e6;
+  color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+[data-bs-theme=dark] .variableButtonSize:disabled:hover {
+  color: #6c757d !important;
 }
 [data-bs-theme=dark] .commonHeader, [data-bs-theme=dark] .header {
   background-color: #666666;

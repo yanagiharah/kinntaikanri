@@ -1,10 +1,5 @@
 package com.example.demo.controller;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -16,8 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.demo.inter.MessageOutput;
-import com.example.demo.model.Attendance;
+import com.example.demo.helper.DateHelper;
 import com.example.demo.model.AttendanceFormList;
 import com.example.demo.model.MonthlyAttendanceReq;
 import com.example.demo.model.Users;
@@ -26,7 +20,6 @@ import com.example.demo.service.CommonActivityService;
 import com.example.demo.service.GoogleCalendarService;
 import com.example.demo.service.ModelService;
 import com.example.demo.service.MonthlyAttendanceReqService;
-import com.google.api.services.calendar.model.Events;
 
 @Controller
 @RequestMapping("/attendance")
@@ -35,39 +28,31 @@ public class AttendanceManagementController {
 	private final AttendanceManagementService attendanceManagementService;
 	private final MonthlyAttendanceReqService monthlyAttendanceReqService;
 	private final CommonActivityService commonActivityService;
-	private final MessageOutput messageOutput;
 	private final GoogleCalendarService googleCalendarService;
 	private final ModelService modelService;
+	private final DateHelper dateHelper;
 
 	public AttendanceManagementController(AttendanceManagementService attendanceManagementService,
 			MonthlyAttendanceReqService monthlyAttendanceReqService, CommonActivityService commonActivityService,
-			MessageOutput messageOutput,GoogleCalendarService googleCalendarService,ModelService modelService) {
+			GoogleCalendarService googleCalendarService,ModelService modelService,DateHelper dateHelper) {
 		this.attendanceManagementService = attendanceManagementService;
 		this.monthlyAttendanceReqService = monthlyAttendanceReqService;
 		this.commonActivityService = commonActivityService;
-		this.messageOutput = messageOutput;
 		this.googleCalendarService=googleCalendarService;
 		this.modelService = modelService;
+		this.dateHelper = dateHelper;
 	}
 
-	@RequestMapping("/index") //9/30if文にelseを追加し初期カレンダー表示のメソッドを移動。マネージャークラスでデータのない表が表示される問題の解消
-	public String start(HttpSession session, MonthlyAttendanceReq monthlyAttendanceReq, Model model) {
-		commonActivityService.usersModelSession(model, session);
-		Users users=commonActivityService.getByUsers(model);
-		//Serviceへ。AttendanceManagementService見込み。メソッド名HandleUserAttendance
-		//Managerなら
+	@RequestMapping("/index") 
+	public String start(HttpSession session, Model model) {
+		
+		Users users = commonActivityService.getCommonInfoAddUsers(model, session,null);
+		
 		if (users.getRole().equalsIgnoreCase("Manager")) {
-			//approvalPendingデータを取得しモデルに追加
-			List<MonthlyAttendanceReq> approvalPending = monthlyAttendanceReqService.selectApprovalPending();
-			modelService.addApprovalPending(model,approvalPending);
+			monthlyAttendanceReqService.selectApprovalPending(model);//ManagerならapprovalPendingデータを取得しモデルに追加
 		}else {
-			//Managerでないなら現在の年月を取得して、それをもとに自身の勤怠情報を取得する。
-			String stringYearsMonth = commonActivityService.yearsMonth();
-			attendanceSearch(users.getUserId(), stringYearsMonth, model, session);	
+			attendanceSearch(users.getUserId(), dateHelper.yearsMonth(), model, session);	//Managerでないなら現在の年月を取得して、それをもとに自身の勤怠情報を取得する。
 		}
-		
-		commonActivityService.getForNotMenuPage(model);
-		
 		return "attendance/registration";
 	}
 
@@ -75,87 +60,61 @@ public class AttendanceManagementController {
 	@RequestMapping(value = "/management", params = "search", method = RequestMethod.POST)
 	public String attendanceSearch(Integer userId, String stringYearsMonth, Model model,
 			HttpSession session) {
-
-		Integer years = Integer.parseInt(stringYearsMonth.substring(0, 4));
-		Integer month = Integer.parseInt(stringYearsMonth.substring(5, 7));
-		//祝日表示用のカレンダー取得
-		Events events = googleCalendarService.getHolidaysEvents(years, month);
-		//勤怠詳細と勤怠データをそれぞれ取得。モデルに追加
-		List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month,Optional.of(events));
-		AttendanceFormList attendanceFormList = attendanceManagementService.setInAttendance(attendance, years, month,
-				stringYearsMonth);
-		modelService.addAttendanceFormList(model,attendanceFormList);
-
-		//月次勤怠テーブルのstatusをユーザー)モデルのstatusに詰める
-		monthlyAttendanceReqService.submissionStatusCheck(attendance.get(0).getAttendanceDate(), userId, model,
-				session);
-		//承認申請ボタンのOnOff切り替え設定
-		attendanceManagementService.requestActivityCheck(attendanceFormList);
 		
+		monthlyAttendanceReqService.getSelectedAttendance(model,stringYearsMonth,userId,session);
 		
-		List<String> holidays = googleCalendarService.listEvents(events);
-		modelService.addHolidays(model,holidays);
-		
-		commonActivityService.getForNotMenuPage(model);
-
 		return "attendance/registration";
 	}
+
+//		Integer years = Integer.parseInt(stringYearsMonth.substring(0, 4));
+//		Integer month = Integer.parseInt(stringYearsMonth.substring(5, 7));
+		
+		//上記置換予定
+//		Integer years = dateHelper.parseDate(stringYearsMonth)[0];
+//		Integer month = dateHelper.parseDate(stringYearsMonth)[1];
+//		
+//		//祝日表示用のカレンダー取得
+//		Events events = googleCalendarService.getHolidaysEvents(years, month);
+//		//勤怠詳細と勤怠データをそれぞれ取得。モデルに追加
+//		List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month,Optional.of(events));
+//		AttendanceFormList attendanceFormList = attendanceManagementService.setInAttendance(attendance, years, month,
+//				stringYearsMonth);
+//		modelService.addAttendanceFormList(model,attendanceFormList);
+	
 
 	//登録ボタンの処理
 	@RequestMapping(value = "/management", params = "insert", method = RequestMethod.POST)
 	public String insert(@ModelAttribute AttendanceFormList attendanceFormList, BindingResult result, Model model,
 			HttpSession session) {
 		Users users = commonActivityService.getCommonInfoAddUsers(model,session,null);
-		//承認申請ボタンのONOffきりかえと書式のエラーチェック
-		attendanceManagementService.requestActivityCheck(attendanceFormList);
-		attendanceManagementService.errorCheck(attendanceFormList, result);
-
-		if (result.hasErrors()) {
-			return "attendance/registration";
-		}
-		//新しいデータに修正してデータベースに登録
-		AttendanceFormList updateAttendanceFormEntity = attendanceManagementService.updateAttendanceFormCreate(attendanceFormList, users.getUserId());
-		attendanceManagementService.attendanceUpsert(updateAttendanceFormEntity);
+		monthlyAttendanceReqService.serviceForUpdateButton(model, attendanceFormList, result, users);
 		
-		Integer years = Integer.parseInt(attendanceFormList.getStringYearsMonth().substring(0, 4));
-		Integer month = Integer.parseInt(attendanceFormList.getStringYearsMonth().substring(5, 7));
-		List<String> holidays = googleCalendarService.getListHolidays(years,month);
-		
-		modelService.addHolidays(model,holidays);
-		modelService.addAttendanceFormList(model,attendanceFormList);
-		modelService.addAttendanceMessage(model);
 		return "attendance/registration";
-	}
+		}
+	
+		//承認申請ボタンのONOffきりかえと書式のエラーチェック
+//		attendanceManagementService.requestActivityCheck(attendanceFormList);
+//		attendanceManagementService.errorCheck(attendanceFormList, result);
+//
+//		if (result.hasErrors()) {
+//			return "attendance/registration";
+//		}
+//		//新しいデータに修正してデータベースに登録
+//		AttendanceFormList updateAttendanceFormEntity = attendanceManagementService.updateAttendanceFormCreate(attendanceFormList, users.getUserId());
+//		attendanceManagementService.attendanceUpsert(updateAttendanceFormEntity);
+//		
+//		googleCalendarService.getListHolidays(model,attendanceFormList.getStringYearsMonth());
+//		
+//		modelService.addAttendanceFormList(model,attendanceFormList);
+//		modelService.addAttendanceMessage(model);
+		
+	
 
 	//承認申請ボタン押下
 	@RequestMapping(value = "/management", params = "approvalApplicationRegistration", method = RequestMethod.POST)
 	public String monthlyAttendanceReqCreate(MonthlyAttendanceReq monthlyAttendanceReq,
 			AttendanceFormList attendanceFormList, Model model, HttpSession session) {
-		Users users = commonActivityService.getCommonInfoAddUsers(model,session,null);
-
-		//サービス層へ。monthlyAttendanceService見込み
-		//勤怠リストのサイズを取得し、そのサイズだけ回す
-		for (int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
-			//形を整える
-			String inputDate = monthlyAttendanceReqService.getInputDate(attendanceFormList);
-			//日数分日付を埋める
-			attendanceFormList.getAttendanceList().get(i).setAttendanceDate(java.sql.Date.valueOf(inputDate));
-		}
-		//月初めの日にちを取る
-		Date firstAttendanceDate = attendanceManagementService.getFirstAttendanceDate(attendanceFormList);
-		//月初日、Listから取得したUserId、勤怠データ、勤怠詳細をもとに勤怠詳細の作成・更新処理
-		monthlyAttendanceReqService.monthlyAttendanceUpdate(firstAttendanceDate, monthlyAttendanceReq.getUserId(),
-				monthlyAttendanceReq, attendanceFormList);
-		//ステータスの更新処理
-		monthlyAttendanceReqService.submissionStatusCheck(firstAttendanceDate, users.getUserId(), model, session);
-		
-		//祝日リスト取得
-		Integer years = Integer.parseInt(attendanceFormList.getStringYearsMonth().substring(0, 4));
-		Integer month = Integer.parseInt(attendanceFormList.getStringYearsMonth().substring(5, 7));
-		List<String> holidays = googleCalendarService.getListHolidays(years,month);
-		modelService.addHolidays(model,holidays);
-		
-		modelService.addAttendanceFormList(model,attendanceFormList);
+		monthlyAttendanceReqService.getForMonthlyAttendanceReqCreate(model,attendanceFormList,monthlyAttendanceReq,session);
 		return "attendance/registration";
 	}
 
@@ -163,45 +122,17 @@ public class AttendanceManagementController {
 	@RequestMapping(value = "/management", params = "ApprovalApplicantDisplay", method = RequestMethod.POST)
 	public String attendance(@RequestParam("approvalUserId") Integer userId, @RequestParam("Years") Integer years,
 		@RequestParam("Month") Integer month, Model model,RedirectAttributes redirectAttributes, HttpSession session) {
-		commonActivityService.getCommonInfo(model,session,null);
-
-		List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month, Optional.<Events>empty());
-
-		//勤怠詳細があるとき
-		if (attendance != null) {
-			//初期化
-			AttendanceFormList attendanceFormList = new AttendanceFormList();
-			ArrayList<Attendance> attendanceList = new ArrayList<Attendance>();
-			//勤怠データ(AttendanceList)と勤怠詳細(attendance)をそれぞれに追加する
-			attendanceFormList.setAttendanceList(attendanceList);
-			attendanceList.addAll(attendance);
-
-			//★	approvalUserIdをセットするfor文を回す
-			for (int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
-				attendanceFormList.getAttendanceList().get(i).setUserId(userId);
-			}
-			modelService.addAttendanceFormList(model,attendanceFormList);
-		}
-		List<MonthlyAttendanceReq> approvalPending = monthlyAttendanceReqService.selectApprovalPending();
-		modelService.addApprovalPending(model,approvalPending);
 		
-		List<String> holidays = googleCalendarService.getListHolidays(years,month);
-		modelService.addHolidays(model,holidays);
-
+		commonActivityService.getCommonInfo(model,session,null);
+		monthlyAttendanceReqService.getForAttendance(model, years, month, userId);
+		
 		return "attendance/registration";
 	}
 
 	//マネージャー承認ボタン
 	@RequestMapping(value = "/management", params = "approval", method = RequestMethod.POST)
-	public String approval(AttendanceFormList attendanceFormList, Model model, HttpSession session,
-			RedirectAttributes redirectAttributes) {
-		if (attendanceFormList.getAttendanceList() == null) {
-			redirectAttributes.addFlashAttribute("choiceUsers", messageOutput.message("choiceUsers"));
-		} else {
-			String inputDate = monthlyAttendanceReqService.getInputDate(attendanceFormList);
-			Integer firstUserId=attendanceManagementService.getFirstAttendanceUserId(attendanceFormList);
-			monthlyAttendanceReqService.approvalStatus(firstUserId, inputDate);
-		}
+	public String approval(AttendanceFormList attendanceFormList,RedirectAttributes redirectAttributes) {
+		monthlyAttendanceReqService.getForApproval(redirectAttributes,attendanceFormList);
 		return "redirect:/attendance/index";
 	}
 
@@ -209,13 +140,7 @@ public class AttendanceManagementController {
 	@RequestMapping(value = "/management", params = "rejected", method = RequestMethod.POST)
 	public String Rejected(AttendanceFormList attendanceFormList, Model model, HttpSession session,
 			RedirectAttributes redirectAttributes) {
-		if (attendanceFormList.getAttendanceList() == null) {
-			redirectAttributes.addFlashAttribute("choiceUsers", messageOutput.message("choiceUsers"));
-		} else {
-			String inputDate =  monthlyAttendanceReqService.getInputDate(attendanceFormList);
-			Integer firstUserId=attendanceManagementService.getFirstAttendanceUserId(attendanceFormList);
-			monthlyAttendanceReqService.rejectedStatus(firstUserId, inputDate);
-		}
+		monthlyAttendanceReqService.getForRejected(redirectAttributes, attendanceFormList);
 		return "redirect:/attendance/index";
 	}
 

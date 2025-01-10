@@ -49,9 +49,6 @@
 								<div th:if="${Users.role} == 'Manager'">
 									<input type="submit" id="approve" value="承認" name="approval"class="buttonSize"  th:attr="role=${Users.role}" onclick="confirmSubmission(event)">
 									<input type="submit" id="reject" value="却下" name="rejected"class="buttonSize" th:attr="role=${Users.role}" onclick="confirmSubmission(event)">
-									<div class="text-danger fw-bold" th:if="${choiceUsers} != null">
-										<span th:text="${choiceUsers}"></span>
-									</div>
 								</div>
 								<div th:unless="${Users.role} == 'Manager'">
 									<span th:with="isDisabled = (${attendanceFormList} == null or ${attendanceFormList.RequestActivityCheck} == false) or (${Users.status} != 0 and ${Users.status} != 3)">
@@ -68,6 +65,9 @@
 					</div>
 					
 					<div th:if="${ApprovalPending} != null">
+						<div class="text-danger fw-bold" th:if="${choiceUsers} != null">
+							<span th:text="${choiceUsers}"></span>
+						</div>
 						<div th:class="${Users.role != 'Manager' ? 'row' : 'row m-2'}"><!--マネージャーではないならrow,（マネージャー）ならrow m-2-->
 							<div class="col-7">
 								<table class="default-table">
@@ -104,6 +104,9 @@
 							<div class="col-12" >
 								<div class="text-danger fw-bold" th:if="${attendanceMessage} != null">
 									<span th:text="${attendanceMessage}"></span>
+								</div>
+								<div class="text-danger fw-bold" th:if="${attendanceSubmit} != null">
+									<span th:text="${attendanceSubmit}"></span>
 								</div>
 								<div class="text-danger">
 									<span th:if="${#fields.hasErrors('itemInaccurate')}" th:errors="*{itemInaccurate}"></span>

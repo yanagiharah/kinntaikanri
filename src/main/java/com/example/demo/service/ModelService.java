@@ -24,15 +24,22 @@ public class ModelService {
 	ModelService(MessageOutput messageOutput){
 		this.messageOutput = messageOutput;
 	}
+	//redirectAttributeにメッセージ追加するメソッド
+	public void addFlashMessage(RedirectAttributes redirectAttributes, String messageKey, String message) {
+        String mainMessage = messageOutput.message(message);
+        redirectAttributes.addFlashAttribute(messageKey, mainMessage);
+    }
 	
 	//messageOutput.message系
 	
 	//同じ名前の部署が無ければ新規登録
 	public Model departmentInsertModel(Integer overlappingDepartmentCheck, RedirectAttributes redirectAttributes) {
 		if(overlappingDepartmentCheck == 1) {
-			redirectAttributes.addFlashAttribute("departmentMessage", messageOutput.message("registrationSuccess"));
+//			redirectAttributes.addFlashAttribute("departmentMessage", messageOutput.message("registrationSuccess"));
+			addFlashMessage(redirectAttributes,"departmentMessage","registrationSuccess");
 		}else if(overlappingDepartmentCheck == 0){
-			redirectAttributes.addFlashAttribute("departmentErrorMessage", messageOutput.message("registrationOverlapping"));
+//			redirectAttributes.addFlashAttribute("departmentErrorMessage", messageOutput.message("registrationOverlapping"));
+			addFlashMessage(redirectAttributes,"departmentErrorMessage","registrationOverlapping");
 		}
 		return redirectAttributes;
 	}
@@ -40,24 +47,54 @@ public class ModelService {
 	//新部署名と旧部署名が同じでなければ部署名変更
 	public Model departmentNameUpdateModel(Integer departmentNameEqualCheck, RedirectAttributes redirectAttributes) {
 		if(departmentNameEqualCheck == 1) {
-			redirectAttributes.addFlashAttribute("departmentMessage", messageOutput.message("updateNameSuccess"));
+//			redirectAttributes.addFlashAttribute("departmentMessage", messageOutput.message("updateNameSuccess"));
+			addFlashMessage(redirectAttributes,"departmentMessage","updateNameSuccess");
 		}else {
-			redirectAttributes.addFlashAttribute("departmentErrorMessage", messageOutput.message("updateNameOverlapping"));
+//			redirectAttributes.addFlashAttribute("departmentErrorMessage", messageOutput.message("updateNameOverlapping"));
+			addFlashMessage(redirectAttributes,"departmentErrorMessage","updateNameOverlapping");
 		}
 		return redirectAttributes;
 	}
 	
 	//部署を無効化したかの判断分岐
 	public Model departmentDeactiveUpdateModel(RedirectAttributes redirectAttributes) {
-		redirectAttributes.addFlashAttribute("departmentMessage", messageOutput.message("deactiveSuccess"));
+//		redirectAttributes.addFlashAttribute("departmentMessage", messageOutput.message("deactiveSuccess"));
+		addFlashMessage(redirectAttributes,"departmentMessage","deactiveSuccess");
 		return redirectAttributes;
 	}
 	
 	//部署を有効化したかの判断分岐。(復元ボタン実装後に有効化してください。)
 	public Model departmentActiveUpdateModel(RedirectAttributes redirectAttributes) {
-		redirectAttributes.addFlashAttribute("departmentMessage", messageOutput.message("activeSuccess"));
+//		redirectAttributes.addFlashAttribute("departmentMessage", messageOutput.message("activeSuccess"));
+		addFlashMessage(redirectAttributes,"departmentMessage","activeSuccess");
 		return redirectAttributes;
 	}
+	
+	public void choiceUsers(RedirectAttributes redirectAttributes) {
+		addFlashMessage(redirectAttributes,"choiceUsers","choiceUsers");
+		//modelService.choiceUsers(redirectAttributes);
+	}
+	
+	public void attendanceApplove(RedirectAttributes redirectAttributes) {
+		addFlashMessage(redirectAttributes,"choiceUsers","attendanceApplove");
+		//modelService.attendanceApplove(redirectAttributes);
+	}
+	
+	public void attendanceReject(RedirectAttributes redirectAttributes) {
+		addFlashMessage(redirectAttributes,"choiceUsers","attendanceReject");
+		//modelService.attendanceReject(redirectAttributes);
+	}
+	
+	public void stringYearsMonth(RedirectAttributes redirectAttributes) {
+		addFlashMessage(redirectAttributes,"stringYearsMonth","stringYearsMonth");
+		//modelService.stringYearsMonth(redirectAttributes);
+	}
+	
+	public void changeMonthlyAttendanceReqReject(RedirectAttributes redirectAttributes) {
+		addFlashMessage(redirectAttributes,"changeMonthlyAttendanceReqReject","changeMonthlyAttendanceReqReject");
+		//modelService.changeMonthlyAttendanceReqReject(redirectAttributes);
+	}
+	
 	//先月の月次勤怠があればモデルに詰めてマネージャーの処理メニュー画面に表示
 	public Model monthlyAttendanceIsSentInsertModel(Model model) {
 		model.addAttribute("monthlyAttendanceStatusIsSent", messageOutput.message("monthlyAttendanceStatusIsSent"));
@@ -167,6 +204,11 @@ public class ModelService {
 	
 	public Model addAttendanceMessage(Model model) {
 		model.addAttribute("attendanceMessage", messageOutput.message("attendanceSuccess"));
+		return model;
+	}
+	
+	public Model attendanceSubmit(Model model) {
+		model.addAttribute("attendanceSubmit",messageOutput.message("attendanceSubmit"));
 		return model;
 	}
 

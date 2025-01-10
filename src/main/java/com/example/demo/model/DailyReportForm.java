@@ -13,7 +13,7 @@ import lombok.Data;
 public class DailyReportForm {
 	
 	@Valid
-	private List< DailyReportDetailForm> dailyReportDetailForm;
+	private List<DailyReportDetailForm> dailyReportDetailForm;
 
 	private Integer dailyReportId;
 	

@@ -12,6 +12,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.helper.DateHelper;
 import com.example.demo.mapper.MonthlyAttendanceReqMapper;
 import com.example.demo.mapper.UsersMapper;
 import com.example.demo.model.Users;
@@ -24,15 +25,17 @@ public class EmailService {
     private final CommonActivityService commonActivityService;
     private final MonthlyAttendanceReqMapper monthlyAttendanceReqMapper;
     private final UserManagementService userManagementService;
+    private final DateHelper dateHelper;
     
 
-    public EmailService(JavaMailSender mailSender, UsersMapper usersMapper, MessageSource messageSource, CommonActivityService commonActivityService, MonthlyAttendanceReqMapper monthlyAttendanceReqMapper, UserManagementService userManagementService) {
+    public EmailService(JavaMailSender mailSender, UsersMapper usersMapper, MessageSource messageSource, CommonActivityService commonActivityService, MonthlyAttendanceReqMapper monthlyAttendanceReqMapper, UserManagementService userManagementService, DateHelper dateHelper) {
         this.mailSender = mailSender;
         this.usersMapper = usersMapper;
         this.messageSource = messageSource;
         this.commonActivityService = commonActivityService;
         this.monthlyAttendanceReqMapper = monthlyAttendanceReqMapper;
         this.userManagementService = userManagementService;
+        this.dateHelper = dateHelper;
     }
     
     public void sendEmail(String to, String subject, String text) {
@@ -46,7 +49,7 @@ public class EmailService {
 
     //月初の3日と5日に月次勤怠申請がされていないユーザーへメール送信
     public void monthlyAttendanceNotApplied() {
-    	Date firstDayOfLastMonthDate = commonActivityService.firstDayLastMonth();
+    	Date firstDayOfLastMonthDate = dateHelper.firstDayLastMonth();
         List<Users> usersList = usersMapper.selectMonthlyAttendanceNotSubmittedUsers(firstDayOfLastMonthDate);
         String regularAndUnitManagerUserNames = concatenateRegularAndUnitManagerUserNames(usersList);
         // 現在の日付を取得
@@ -98,7 +101,7 @@ public class EmailService {
 	
 	public void monthlyAttendanceReq() {
 		//先月の1日を取ってくるメソッド
-		Date firstDayOfLastMonthDate = commonActivityService.firstDayLastMonth();
+		Date firstDayOfLastMonthDate = dateHelper.firstDayLastMonth();
 		// 先月の月次勤怠に承認待ちがあるかを確認（0 or 1）
         Integer approvalStatus = monthlyAttendanceReqMapper.selectMonthlyAttendanceReq(firstDayOfLastMonthDate); 
         if (approvalStatus != null && approvalStatus == 1) {

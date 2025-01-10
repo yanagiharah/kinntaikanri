@@ -2,8 +2,6 @@ package com.example.demo.service;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -17,7 +15,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
+import com.example.demo.helper.DateHelper;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
@@ -35,6 +35,14 @@ public class GoogleCalendarService {
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final String CREDENTIALS_FILE_PATH = "iwantholiday-d8c7401a6a5b.json";
     private Calendar cachedService;
+    
+    private final ModelService modelService;
+    private final DateHelper dateHelper;
+    
+    GoogleCalendarService(ModelService modelService,DateHelper dateHelper) {
+    	this.modelService = modelService;
+    	this.dateHelper = dateHelper;
+    }
 
     //初回カレンダー取得
     public Calendar getCalendar() throws GeneralSecurityException, IOException {
@@ -78,7 +86,7 @@ public class GoogleCalendarService {
          return events;
     }
 //APIから受け取ったカレンダーの日付を取得
-    public List<String> listEvents(Events events){
+    public Model listEvents(Model model,Events events){
 //    	    System.out.println(events);
     	    List<String> holidays = events.getItems().stream()
     	        .map(event -> {
@@ -90,7 +98,7 @@ public class GoogleCalendarService {
     	            return localDate.format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
     	        })
     	        .collect(Collectors.toList());
-    	    return holidays;
+    	    return modelService.addHolidays(model,holidays);
     	}
     
     //APIから受け取ったカレンダーの日付と名前を格納したMapを取得
@@ -130,31 +138,23 @@ public class GoogleCalendarService {
                         LinkedHashMap::new // 順序を保持するためにLinkedHashMapを使用
                 ));
     }
-    
-    public Date convertToDate(int year, int month){
-        String dateString = year + "-" + String.format("%02d", month) + "-01";
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Date dateYearMonth = null;
-		try {
-			dateYearMonth = sdf.parse(dateString);
-		} catch (ParseException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
-		}
-        return dateYearMonth;
-    }
-    
     //祝日の日付返却用
     public Events getHolidaysEvents(Integer years,Integer month){
-		Date date = convertToDate(years, month);
+		Date date = dateHelper.convertToDate(years, month);
 		Events events = setListEvents(date);
 		return events;
 	}
     //祝日の日付と名前のリスト返却用（勤怠管理一般でしか使いません、現状）
-    public List<String> getListHolidays(Integer years,Integer month){
+    public Model getListHolidays(Model model, Integer years,Integer month){
     	Events events = getHolidaysEvents(years,month);
-		List<String> holidays = listEvents(events);
-		return holidays;
+		return listEvents(model,events);
+    }
+    
+    //年・月を持たないgetListHolidays
+    public Model getListHolidays(Model model,String yearMonth) {
+    	Integer years = dateHelper.parseDate(yearMonth)[0];
+		Integer month = dateHelper.parseDate(yearMonth)[1];
+		return getListHolidays(model,years,month);
     }
     
 }
