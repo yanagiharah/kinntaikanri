@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.demo.model.Users;
 import com.example.demo.service.CommonActivityService;
+import com.example.demo.service.MenuService;
 import com.example.demo.service.ModelService;
 
 @Controller
@@ -20,8 +20,11 @@ public class MenuController {
 	
 	private final ModelService modelService;
 	
-	MenuController(CommonActivityService commonActivityService,ModelService modelService) {
+	private final MenuService menuService;
+	
+	MenuController(CommonActivityService commonActivityService,ModelService modelService,MenuService menuService) {
 		this.commonActivityService = commonActivityService;
+		this.menuService = menuService;
 		this.modelService = modelService;
 		}
 
@@ -37,7 +40,7 @@ public class MenuController {
 	
 	@RequestMapping("loaded")
 	public String changeUrl(HttpSession session, Model model) {
-		commonActivityService.backMenu(model, session);
+		menuService.backMenu(model, session);
 		return "menu/processMenu";
 	}
 	
@@ -53,8 +56,7 @@ public class MenuController {
 	//勤怠登録画面に遷移
 	@RequestMapping("/index")
 	public String attenddance(HttpSession session, Model model) {
-		Users users = (Users) session.getAttribute("Users");
-		model.addAttribute("Users", users);
+		commonActivityService.usersModelSession(model,session);
 		return "redirect:/attendance/index";
 	}
 	

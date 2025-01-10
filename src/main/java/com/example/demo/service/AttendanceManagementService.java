@@ -3,7 +3,6 @@ package com.example.demo.service;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
 import com.example.demo.Factory.AttendanceFactory;
+import com.example.demo.helper.DateHelper;
 import com.example.demo.mapper.AttendanceSearchMapper;
 import com.example.demo.model.Attendance;
 import com.example.demo.model.AttendanceFormList;
@@ -27,13 +27,17 @@ public class AttendanceManagementService {
   private final AttendanceValidation attendanceValidation; 
   private final AttendanceFactory attendanceFactory;
   private final ModelService modelService;
+  private final DateHelper dateHelper;
+  private final GoogleCalendarService googleCalendarService;
   
   public AttendanceManagementService(AttendanceSearchMapper attendanceSearchMapper,AttendanceValidation attendanceValidation,
-		  AttendanceFactory attendanceFactory,ModelService modelService){
+		  AttendanceFactory attendanceFactory,ModelService modelService,DateHelper dateHelper,GoogleCalendarService googleCalendarService){
 	  this.attendanceSearchMapper = attendanceSearchMapper;
 	  this.attendanceValidation = attendanceValidation;
 	  this.attendanceFactory = attendanceFactory;
 	  this.modelService = modelService;
+	  this.dateHelper = dateHelper;
+	  this.googleCalendarService =googleCalendarService;
   }
   
   	//昨日の勤怠登録状況を取得
@@ -49,11 +53,7 @@ public class AttendanceManagementService {
 	public List<Attendance> attendanceSearchListUp(Integer userId, Integer years, Integer month,Optional<Events> events) {
 		
 		//年月から最終月日を算出
-		Calendar calendar = Calendar.getInstance();
-		calendar.clear();
-		calendar.set(Calendar.YEAR, years);
-		calendar.set(Calendar.MONTH, month - 1);
-		int monthDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+		int monthDays = dateHelper.getMonthDays(years,month);
 		List<Attendance> emptyAttendanceList = null;
 
 		//空の勤怠表を生成
@@ -64,9 +64,9 @@ public class AttendanceManagementService {
 		}
 		
 		//DBから勤怠表を取得
-		LocalDate firsrtDayMonth = LocalDate.of(years, month, 1);
-		LocalDate lastDayMonth = firsrtDayMonth.with(TemporalAdjusters.lastDayOfMonth());
-		List<Attendance> dbAttendanceList = attendanceSearchMapper.selectByYearMonth(userId, firsrtDayMonth, lastDayMonth);
+		LocalDate firstDayMonth = LocalDate.of(years, month, 1);
+		LocalDate lastDayMonth = firstDayMonth.with(TemporalAdjusters.lastDayOfMonth());
+		List<Attendance> dbAttendanceList = attendanceSearchMapper.selectByYearMonth(userId, firstDayMonth, lastDayMonth);
 		List<Attendance> UpdatedDbAttendanceList = attendanceFactory.dbAttendanceSetYear(dbAttendanceList);
 		
 		//空の勤怠表とDBの勤怠表を統合
@@ -158,6 +158,43 @@ public class AttendanceManagementService {
 		}
 		return null;
 	}
+	
+//	public List<Attendance> getSelectedAttendance(Model model,String targetYearMonth,Integer userId) {
+//		Integer years = dateHelper.parseDate(targetYearMonth)[0];
+//		Integer month = dateHelper.parseDate(targetYearMonth)[1];
+//		
+//		//祝日表示用のカレンダー取得
+//		Events events = googleCalendarService.getHolidaysEvents(years, month);
+//		//勤怠詳細と勤怠データをそれぞれ取得。モデルに追加
+//		List<Attendance> attendance = attendanceSearchListUp(userId, years, month,Optional.of(events));
+//		AttendanceFormList attendanceFormList = setInAttendance(attendance, years, month,
+//				targetYearMonth);
+//		modelService.addAttendanceFormList(model,attendanceFormList);
+//		//承認申請ボタンのOnOff切り替え設定
+//		requestActivityCheck(attendanceFormList);
+//		googleCalendarService.listEvents(model,events);
+//		return attendance;
+//	}
+	
+//	public Boolean serviceForUpdateButton(Model model,AttendanceFormList attendanceFormList,BindingResult result,Users users) {
+//		//承認申請ボタンのONOffきりかえと書式のエラーチェック
+//		requestActivityCheck(attendanceFormList);
+//		errorCheck(attendanceFormList, result);
+//
+//		if (result.hasErrors()) {
+//			System.out.println("errors"+ result.getAllErrors());
+//			return true;
+//		}
+//		//新しいデータに修正してデータベースに登録
+//		AttendanceFormList updateAttendanceFormEntity = updateAttendanceFormCreate(attendanceFormList, users.getUserId());
+//		attendanceUpsert(updateAttendanceFormEntity);
+//		
+//		googleCalendarService.getListHolidays(model,attendanceFormList.getStringYearsMonth());
+//		
+//		modelService.addAttendanceFormList(model,attendanceFormList);
+//		modelService.addAttendanceMessage(model);
+//		return false;
+//	}
 }
 
 

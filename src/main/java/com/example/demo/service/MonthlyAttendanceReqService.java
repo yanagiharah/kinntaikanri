@@ -4,22 +4,26 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.demo.helper.DateHelper;
 import com.example.demo.mapper.MonthlyAttendanceReqMapper;
+import com.example.demo.model.Attendance;
 import com.example.demo.model.AttendanceFormList;
 import com.example.demo.model.MonthlyAttendanceReq;
 import com.example.demo.model.Users;
+import com.google.api.services.calendar.model.Events;
 
 @Service
 public class MonthlyAttendanceReqService {
@@ -29,14 +33,23 @@ public class MonthlyAttendanceReqService {
 	private final AttendanceManagementService attendanceManagementService;
 	
 	private final ModelService modelService;
+	
+	private final DateHelper dateHelper;
+	
+	private final CommonActivityService commonActivityService;
+	
+	private final GoogleCalendarService googleCalendarService;
 
-	MonthlyAttendanceReqService(MonthlyAttendanceReqMapper monthlyAttendanceReqMapper, AttendanceManagementService attendanceManagementService,ModelService modelService) {
+	MonthlyAttendanceReqService(MonthlyAttendanceReqMapper monthlyAttendanceReqMapper, AttendanceManagementService attendanceManagementService,ModelService modelService,DateHelper dateHelper,CommonActivityService commonActivityService,GoogleCalendarService googleCalendarService) {
 		this.monthlyAttendanceReqMapper = monthlyAttendanceReqMapper;
 		this.attendanceManagementService = attendanceManagementService;
 		this.modelService = modelService;
+		this.dateHelper = dateHelper;
+		this.commonActivityService = commonActivityService;
+		this.googleCalendarService = googleCalendarService;
 	}
 
-	public List<MonthlyAttendanceReq> selectApprovalPending() {
+	public void selectApprovalPending(Model model) {
 		//1は承認待ち
 		List<MonthlyAttendanceReq> monthlyAttendanceReq = monthlyAttendanceReqMapper.selectApprovalPending(1);
 		for (int i = 0; i < monthlyAttendanceReq.size(); i++) {
@@ -48,7 +61,7 @@ public class MonthlyAttendanceReqService {
 			monthlyAttendanceReq.get(i)
 					.setMonth(Integer.valueOf(getMonth.format(monthlyAttendanceReq.get(i).getTargetYearMonth())));
 		}
-		return monthlyAttendanceReq;
+		modelService.addApprovalPending(model,monthlyAttendanceReq);
 	}
 
 	//承認申請ボタン押下(初めての申請の際)
@@ -92,10 +105,9 @@ public class MonthlyAttendanceReqService {
 
 	//承認申請のステータス確認
 	public Model submissionStatusCheck(Date targetYearMonth, Integer userId, Model model, HttpSession session) {
-		Users users = (Users) session.getAttribute("Users");
+		Users users = commonActivityService.getCommonInfoAddUsers(model,session,null);
 		//ステータスチェックを呼び出し、ステータスの記録があればそれを、なければ０を割り当てる処理
-		MonthlyAttendanceReq statusCheck = monthlyAttendanceReqMapper.selectTargetYearMonthStatus(targetYearMonth,
-				userId);
+		MonthlyAttendanceReq statusCheck = monthlyAttendanceReqMapper.selectTargetYearMonthStatus(targetYearMonth,userId);
 		if (statusCheck != null) {
 			Integer nowStatus = statusCheck.getStatus();
 			users.setStatus(nowStatus);
@@ -115,6 +127,115 @@ public class MonthlyAttendanceReqService {
 	public void rejectedStatus(Integer userId, String targetYearMonth) {
 		monthlyAttendanceReqMapper.rejectedStatus(userId, targetYearMonth);
 	}
+	
+	public List<Attendance> getSelectedAttendance(Model model,String targetYearMonth,Integer userId,HttpSession session) {
+		Integer years = dateHelper.parseDate(targetYearMonth)[0];
+		Integer month = dateHelper.parseDate(targetYearMonth)[1];
+		
+		//祝日表示用のカレンダー取得
+		Events events = googleCalendarService.getHolidaysEvents(years, month);
+		//勤怠詳細と勤怠データをそれぞれ取得。モデルに追加
+		List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month,Optional.of(events));
+		AttendanceFormList attendanceFormList = attendanceManagementService.setInAttendance(attendance, years, month,
+				targetYearMonth);
+		modelService.addAttendanceFormList(model,attendanceFormList);
+		//月次勤怠テーブルのstatusをユーザー)モデルのstatusに詰める
+		submissionStatusCheck(attendance.get(0).getAttendanceDate(), userId, model, session);
+		//承認申請ボタンのOnOff切り替え設定
+		attendanceManagementService.requestActivityCheck(attendanceFormList);
+		googleCalendarService.listEvents(model,events);
+		return attendance;
+	}
+	
+	public Boolean serviceForUpdateButton(Model model,AttendanceFormList attendanceFormList,BindingResult result,Users users) {
+		//承認申請ボタンのONOffきりかえと書式のエラーチェック
+		attendanceManagementService.requestActivityCheck(attendanceFormList);
+		attendanceManagementService.errorCheck(attendanceFormList, result);
+
+		if (result.hasErrors()) {
+			System.out.println("errors"+ result.getAllErrors());
+			return true;
+		}
+		//新しいデータに修正してデータベースに登録
+		AttendanceFormList updateAttendanceFormEntity = attendanceManagementService.updateAttendanceFormCreate(attendanceFormList, users.getUserId());
+		attendanceManagementService.attendanceUpsert(updateAttendanceFormEntity);
+		
+		googleCalendarService.getListHolidays(model,attendanceFormList.getStringYearsMonth());
+		
+		modelService.addAttendanceFormList(model,attendanceFormList);
+		modelService.addAttendanceMessage(model);
+		return false;
+	}
+	
+	public void getForMonthlyAttendanceReqCreate(Model model,AttendanceFormList attendanceFormList,MonthlyAttendanceReq monthlyAttendanceReq,HttpSession session) {
+		Users users = commonActivityService.getCommonInfoAddUsers(model,session,null);
+		//勤怠リストのサイズを取得し、そのサイズだけ回す
+		for (int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
+			//形を整える
+			String inputDate = getInputDate(attendanceFormList);
+			//日数分日付を埋める
+			attendanceFormList.getAttendanceList().get(i).setAttendanceDate(java.sql.Date.valueOf(inputDate));
+		}
+		//月初めの日にちを取る
+		Date firstAttendanceDate = attendanceManagementService.getFirstAttendanceDate(attendanceFormList);
+		//月初日、Listから取得したUserId、勤怠データ、勤怠詳細をもとに勤怠詳細の作成・更新処理
+		monthlyAttendanceUpdate(firstAttendanceDate, monthlyAttendanceReq.getUserId(),
+				monthlyAttendanceReq, attendanceFormList);
+		//ステータスの更新処理
+		submissionStatusCheck(firstAttendanceDate, users.getUserId(), model, session);
+		
+		//祝日リスト取得
+		googleCalendarService.getListHolidays(model,attendanceFormList.getStringYearsMonth());
+		modelService.addAttendanceFormList(model,attendanceFormList);
+		modelService.attendanceSubmit(model);
+	}
+	
+	public void getForAttendance(Model model,Integer years,Integer month,Integer userId) {
+		List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month, Optional.<Events>empty());
+
+		//勤怠詳細があるとき
+		if (attendance != null) {
+			//初期化
+			AttendanceFormList attendanceFormList = new AttendanceFormList();
+			ArrayList<Attendance> attendanceList = new ArrayList<Attendance>();
+			//勤怠データ(AttendanceList)と勤怠詳細(attendance)をそれぞれに追加する
+			attendanceFormList.setAttendanceList(attendanceList);
+			attendanceList.addAll(attendance);
+
+			//★	approvalUserIdをセットするfor文を回す
+			for (int i = 0; i < attendanceFormList.getAttendanceList().size(); i++) {
+				attendanceFormList.getAttendanceList().get(i).setUserId(userId);
+			}
+			modelService.addAttendanceFormList(model,attendanceFormList);
+		}
+		selectApprovalPending(model);
+		
+		
+		googleCalendarService.getListHolidays(model,years,month);
+	}
+	
+	public void getForApproval(RedirectAttributes redirectAttributes,AttendanceFormList attendanceFormList) {
+		if (attendanceFormList.getAttendanceList() == null) {
+			modelService.choiceUsers(redirectAttributes);
+		} else {
+			String inputDate = getInputDate(attendanceFormList);
+			Integer firstUserId=attendanceManagementService.getFirstAttendanceUserId(attendanceFormList);
+			approvalStatus(firstUserId, inputDate);
+			modelService.attendanceApplove(redirectAttributes);
+		}
+	}
+	
+	public void getForRejected(RedirectAttributes redirectAttributes,AttendanceFormList attendanceFormList) {
+		if (attendanceFormList.getAttendanceList() == null) {
+			modelService.choiceUsers(redirectAttributes);
+		} else {
+			String inputDate =  getInputDate(attendanceFormList);
+			Integer firstUserId=attendanceManagementService.getFirstAttendanceUserId(attendanceFormList);
+			rejectedStatus(firstUserId, inputDate);
+			modelService.attendanceReject(redirectAttributes);
+		}
+	}
+	
 
 //*********************************↓↓勤怠訂正↓↓***********************************
 	
@@ -124,10 +245,12 @@ public class MonthlyAttendanceReqService {
         List<MonthlyAttendanceReq> targetList = monthlyAttendanceReqMapper.selectApproved(userId);
         
         // 先月の月を取得
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MONTH,-1);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
-        String lastMonth = dateFormat.format(calendar.getTime());
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.add(Calendar.MONTH,-1);
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
+//        String lastMonth = dateFormat.format(calendar.getTime());
+        
+        String lastMonth = dateHelper.lastYearsMonth();
 
         // 先月の月のMonthlyAttendanceReqオブジェクトを作成
         MonthlyAttendanceReq lastMonthReq = new MonthlyAttendanceReq();
@@ -222,20 +345,20 @@ public class MonthlyAttendanceReqService {
 	}
 
 	//カレンダーで選んだ年月を"yyyy-MM-01"の形に変更するメソッド
-	public LocalDate convertStringToLocalDate(String stringYearsMonth) {
-		try {
-			// 元の形式
-			DateTimeFormatter monthlyAttendanceReqFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-			LocalDate targetDate = LocalDate.parse(stringYearsMonth + "-01", monthlyAttendanceReqFormat);
-			// 日付を1日に設定
-			return targetDate.withDayOfMonth(1);
-		} catch (DateTimeParseException e) {
-			//ほぼあり得ないがエラー時用の処理
-			System.err.println("Error parsing date: " + stringYearsMonth);
-			e.printStackTrace();
-			return null;
-		}
-	}
+//	public LocalDate convertStringToLocalDate(String stringYearsMonth) {
+//		try {
+//			// 元の形式
+//			DateTimeFormatter monthlyAttendanceReqFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//			LocalDate targetDate = LocalDate.parse(stringYearsMonth + "-01", monthlyAttendanceReqFormat);
+//			// 日付を1日に設定
+//			return targetDate.withDayOfMonth(1);
+//		} catch (DateTimeParseException e) {
+//			//ほぼあり得ないがエラー時用の処理
+//			System.err.println("Error parsing date: " + stringYearsMonth);
+//			e.printStackTrace();
+//			return null;
+//		}
+//	}
 
 	//特定ユーザーだけ表示するフィルター
 	public List<MonthlyAttendanceReq> filteringHasChangeReq(Integer userId, String stringYearsMonth) {
@@ -251,8 +374,7 @@ public class MonthlyAttendanceReqService {
 	public String getInputDate(AttendanceFormList attendanceFormList) {
 		 if (attendanceFormList != null && !attendanceFormList.getAttendanceList().isEmpty()) {
 	            String defaultInputDate=attendanceFormList.getAttendanceList().get(0).getAttendanceDateS();
-	            String conversion = defaultInputDate.replace("/", "-");
-	            return conversion;
+	            return dateHelper.convertionInputDate(defaultInputDate);
 	        }
 	        return null; // または適切なデフォルト値
 	}

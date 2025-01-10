@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.demo.helper.DateHelper;
 import com.example.demo.model.DailyReportDetailForm;
 import com.example.demo.model.DailyReportForm;
 import com.example.demo.model.Users;
@@ -38,27 +38,24 @@ public class DailyReportController {
 	private final CommonActivityService commonActivityService;
 	
 	private final ModelService modelService;
+	
+	private final DateHelper dateHelper;
 
 	public DailyReportController(DailyReportService dailyReportService, MessageSource messageSource,
-			CommonActivityService commonActivityService, ModelService modelService) {
+			CommonActivityService commonActivityService, ModelService modelService, DateHelper dateHelper) {
 		this.dailyReportService = dailyReportService;
 		this.messageSource = messageSource;
 		this.commonActivityService = commonActivityService;
 		this.modelService = modelService;
+		this.dateHelper = dateHelper;
 	}
 
 	//日報の初期表示画面（今日時点のものを表示）
 	@RequestMapping("/detail")
 	public String dailyReportDetail(@RequestParam(value = "date", required = false) String date, HttpSession session, Model model) {
 		Users users = commonActivityService.getCommonInfoAddUsers(model,session,null);
-
-		LocalDate calendarDate;
+		LocalDate calendarDate=dateHelper.getInputCalendarDate(date);
 		
-		if (date == null) {
-			calendarDate = LocalDate.now();
-		} else {
-			calendarDate = LocalDate.parse(date);
-		}
 		if (!users.getRole().equalsIgnoreCase("Manager")) {
 			Integer userId = users.getUserId();
 			
@@ -124,7 +121,7 @@ public class DailyReportController {
 		modelService.addMessage(model,successMessage);
 
 		LocalDate calendarDate = dailyReportForm.getDailyReportDetailForm().get(0).getDailyReportDetailDate();
-		String calendarDateS = calendarDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		String calendarDateS = dateHelper.getYearMonthDay(calendarDate);
 		return dailyReportDetail(calendarDateS, session, model);
 	}
 	
@@ -134,13 +131,7 @@ public class DailyReportController {
 		Users users = commonActivityService.getCommonInfoAddUsers(model,session,null);
 		model.addAttribute("Users", users);
 		
-		LocalDate calendarDate;
-		
-		if (date == null) {
-			calendarDate = LocalDate.now();
-		} else {
-			calendarDate = LocalDate.parse(date);
-		}
+		LocalDate calendarDate=dateHelper.getInputCalendarDate(date);
 		
 		List<String> confirmPendingStatus1 = dailyReportService.selectConfirmPendingStatus1();
 		if(!confirmPendingStatus1.isEmpty()) {

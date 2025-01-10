@@ -8,6 +8,12 @@ $attendance-color:rgb(255, 128, 64);
 $dailyRep-color: rgb(128, 128, 64);
 $department-color: rgb(128, 179, 255);
 $management-color: rgb(131, 118, 137);
+$hoverManagement-color:rgb(153, 138, 160);
+$hoverAttendance-color: rgb(255, 153, 102);
+$hoverDailyRep-color: rgb(153, 153, 102);
+$hoverDepartment-color:rgb(153, 204, 255);
+
+
 
 @import "../../../../../node_modules/bootstrap/scss/containers"; 
 @import "../../../../../node_modules/bootstrap/scss/tables";
@@ -28,6 +34,13 @@ $menuColors:(
 	attendance:$attendance-color,
 	dailyRep:$dailyRep-color,
 	department:$department-color,
+);
+
+$hoverMenuColors:(
+	management:$hoverManagement-color,
+	attendance:$hoverAttendance-color,
+	dailyRep:$hoverDailyRep-color,
+	department:$hoverDepartment-color,
 );
 
 $daysColors:(
@@ -102,8 +115,21 @@ main{
 }
 
 .buttonSize{
+	@extend .btn;
+	@extend .btn-sm;
 	width: 100px;
+	@include txt-color($gray-900);
 	@include bg-color($yellow);
+	&:hover{
+		@include bg-color($yellow-600);
+		@include txt-color($gray-100);
+	}
+	&:disabled {
+	   background-color: $gray-300; 
+	   color: $gray-600; 
+	   cursor: not-allowed; 
+	   opacity: 0.65; 
+	 }
 }
 
 .noneBox {
@@ -174,10 +200,15 @@ input[type='time'] {
 }
 //************************処理メニュー画面↓************************************************
 .menuButtonSize {
+		@extend .btn;
 		width: 260px;
 		height: 80px;
 		@include bg-color($white);
 		@extend .mt-1;
+		&:hover {
+		   @include bg-color(#666); // ホバー時の背景色を指定
+		   color: #ccc; // ホバー時の文字色を指定（必要に応じて）
+		 }
 }
 
 .menuAlert{
@@ -197,6 +228,12 @@ input[type='time'] {
 	.#{$type} .menuButtonSize {
 	       @include bg-color($color);
 	   }
+}
+
+@each $type,$color in $hoverMenuColors{
+	.#{$type} .menuButtonSize:hover{
+		@include bg-color($color);
+	}
 }
 
 //天気系
@@ -229,9 +266,9 @@ input[type='time'] {
 	
 //**************************訂正申請画面*******************************************
 .managers{
-		margin-top: 90px;
+		margin-top: 40px;
 		@media screen and (min-width:1200px ){
-					margin-top:80px;
+					margin-top:40px;
 					.managers-xl{
 								margin-top:14px;
 							}
@@ -356,20 +393,37 @@ input[type='time'] {
 		}
 }
 .buttonRound {
-			width: 120px;
-			height: 60px;
-			@include bg-color($yellow);
-			// border-radius:30px;
+	width: 120px;
+	height: 60px;
+	@include bg-color($yellow);
+	&:hover{
+			@include bg-color($yellow-600);
+			@include txt-color($gray-100);
+		}
+	// border-radius:30px;
 	}
 
 .variableButtonSize {
-				//width: 100px;
-				display: inline-block;
-				padding: 10px 20px;
-				cursor: pointer;
-				@include bg-color($yellow);
-				font-size: 16px;
+		//width: 100px;
+		display: inline-block;
+		padding: 10px 20px;
+		cursor: pointer;
+		@include bg-color($yellow);
+		font-size: 16px;
+		&:hover{
+				@include bg-color($yellow-600);
+				@include txt-color($gray-100);
 			}
+		&:disabled {
+			   background-color: $gray-300; 
+			   color: $gray-600; 
+			   cursor: not-allowed; 
+			   opacity: 0.65; 
+			   &:hover{
+				@include txt-color($gray-600)
+			   }
+			 }
+	}
 
 	
 //*****************************アドミン********************************************
@@ -420,6 +474,33 @@ hr{
 	}
 	.buttonRound ,.buttonSize{
 			@include bg-color($yellow-600);
+			@include txt-color($gray-100);
+			&:hover{
+					@include bg-color($yellow-300);
+					@include txt-color($gray-700);
+				}
+				&:disabled {
+				   background-color: $gray-300; 
+				   color: $gray-600;
+				   @include txt-color($gray-800);
+				   cursor: not-allowed; 
+				   opacity: 0.65; 
+				 }
+	}
+	.variableButtonSize{
+		&:hover{
+			@include bg-color($yellow-600);
+			@include txt-color($gray-100);
+		}
+		&:disabled {
+		   background-color: $gray-300; 
+		   color: $gray-600; 
+		   cursor: not-allowed; 
+		   opacity: 0.65; 
+		   &:hover{
+				@include txt-color($gray-600)
+		   }
+	 	}
 	}
 	.commonHeader{
 		@include bg-color($header-dark-color);

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.demo.inter.MessageOutput;
+import com.example.demo.helper.DateHelper;
 import com.example.demo.model.Attendance;
 import com.example.demo.model.AttendanceFormList;
 import com.example.demo.model.MonthlyAttendanceReq;
@@ -35,19 +35,19 @@ public class MonthlyAttendanceReqController {
 	private final CommonActivityService commonActivityService;
 	private final MonthlyAttendanceReqService monthlyAttendanceReqService;
 	private final AttendanceManagementService attendanceManagementService;
-	private final MessageOutput messageOutput;
 	private final ModelService modelService;
 	private final GoogleCalendarService googleCalendarService;
+	private final DateHelper dateHelper;
 
 	public MonthlyAttendanceReqController(CommonActivityService commonActivityService,
-			MonthlyAttendanceReqService monthlyAttendanceReqService,
-			AttendanceManagementService attendanceManagementService, MessageOutput messageOutput,ModelService modelService,GoogleCalendarService googleCalendarService) {
+			MonthlyAttendanceReqService monthlyAttendanceReqService,DateHelper dateHelper,
+			AttendanceManagementService attendanceManagementService, ModelService modelService,GoogleCalendarService googleCalendarService) {
 		this.commonActivityService = commonActivityService;
 		this.monthlyAttendanceReqService = monthlyAttendanceReqService;
 		this.attendanceManagementService = attendanceManagementService;
-		this.messageOutput = messageOutput;
 		this.modelService = modelService;
 		this.googleCalendarService=googleCalendarService;
+		this.dateHelper = dateHelper;
 	}
 
 	@RequestMapping("/correction")
@@ -55,10 +55,10 @@ public class MonthlyAttendanceReqController {
 		
 		Users users = commonActivityService.getCommonInfoAddUsers(model,session,null);
 		
-		String stringYearsMonth;
-		stringYearsMonth = (String) model.asMap().get("stringYearsMonth");
+		String stringYearsMonth = (String) model.asMap().get("stringYearsMonth");
+		
 	    if (stringYearsMonth == null) {
-	        stringYearsMonth = commonActivityService.lastYearsMonth();
+	        stringYearsMonth = dateHelper.lastYearsMonth();
 	    }
 	    
 		if (users.getRole().equalsIgnoreCase("Manager")) {
@@ -82,8 +82,8 @@ public class MonthlyAttendanceReqController {
 			HttpSession session) {
 		Users users = commonActivityService.getCommonInfoAddUsers(model,session,null);
 		//yearとmonthの作成
-		Integer years = Integer.parseInt(stringYearsMonth.substring(0, 4));
-		Integer month = Integer.parseInt(stringYearsMonth.substring(5, 7));
+		Integer years = dateHelper.parseDate(stringYearsMonth)[0];
+		Integer month = dateHelper.parseDate(stringYearsMonth)[1];
 
 		//yearとmonthに該当する勤怠表を探してAttendanceFormListに詰める処理
 		List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month, Optional.<Events>empty());
@@ -93,8 +93,7 @@ public class MonthlyAttendanceReqController {
 		if (!users.getRole().equalsIgnoreCase("Manager")) {
 			modelService.addAttendanceFormList(model,attendanceFormList);
 			//月次勤怠テーブルのstatusをユーザー)モデルのstatusに詰める
-			monthlyAttendanceReqService.submissionStatusCheck(attendance.get(0).getAttendanceDate(), userId, model,
-					session);
+			monthlyAttendanceReqService.submissionStatusCheck(attendance.get(0).getAttendanceDate(), userId, model,session);
 			attendanceManagementService.requestActivityCheck(attendanceFormList);
 			List<MonthlyAttendanceReq> approvedMonths= monthlyAttendanceReqService.selectApproval(users.getUserId());
 			modelService.addApprovedMonths(model,approvedMonths);
@@ -105,8 +104,7 @@ public class MonthlyAttendanceReqController {
 			modelService.addStringYearsMonth(model,stringYearsMonth);
 		}
 		
-		List<String> holidays = googleCalendarService. getListHolidays(years,month);
-		modelService.addHolidays(model,holidays);
+		googleCalendarService.getListHolidays(model,years,month);
 		return "monthlyAttendanceReq/monthlyAttendance";
 	}
 
@@ -117,15 +115,15 @@ public class MonthlyAttendanceReqController {
 			@RequestParam("stringYearsMonth") String stringYearsMonth) {
 		commonActivityService.getCommonInfo(model,session,null);
 		//	has_change_reqを１に変更する処理のためにLocalDateに変更して処理
-		LocalDate targetYearMonth = monthlyAttendanceReqService.convertStringToLocalDate(stringYearsMonth);
+		LocalDate targetYearMonth = dateHelper.convertStringToLocalDate(stringYearsMonth);
 		if (targetYearMonth != null) {
 			monthlyAttendanceReqService.changeRequestMonthlyAttendanceReq(userId, targetYearMonth, changeReason);
 		}
 		//再度同じ月の勤怠表を表示するための処理
-		Integer years = Integer.parseInt(stringYearsMonth.substring(0, 4));
-		Integer month = Integer.parseInt(stringYearsMonth.substring(5, 7));
-		List<String> holidays = googleCalendarService.getListHolidays(years,month);
-		modelService.addHolidays(model,holidays);
+		Integer years = dateHelper.parseDate(stringYearsMonth)[0];
+		Integer month = dateHelper.parseDate(stringYearsMonth)[1];
+		googleCalendarService.getListHolidays(model,stringYearsMonth);
+		
 		List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month,Optional.<Events>empty());
 		AttendanceFormList attendanceFormList = attendanceManagementService.setInAttendance(attendance, years, month,
 				stringYearsMonth);
@@ -141,16 +139,14 @@ public class MonthlyAttendanceReqController {
 
 	//	//マネージャー用訂正申請者勤怠表表示ボタンの処理
 	@RequestMapping(value = "/management", params = "ApprovalApplicantDisplay", method = RequestMethod.POST)
-	public String attendance(@RequestParam("approvalUserId") Integer userId, @RequestParam("Years") Integer years,
-			@RequestParam("Month") Integer month, @RequestParam("approvalUserName") String userName, Model model,
+	public String attendance(@RequestParam("approvalUserId") Integer userId, @RequestParam("stringYearsMonth") String stringYearsMonth,  @RequestParam("approvalUserName") String userName, Model model,
 			HttpSession session) {
 		commonActivityService.getCommonInfo(model,session,null);
-		//monthをMMの形に再成型
-		String monthString = String.format("%02d", month);
-		String stringYearsMonth = years + "-" + monthString;
+		//yearとmonthを"yyyy-MM"の形に再成型
+		Integer years = dateHelper.parseDate(stringYearsMonth)[0];
+		Integer month = dateHelper.parseDate(stringYearsMonth)[1];
 		
-		List<String> holidays = googleCalendarService.getListHolidays(years,month);
-		modelService.addHolidays(model,holidays);
+		googleCalendarService.getListHolidays(model,years,month);
 
 		List<Attendance> attendance = attendanceManagementService.attendanceSearchListUp(userId, years, month,Optional.<Events>empty());
 
@@ -185,16 +181,16 @@ public class MonthlyAttendanceReqController {
 	@RequestMapping(value = "/management", params = "approval", method = RequestMethod.POST)
 	public String approval(AttendanceFormList attendanceFormList, Model model, HttpSession session,
 			RedirectAttributes redirectAttributes,@RequestParam("stringYearsMonth")String stringYearsMonth) {
-		redirectAttributes.addFlashAttribute("stringYearsMonth",stringYearsMonth);
+		modelService.stringYearsMonth(redirectAttributes);
 		//else句以外ほぼ起きることはない、状況を見て消去可,システム上前半句は起きえないはず
 		if (attendanceFormList.getAttendanceList() == null) {
-			redirectAttributes.addFlashAttribute("choiceUsers", messageOutput.message("choiceUsers"));
+			modelService.choiceUsers(redirectAttributes);
 		} else {
 			//承認更新文のための処理とその実行
 			String inputDate =  monthlyAttendanceReqService.getInputDate(attendanceFormList);
 			Integer firstUserId=attendanceManagementService.getFirstAttendanceUserId(attendanceFormList);
 			monthlyAttendanceReqService.changeApprovalMonthlyAttendanceReq(firstUserId, inputDate);
-			modelService.changeMonthlyAttendanceReqApproval(model);
+			modelService.stringYearsMonth(redirectAttributes);
 		}
 		return "redirect:/attendanceCorrect/correction";
 	}
@@ -204,15 +200,15 @@ public class MonthlyAttendanceReqController {
 	@RequestMapping(value = "/management", params = "rejected", method = RequestMethod.POST)
 	public String Rejected(AttendanceFormList attendanceFormList, Model model, HttpSession session,
 			RedirectAttributes redirectAttributes,@RequestParam("rejectionReason")String rejectionReason,@RequestParam("stringYearsMonth")String stringYearsMonth) {
-		redirectAttributes.addFlashAttribute("stringYearsMonth",stringYearsMonth);
+		modelService.stringYearsMonth(redirectAttributes);
 		if (attendanceFormList.getAttendanceList() == null) {
-			redirectAttributes.addFlashAttribute("choiceUsers", messageOutput.message("choiceUsers"));
+			modelService.choiceUsers(redirectAttributes);
 		} else {
 			//却下更新分のための処理とその実行
 			String inputDate =  monthlyAttendanceReqService.getInputDate(attendanceFormList);
 			Integer firstUserId=attendanceManagementService.getFirstAttendanceUserId(attendanceFormList);
 			monthlyAttendanceReqService.changeRejectionMonthlyAttendanceReq(firstUserId, inputDate, rejectionReason);
-			modelService.changeMonthlyAttendanceReqReject(model);
+			modelService.changeMonthlyAttendanceReqReject(redirectAttributes);
 		}
 		return "redirect:/attendanceCorrect/correction";
 	}

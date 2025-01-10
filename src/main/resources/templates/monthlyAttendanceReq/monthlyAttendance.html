@@ -68,6 +68,12 @@
 							
 						</div>
 						<div th:class="${Users.role != 'Manager' ? 'row mt-3' : 'row managers'}">
+							<div class="text-danger fw-bold" th:if="${changeMonthlyAttendanceReqReject} != null">
+								<span th:text="${changeMonthlyAttendanceReqReject}"></span>
+							</div>
+							<div class="text-danger fw-bold" th:if="${changeMonthlyAttendanceReqApproval} != null">
+								<span th:text="${changeMonthlyAttendanceReqApproval}"></span>
+							</div>
 							<div class="col-xl-6 managers-xl">
 								<div th:if="${HasChangeReq} != null" ><!--マネージャー画面でない限りnull-->
 									<table class="default-table" id="attendanceList">
@@ -88,8 +94,6 @@
 														<th:block>
 															<input type="hidden" name="approvalUserId" th:value="${HasChangeReq.userId}">
 															<input type="hidden" name="approvalUserName" th:value="${HasChangeReq.userName}">
-															<input type="hidden" name="Years" th:value="${HasChangeReq.Years}">
-															<input type="hidden" name="Month" th:value="${HasChangeReq.Month}">
 														</th:block>
 															<!--以上の要素がattendanceSerchUpメソッドの引数となる-->
 														<button type="submit"name="ApprovalApplicantDisplay" class="ApprovalApplicantDisplay linklike"> [[${HasChangeReq.userName}]]</button>
@@ -138,6 +142,9 @@
 							<div class="row m-0">
 								<div class="text-danger fw-bold" th:if="${sendCorrectionApplication} != null">
 									<span th:text="${sendCorrectionApplication}"></span>
+								</div>
+								<div class="text-danger fw-bold" th:if="${choiceUsers} != null">
+									<span th:text="${choiceUsers}"></span>
 								</div>
 								<div class="attendanceList">
 									<table class="collapsedTable">
