@@ -26,14 +26,14 @@ public class AttendanceFactory {
 	private GoogleCalendarService googleCalendarService;
 	
 	//検索ボタン時attendanceFormListに詰めなおし
-	public AttendanceFormList setInAttendance(List<Attendance> attendance,Integer stringYears,Integer years,String month) {
+	public AttendanceFormList setInAttendance(List<Attendance> attendance,Integer years,Integer month ,String stringYears) {
 		AttendanceFormList attendanceFormList = new AttendanceFormList();
 		ArrayList<Attendance> attendanceList = new ArrayList<Attendance>();
 		attendanceFormList.setAttendanceList(attendanceList);
 		attendanceList.addAll(attendance);
 		attendanceFormList.setStringYears(String.valueOf(years));
-		attendanceFormList.setStringMonth(String.valueOf(years));
-		attendanceFormList.setStringYearsMonth(month);
+		attendanceFormList.setStringMonth(String.valueOf(month));
+		attendanceFormList.setStringYearsMonth(stringYears);
 		return attendanceFormList;
 	}
 	
@@ -47,12 +47,26 @@ public class AttendanceFactory {
 		  }
 		return attendanceFormList;
 	}
+	
+	public AttendanceFormList createAttendanceFormList(List<Attendance> attendance, Integer userId) {
+		AttendanceFormList attendanceFormList = new AttendanceFormList();
+		ArrayList<Attendance> attendanceList = new ArrayList<>(attendance);
+		attendanceFormList.setAttendanceList(attendanceList);
+		
+		// approvalUserIdをセットするfor文を回す
+		for (Attendance att : attendanceFormList.getAttendanceList()) {
+		    att.setUserId(userId);
+		}
+		
+		return attendanceFormList;
+	}	
 	//勤怠管理一般表示用
 	public List<Attendance> emptyAttendanceCreate(int lastMonthAndDay, Integer years, Integer month, Events events) {
 	    // 祝日データの取得
 	    Map<String, String> formattedHolidaysWithNames = googleCalendarService.listEventsName(events);
 	    return createAttendanceList(lastMonthAndDay, years, month, formattedHolidaysWithNames);
 	}
+	
 	//勤怠管理や修正用（オーバーロードする理由として上記メソッドはAPIを通すゆえにかなり重いことから避けたいため）
 	public List<Attendance> emptyAttendanceCreate(int lastMonthAndDay, Integer years, Integer month) {
 	    // 空の祝日データを渡す

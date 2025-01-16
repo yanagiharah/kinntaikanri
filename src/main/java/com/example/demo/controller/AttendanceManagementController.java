@@ -11,48 +11,27 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.demo.helper.DateHelper;
 import com.example.demo.model.AttendanceFormList;
 import com.example.demo.model.MonthlyAttendanceReq;
 import com.example.demo.model.Users;
-import com.example.demo.service.AttendanceManagementService;
 import com.example.demo.service.CommonActivityService;
-import com.example.demo.service.GoogleCalendarService;
-import com.example.demo.service.ModelService;
 import com.example.demo.service.MonthlyAttendanceReqService;
 
 @Controller
 @RequestMapping("/attendance")
 public class AttendanceManagementController {
-
-	private final AttendanceManagementService attendanceManagementService;
 	private final MonthlyAttendanceReqService monthlyAttendanceReqService;
 	private final CommonActivityService commonActivityService;
-	private final GoogleCalendarService googleCalendarService;
-	private final ModelService modelService;
-	private final DateHelper dateHelper;
 
-	public AttendanceManagementController(AttendanceManagementService attendanceManagementService,
-			MonthlyAttendanceReqService monthlyAttendanceReqService, CommonActivityService commonActivityService,
-			GoogleCalendarService googleCalendarService,ModelService modelService,DateHelper dateHelper) {
-		this.attendanceManagementService = attendanceManagementService;
+	public AttendanceManagementController(MonthlyAttendanceReqService monthlyAttendanceReqService, CommonActivityService commonActivityService) {
 		this.monthlyAttendanceReqService = monthlyAttendanceReqService;
 		this.commonActivityService = commonActivityService;
-		this.googleCalendarService=googleCalendarService;
-		this.modelService = modelService;
-		this.dateHelper = dateHelper;
 	}
 
 	@RequestMapping("/index") 
 	public String start(HttpSession session, Model model) {
-		
-		Users users = commonActivityService.getCommonInfoAddUsers(model, session,null);
-		
-		if (users.getRole().equalsIgnoreCase("Manager")) {
-			monthlyAttendanceReqService.selectApprovalPending(model);//ManagerならapprovalPendingデータを取得しモデルに追加
-		}else {
-			attendanceSearch(users.getUserId(), dateHelper.yearsMonth(), model, session);	//Managerでないなら現在の年月を取得して、それをもとに自身の勤怠情報を取得する。
-		}
+		Users users = commonActivityService.getCommonInfoWithUsers(model, session, null);
+		monthlyAttendanceReqService.startAttendanceManagement(model,users);//ManagerならapprovalPendingデータを取得しモデルに追加
 		return "attendance/registration";
 	}
 
@@ -60,8 +39,8 @@ public class AttendanceManagementController {
 	@RequestMapping(value = "/management", params = "search", method = RequestMethod.POST)
 	public String attendanceSearch(Integer userId, String stringYearsMonth, Model model,
 			HttpSession session) {
-		
-		monthlyAttendanceReqService.getSelectedAttendance(model,stringYearsMonth,userId,session);
+		Users users = commonActivityService.getCommonInfoWithUsers(model, session, null);
+		monthlyAttendanceReqService.getSelectedAttendance(model,stringYearsMonth,userId,users);
 		
 		return "attendance/registration";
 	}
@@ -86,7 +65,7 @@ public class AttendanceManagementController {
 	@RequestMapping(value = "/management", params = "insert", method = RequestMethod.POST)
 	public String insert(@ModelAttribute AttendanceFormList attendanceFormList, BindingResult result, Model model,
 			HttpSession session) {
-		Users users = commonActivityService.getCommonInfoAddUsers(model,session,null);
+		Users users = commonActivityService.getCommonInfoWithUsers(model,session,null);
 		monthlyAttendanceReqService.serviceForUpdateButton(model, attendanceFormList, result, users);
 		
 		return "attendance/registration";
@@ -114,7 +93,8 @@ public class AttendanceManagementController {
 	@RequestMapping(value = "/management", params = "approvalApplicationRegistration", method = RequestMethod.POST)
 	public String monthlyAttendanceReqCreate(MonthlyAttendanceReq monthlyAttendanceReq,
 			AttendanceFormList attendanceFormList, Model model, HttpSession session) {
-		monthlyAttendanceReqService.getForMonthlyAttendanceReqCreate(model,attendanceFormList,monthlyAttendanceReq,session);
+		Users users = commonActivityService.getCommonInfoWithUsers(model,session,null);
+		monthlyAttendanceReqService.getForMonthlyAttendanceReqCreate(model,attendanceFormList,monthlyAttendanceReq,users);
 		return "attendance/registration";
 	}
 

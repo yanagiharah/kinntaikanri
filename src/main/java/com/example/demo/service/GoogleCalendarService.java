@@ -138,13 +138,13 @@ public class GoogleCalendarService {
                         LinkedHashMap::new // 順序を保持するためにLinkedHashMapを使用
                 ));
     }
-    //祝日の日付返却用
+    //祝日の日付と名前のリスト返却用（勤怠管理一般でしか使いません、現状）
     public Events getHolidaysEvents(Integer years,Integer month){
 		Date date = dateHelper.convertToDate(years, month);
 		Events events = setListEvents(date);
 		return events;
 	}
-    //祝日の日付と名前のリスト返却用（勤怠管理一般でしか使いません、現状）
+    //祝日の日付返却用 
     public Model getListHolidays(Model model, Integer years,Integer month){
     	Events events = getHolidaysEvents(years,month);
 		return listEvents(model,events);
@@ -152,9 +152,8 @@ public class GoogleCalendarService {
     
     //年・月を持たないgetListHolidays
     public Model getListHolidays(Model model,String yearMonth) {
-    	Integer years = dateHelper.parseDate(yearMonth)[0];
-		Integer month = dateHelper.parseDate(yearMonth)[1];
-		return getListHolidays(model,years,month);
+    	int[] yearsMonth = dateHelper.parseDate(yearMonth);
+		return getListHolidays(model,yearsMonth[0],yearsMonth[1]);
     }
     
 }

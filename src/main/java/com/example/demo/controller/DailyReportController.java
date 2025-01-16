@@ -53,7 +53,7 @@ public class DailyReportController {
 	//日報の初期表示画面（今日時点のものを表示）
 	@RequestMapping("/detail")
 	public String dailyReportDetail(@RequestParam(value = "date", required = false) String date, HttpSession session, Model model) {
-		Users users = commonActivityService.getCommonInfoAddUsers(model,session,null);
+		Users users = commonActivityService.getCommonInfoWithUsers(model,session,null);
 		LocalDate calendarDate=dateHelper.getInputCalendarDate(date);
 		
 		if (!users.getRole().equalsIgnoreCase("Manager")) {
@@ -128,7 +128,7 @@ public class DailyReportController {
 	//検索ボタン押下処理
 	@RequestMapping(value="/detailUpdate", params ="searchConfirmPending",method = RequestMethod.POST)
 	public String searchConfirmPendingStatusOne(Model model,HttpSession session,String date){
-		Users users = commonActivityService.getCommonInfoAddUsers(model,session,null);
+		Users users = commonActivityService.getCommonInfoWithUsers(model,session,null);
 		model.addAttribute("Users", users);
 		
 		LocalDate calendarDate=dateHelper.getInputCalendarDate(date);

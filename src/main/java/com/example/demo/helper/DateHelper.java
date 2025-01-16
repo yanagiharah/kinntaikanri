@@ -11,6 +11,8 @@ import java.util.Date;
 
 import org.springframework.stereotype.Component;
 
+import com.example.demo.model.AttendanceFormList;
+
 @Component
 public class DateHelper {
 	
@@ -117,5 +119,23 @@ public class DateHelper {
 		}
 	    return dateYearMonth;
     }
+	
+	public LocalDate convertToLocalDate(Date date) {
+        if (date == null) {
+            return null;
+        }
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    }
+	
+	//InputDate共通化処理
+	public String getInputDate(AttendanceFormList attendanceFormList) {
+		 if (attendanceFormList != null && !attendanceFormList.getAttendanceList().isEmpty()) {
+	            String defaultInputDate = attendanceFormList.getAttendanceList().get(0).getAttendanceDateS();
+	            return convertionInputDate(defaultInputDate);
+	        }
+	        return null; // または適切なデフォルト値
+	}
+	
+	//Int year,Int month,(Int day)をLocalDateに変換　LocalDate.of(years, month, Day);yyyy-MM-dd
 
 }
