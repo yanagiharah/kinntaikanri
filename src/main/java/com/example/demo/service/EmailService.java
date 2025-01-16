@@ -22,17 +22,15 @@ public class EmailService {
 	private final JavaMailSender mailSender;
     private final UsersMapper usersMapper;
     private final MessageSource messageSource;
-    private final CommonActivityService commonActivityService;
     private final MonthlyAttendanceReqMapper monthlyAttendanceReqMapper;
     private final UserManagementService userManagementService;
     private final DateHelper dateHelper;
     
 
-    public EmailService(JavaMailSender mailSender, UsersMapper usersMapper, MessageSource messageSource, CommonActivityService commonActivityService, MonthlyAttendanceReqMapper monthlyAttendanceReqMapper, UserManagementService userManagementService, DateHelper dateHelper) {
+    public EmailService(JavaMailSender mailSender, UsersMapper usersMapper, MessageSource messageSource, MonthlyAttendanceReqMapper monthlyAttendanceReqMapper, UserManagementService userManagementService, DateHelper dateHelper) {
         this.mailSender = mailSender;
         this.usersMapper = usersMapper;
         this.messageSource = messageSource;
-        this.commonActivityService = commonActivityService;
         this.monthlyAttendanceReqMapper = monthlyAttendanceReqMapper;
         this.userManagementService = userManagementService;
         this.dateHelper = dateHelper;

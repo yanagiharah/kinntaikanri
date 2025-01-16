@@ -85,9 +85,15 @@ public class ModelService {
 		//modelService.attendanceReject(redirectAttributes);
 	}
 	
-	public void stringYearsMonth(RedirectAttributes redirectAttributes) {
-		addFlashMessage(redirectAttributes,"stringYearsMonth","stringYearsMonth");
+	public void stringYearsMonth(RedirectAttributes redirectAttributes,String stringYearsMonth) {
+		redirectAttributes.addFlashAttribute("stringYearsMonth", stringYearsMonth);
 		//modelService.stringYearsMonth(redirectAttributes);
+	}
+	
+	//月次勤怠訂正依頼を承認した際の表示
+	public void changeMonthlyAttendanceReqApproval(RedirectAttributes redirectAttributes) {
+		addFlashMessage(redirectAttributes,"changeMonthlyAttendanceReqApproval","changeMonthlyAttendanceReqApproval");
+		//modelService.changeMonthlyAttendanceReqApproval(redirectAttributes);
 	}
 	
 	public void changeMonthlyAttendanceReqReject(RedirectAttributes redirectAttributes) {
@@ -130,17 +136,7 @@ public class ModelService {
 		return model;
 	}
 	
-	//月次勤怠訂正依頼を承認した際の表示
-	public Model changeMonthlyAttendanceReqApproval(Model model) {
-		model.addAttribute("changeMonthlyAttendanceReqApproval", messageOutput.message("changeMonthlyAttendanceReqApproval"));
-		return model;
-	}
-
-	//月次勤怠訂正依頼を却下した際の表示
-	public Model changeMonthlyAttendanceReqReject(Model model) {
-		model.addAttribute("changeMonthlyAttendanceReqReject", messageOutput.message("changeMonthlyAttendanceReqReject"));
-		return model;
-	}
+	
 	
 	public Model newPasswordErrorCheck(Model model) {
 		model.addAttribute("requiredHannkaku", messageOutput.message("requiredHannkaku"));

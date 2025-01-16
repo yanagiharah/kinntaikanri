@@ -30,7 +30,7 @@ public class CommonActivityService {
 	}
 	
 	//Usersをセッションから取得、Usersとmenupage情報をモデルに追加、Usersを返す。
-	public Users getCommonInfoAddUsers(Model model,HttpSession session,Boolean infoAboutMenu) {
+	public Users getCommonInfoWithUsers(Model model,HttpSession session,Boolean infoAboutMenu) {
 		getCommonInfo(model,session,infoAboutMenu);
 		Users users = getByUsers(model);
 		return users;
@@ -65,7 +65,7 @@ public class CommonActivityService {
 //	public void backMenu(Model model, HttpSession session) {
 //		Boolean infoAboutMenu = true;//メニューページフラグ
 //		
-//		Users users = getCommonInfoAddUsers(model,session,infoAboutMenu);
+//		Users users = getCommonInfoWithUsers(model,session,infoAboutMenu);
 //		String userRole = users.getRole();
 //		
 //		LocalDate yesterday = LocalDate.now().minusDays(1);
