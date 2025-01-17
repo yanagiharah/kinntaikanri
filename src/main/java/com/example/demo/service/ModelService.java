@@ -192,8 +192,8 @@ public class ModelService {
 		return model;
 	}
 	
-	public Model addMessage(Model model,String message) {
-		model.addAttribute("message", message);
+	public Model addMessage(Model model) {
+		model.addAttribute("message", messageOutput.message("dailyReport.update.success"));
 		return model;
 		//modelService.addMessage(model,message);
 	}
