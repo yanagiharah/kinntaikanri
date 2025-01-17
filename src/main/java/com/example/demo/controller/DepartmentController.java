@@ -61,7 +61,7 @@ public class DepartmentController {
 	
 	//変更ボタン押下
 	@RequestMapping(value = "/action", params = "change", method = RequestMethod.POST)
-	public String departmenNameUpdate(DepartmentForm departmentForm, RedirectAttributes redirectAttributes) {
+	public String departmentNameUpdate(DepartmentForm departmentForm, RedirectAttributes redirectAttributes) {
 		Integer departmentNameEqualCheck = departmentService.departmentNameUpdate(departmentForm);
 		modelService.departmentNameUpdateModel(departmentNameEqualCheck, redirectAttributes);
 		return "redirect:/department/";

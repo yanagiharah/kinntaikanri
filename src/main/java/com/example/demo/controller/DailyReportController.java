@@ -1,13 +1,11 @@
 package com.example.demo.controller;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Locale;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,13 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.demo.helper.DateHelper;
-import com.example.demo.model.DailyReportDetailForm;
 import com.example.demo.model.DailyReportForm;
 import com.example.demo.model.Users;
 import com.example.demo.service.CommonActivityService;
 import com.example.demo.service.DailyReportService;
-import com.example.demo.service.ModelService;
 
 @Controller
 @RequestMapping("/daily")
@@ -33,137 +28,61 @@ public class DailyReportController {
 
 	private final DailyReportService dailyReportService;
 
-	private final MessageSource messageSource;
-
 	private final CommonActivityService commonActivityService;
-	
-	private final ModelService modelService;
-	
-	private final DateHelper dateHelper;
 
-	public DailyReportController(DailyReportService dailyReportService, MessageSource messageSource,
-			CommonActivityService commonActivityService, ModelService modelService, DateHelper dateHelper) {
+	public DailyReportController(DailyReportService dailyReportService, 
+			CommonActivityService commonActivityService) {
 		this.dailyReportService = dailyReportService;
-		this.messageSource = messageSource;
 		this.commonActivityService = commonActivityService;
-		this.modelService = modelService;
-		this.dateHelper = dateHelper;
 	}
 
 	//日報の初期表示画面（今日時点のものを表示）
 	@RequestMapping("/detail")
 	public String dailyReportDetail(@RequestParam(value = "date", required = false) String date, HttpSession session, Model model) {
 		Users users = commonActivityService.getCommonInfoWithUsers(model,session,null);
-		LocalDate calendarDate=dateHelper.getInputCalendarDate(date);
-		
-		if (!users.getRole().equalsIgnoreCase("Manager")) {
-			Integer userId = users.getUserId();
-			
-			//日報取得 
-			DailyReportForm dailyReportForm = dailyReportService.getDailyReport(userId, calendarDate);
-			// 日報詳細を取得
-			List<DailyReportDetailForm> dailyReportDetailForm = dailyReportService.getDailyReportDetail(userId, calendarDate);
-			//空のリストを10行まで追加で作成
-			dailyReportService.populateEmptyDailyReportDetails(dailyReportDetailForm,userId,calendarDate);
-			//（今日の日付とユーザーIDをセット）
-			dailyReportForm.setDailyReportDetailForm(dailyReportDetailForm);
-			dailyReportForm.setUserId(userId);
-
-			modelService.addDailyReportForm(model,dailyReportForm);
-
-		} else {
-			List<DailyReportForm> confirmPending = dailyReportService.selectConfirmPending(calendarDate);
-			modelService.addConfirmPending(model,confirmPending);
-			modelService.addCalendarDate(model,calendarDate);
-
-		}
+		dailyReportService.serviceForDailyReportDetail(model, users, date);
 		return "DailyReport/dailyReport";
 
 	}
 
 	//confirmPending表示者を押したときの処理
 	@RequestMapping(value = "/detailUpdate", params = "DailyReportSubmitterDisplay", method = RequestMethod.POST)
-	public String dailyRepManagement(@RequestParam("dailyReportDate") LocalDate dailyReportDate,
-			@RequestParam("confirmationUserId") Integer confirmaitionUserId, @RequestParam("confirmationUserName") String confirmaitionUserName,Model model,HttpSession session) {
+	public String dailyRepManagement(@RequestParam("dailyReportDate") LocalDate dailyReportDate,@RequestParam("confirmationUserId") Integer confirmationUserId, @RequestParam("confirmationUserName") String confirmationUserName,Model model,HttpSession session) {
 		commonActivityService.getCommonInfo(model,session,null);
-		
-		//日報取得 
-		DailyReportForm dailyReportForm = dailyReportService.getDailyReport(confirmaitionUserId, dailyReportDate);
-		// 日報詳細を取得
-		List<DailyReportDetailForm> dailyReportDetailForm = dailyReportService.getDailyReportDetail(confirmaitionUserId,
-				dailyReportDate);
-		//空のリストを10行まで追加で作成
-		dailyReportService.populateEmptyDailyReportDetails(dailyReportDetailForm,confirmaitionUserId,dailyReportDate);
-		//（今日の日付とユーザーIDをセット）
-		dailyReportForm.setDailyReportDetailForm(dailyReportDetailForm);
-		dailyReportForm.setUserId(confirmaitionUserId);
-		dailyReportForm.setUserName(confirmaitionUserName);
-		modelService.addDailyReportForm(model,dailyReportForm);
-		
-		List<DailyReportForm> confirmPending= dailyReportService.selectConfirmPending(dailyReportDate);
-		modelService.addConfirmPending(model,confirmPending);
+		dailyReportService.serviceForDailyRepManagement(model,confirmationUserId,confirmationUserName,dailyReportDate);
 		return "DailyReport/dailyReport";
 	}
 
 	//提出ボタン押下後
 	@RequestMapping(value = "/detailUpdate", params = "submission", method = RequestMethod.POST)
-	public String updateDailyReportDetail(@ModelAttribute DailyReportForm dailyReportForm,
-			BindingResult result, HttpSession session, Model model, Locale locale) {
+	public String updateDailyReportDetail(@ModelAttribute DailyReportForm dailyReportForm,BindingResult result, HttpSession session, Model model, Locale locale) {
 		commonActivityService.getCommonInfo(model,session,null);
 
 		if (result.hasErrors()) {
 			return "DailyReport/dailyReport";
 		}
-
-		dailyReportService.updateDailyReportDetail(dailyReportForm);
-		
-		String successMessage = messageSource.getMessage("dailyReport.update.success", null, locale);
-		modelService.addMessage(model,successMessage);
-
-		LocalDate calendarDate = dailyReportForm.getDailyReportDetailForm().get(0).getDailyReportDetailDate();
-		String calendarDateS = dateHelper.getYearMonthDay(calendarDate);
+		String calendarDateS = dailyReportService.serviceForUpdateDailyReportDetail(model ,dailyReportForm,locale);
 		return dailyReportDetail(calendarDateS, session, model);
 	}
 	
 	//検索ボタン押下処理
 	@RequestMapping(value="/detailUpdate", params ="searchConfirmPending",method = RequestMethod.POST)
 	public String searchConfirmPendingStatusOne(Model model,HttpSession session,String date){
-		Users users = commonActivityService.getCommonInfoWithUsers(model,session,null);
-		model.addAttribute("Users", users);
-		
-		LocalDate calendarDate=dateHelper.getInputCalendarDate(date);
-		
-		List<String> confirmPendingStatus1 = dailyReportService.selectConfirmPendingStatus1();
-		if(!confirmPendingStatus1.isEmpty()) {
-			modelService.addConfirmPendingStatus1(model,confirmPendingStatus1);
-		} else {
-			modelService.dailyReportAllSubmitted(model);
-		}
-		//もしデータがない場合はそのメッセージも送らないといけないかも
-	    
-		modelService.addCalendarDate(model,calendarDate);
+		commonActivityService.usersModelSession(model,session);
+		dailyReportService.serviceForSearchConfirmPendingStatusOne(model, date);
 		return "DailyReport/dailyReport";
 	}
 
 	//確認ボタン押下処理
 	@RequestMapping(value = "/detailUpdate",params ="confirm",method=RequestMethod.POST)
-	public String updateStatusConfirm(@Valid @ModelAttribute("dailyReportForm") DailyReportForm dailyReportForm,
-			BindingResult result, HttpSession session, Model model, Locale locale){
+	public String updateStatusConfirm(@Valid @ModelAttribute("dailyReportForm") DailyReportForm dailyReportForm,BindingResult result, HttpSession session, Model model, Locale locale){
 		commonActivityService.getCommonInfo(model,session,null);
 		
 		if (result.hasErrors()) {
 			return "DailyReport/dailyReport";
 		}
 		
-		dailyReportService.updateConfirmDailyReport(dailyReportForm);
-		
-		LocalDate calendarDate = dailyReportForm.getDailyReportDate();
-		List<DailyReportForm> confirmPending = dailyReportService.selectConfirmPending(calendarDate);
-		modelService.addConfirmPending(model,confirmPending);
-		modelService.addCalendarDate(model,dailyReportForm.getDailyReportDate());
-		
-		dailyReportForm = null;
-		modelService.addDailyReportForm(model,dailyReportForm);
+		dailyReportService.serviceForUpdateStatusConfirm(model, dailyReportForm);
 		
 		return "DailyReport/dailyReport";
 	}
