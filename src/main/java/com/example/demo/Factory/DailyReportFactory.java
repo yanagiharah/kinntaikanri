@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.example.demo.helper.DateHelper;
 import com.example.demo.mapper.DailyReportDetailMapper;
 import com.example.demo.mapper.DailyReportMapper;
 import com.example.demo.model.DailyReportDetailForm;
@@ -15,14 +14,11 @@ import com.example.demo.model.DailyReportForm;
 @Component
 public class DailyReportFactory {
 	
-	private DateHelper dateHelper;
-	
 	private DailyReportMapper dailyReportMapper;
 	
 	private DailyReportDetailMapper dailyReportDetailMapper;
 	
-	DailyReportFactory(DateHelper dateHelper,DailyReportMapper dailyReportMapper,DailyReportDetailMapper dailyReportDetailMapper){
-		this.dateHelper = dateHelper;
+	DailyReportFactory(DailyReportMapper dailyReportMapper,DailyReportDetailMapper dailyReportDetailMapper){
 		this.dailyReportMapper = dailyReportMapper;
 		this.dailyReportDetailMapper = dailyReportDetailMapper;
 	}

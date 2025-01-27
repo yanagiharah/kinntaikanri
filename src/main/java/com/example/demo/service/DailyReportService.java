@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
 
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -114,7 +113,6 @@ public class DailyReportService {
 	//日報更新
 	@Transactional
 	public void updateDailyReportDetail(DailyReportForm dailyReportForm) {
-		try {
 			//dailyReportの存在確認ののち、無ければinsert
 			if (dailyReportForm.getStatus() == null) {
 				dailyReportMapper.insertDailyReport(dailyReportForm);
@@ -140,9 +138,7 @@ public class DailyReportService {
 			} else {
 				dailyReportMapper.updateDailyReport(dailyReportForm);
 			}
-			//日報登録をしてからf5を押したときに出るエクセプション
-		} catch (DuplicateKeyException e) {
-		}
+
 	}
 	//マネージャー用 確認待ち取得
 	public List<DailyReportForm> selectConfirmPending(LocalDate today) {
