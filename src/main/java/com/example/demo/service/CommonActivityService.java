@@ -7,6 +7,13 @@ import org.springframework.ui.Model;
 
 import com.example.demo.model.Users;
 
+/*注記：usersModelSessionが基本的にこのクラスの根幹となっており、HttpSessionの依存が行われる原因でもあるため
+新たにSessionHelperを作成済み。sessionHelperをコントローラで動かしてUsersを取る仕様にすることで問題を解決できますが、
+このクラスのいくつかのメソッドが不必要、あるいは改修が必要になります。
+またPOJOを意識した設計にする場合、同様の理由でModelHelperを作った方がよく,
+それにともないほぼすべてのメソッドで引数を変える必要がある可能性があります。
+*/
+
 @Service
 public class CommonActivityService {
 
