@@ -11,7 +11,7 @@ COPY . /app/.
 RUN java -version
 
 # Maven を実行してビルド（キャッシュを有効化）
-RUN --mount=type=cache,id=cache/m2,target=/root/.m2 chmod +x ./mvnw && ./mvnw -B -DskipTests clean install
+RUN --mount=type=cache,id=cache-key-m2,target=/root/.m2 chmod +x ./mvnw && ./mvnw -B -DskipTests clean install
 
 # 実行する JAR ファイルのパスを指定
 CMD ["java", "-jar", "target/demo-0.0.1-SNAPSHOT.jar"]
