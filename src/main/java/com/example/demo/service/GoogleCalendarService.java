@@ -124,18 +124,18 @@ public class GoogleCalendarService {
                 .sorted(Map.Entry.comparingByKey())
                 .collect(Collectors.toMap(
                         entry -> entry.getKey().format(dateFormatter),
-                        Map.Entry::getValue,
+                        entry -> entry.getValue(), // 明示的に `entry -> entry.getValue()` にする
                         (oldValue, newValue) -> oldValue, // マージ関数
-                        LinkedHashMap::new // 順序を保持するためにLinkedHashMapを使用
+                        () -> new LinkedHashMap<>() // ここを `LinkedHashMap::new` から `() -> new LinkedHashMap<>()` に戻す
                 )));
         // フォーマットされたMapの生成
         return holidaysMap.entrySet().stream()
-                .sorted(Map.Entry.comparingByKey())
+                .sorted(Map.Entry.comparingByKey()) // 型推論のためにジェネリクスは不要
                 .collect(Collectors.toMap(
                         entry -> entry.getKey().format(dateFormatter),
                         Map.Entry::getValue,
-                        (oldValue, newValue) -> oldValue, // マージ関数
-                        LinkedHashMap::new // 順序を保持するためにLinkedHashMapを使用
+                        (oldValue, newValue) -> oldValue,
+                        LinkedHashMap::new // ここを変更
                 ));
     }
     //祝日の日付と名前のリスト返却用（勤怠管理一般でしか使いません、現状）
